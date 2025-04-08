@@ -21,4 +21,7 @@ Album* criarAlbum(char* titulo, char* anoLancamento);
 int insereAlbum(Album** R, Album* No);
 void cadastrarAlbum(Artista* raiz, char* nomeA, char* titulo, char* anoLancamento);
 void buscaAlbum(Album* R, char* nome, Album** resultado);
+void imprimirAlbuns(Album* R);
+void imprimirAlbunsPorAno(Album* R, char* ano);
+
 #endif

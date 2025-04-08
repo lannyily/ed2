@@ -18,5 +18,6 @@ typedef struct Musica {
 Musica* criarMusica(char* titulo, int quantMinutos);
 int insereMusica(Musica **R, Musica *No);
 void CadastrarMusica(Album* raiz, char* nomeAlbum, char* titulo, int quantMinutos);
-
+void imprimirMusicas(Musica* R);
+void buscaMusica(Musica* R, char* titulo, Musica** resultado);
 #endif

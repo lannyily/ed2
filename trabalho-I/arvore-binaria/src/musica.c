@@ -34,17 +34,40 @@ int insereMusica(Musica** R, Musica* No) {
 void CadastrarMusica(Album* raiz, char* nomeAlbum, char* titulo, int quantMinutos) {
   Album *album;
   album = NULL;
+
   buscaAlbum(raiz, nomeAlbum, &album); 
 
   if (album != NULL) {
       Musica* novaMusica = criarMusica(titulo, quantMinutos);
       if (insereMusica(&(album->musicas), novaMusica)) {
           album->quantMusicas++;
-          printf("A música \"%s\" foi cadastrada no álbum \"%s\"\n", titulo, nomeAlbum);
+          printf("A musica \"%s\" foi cadastrada no álbum \"%s\"\n", titulo, nomeAlbum);
       } else {
-          printf("A música \"%s\" já está cadastrada no álbum \"%s\"\n", titulo, nomeAlbum);
+          printf("A musica \"%s\" ja está cadastrada no álbum \"%s\"\n", titulo, nomeAlbum);
       }
   } else {
-      printf("Álbum \"%s\" não encontrado!\n", nomeAlbum);
+      printf("Álbum \"%s\" nao encontrado!\n", nomeAlbum);
+  }
+}
+
+void imprimirMusicas(Musica* R) {
+    if (R != NULL) {
+        imprimirMusicas(R->Esq); // Percorre a subárvore esquerda
+        printf("Título: %s, Duração: %d minutos\n", R->titulo, R->quantMinutos);
+        imprimirMusicas(R->Dir); // Percorre a subárvore direita
+    }
+}
+
+void buscaMusica(Musica* R, char* titulo, Musica** resultado) {
+  *resultado = NULL; // Inicializa o resultado como NULL
+
+  if (R != NULL) {
+      if (strcmp(R->titulo, titulo) == 0) {
+          *resultado = R; // Encontrou a música
+      } else if (strcmp(titulo, R->titulo) < 0) {
+          buscaMusica(R->Esq, titulo, resultado); // Continua na subárvore esquerda
+      } else {
+          buscaMusica(R->Dir, titulo, resultado); // Continua na subárvore direita
+      }
   }
 }
