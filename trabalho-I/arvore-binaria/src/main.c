@@ -33,6 +33,7 @@ int main() {
 
     // Imprimindo álbuns de um ano específico de um artista
     printf("\n=== Albuns do Artista 'Cazuza' no ano de 1988 ===\n");
+    buscaArtista(raiz, "Cazuza", &artista);
     if (artista != NULL) {
         imprimirAlbunsPorAno(artista->albuns, "1988");
     }
