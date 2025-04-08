@@ -1,7 +1,7 @@
+#include "../include/artista.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../include/artista.h"
 
 Artista* criarArtista(char* nome, char* tipo, char* estiloM) {
     Artista* no = (Artista*)malloc(sizeof(Artista));
@@ -14,34 +14,28 @@ Artista* criarArtista(char* nome, char* tipo, char* estiloM) {
     no->Dir = NULL;
     return no;
 }
-
-
 int insereArtista(Artista** R, Artista* No) {
-    int inseriu = 0;
-    
     if (*R == NULL) {
         *R = No;
+        return 1; // Inserção bem-sucedida
     }
-    else if (strcmp(No->nome, (*R)->nome) < 0) {
-        inseriu = insere(&((*R)->Esq), No);
+
+    if (strcmp(No->nome, (*R)->nome) < 0) {
+        return insereArtista(&((*R)->Esq), No); // Insere na subárvore esquerda
+    } else if (strcmp(No->nome, (*R)->nome) > 0) {
+        return insereArtista(&((*R)->Dir), No); // Insere na subárvore direita
     }
-    else if (strcmp(No->nome, (*R)->nome) > 0) {
-        inseriu = insere(&((*R)->Dir), No);
-    }
-    else {
-        inseriu = 1;  
-    }
-    return inseriu;
+
+    return 0; // Artista já existe
 }
 
-void imprimirArtistas(Artista* R){
-    if (R != NULL){
+void imprimirArtistas(Artista* R) {
+    if (R != NULL) {
         imprimirArtistas(R->Esq);
-        printf("Nome: %s\n", R->nome);
-        printf("Tipo: %s\n", R->tipo);
-        printf("Estilo: %s\n", R->estiloMusical);
-        printf("Numero de albuns: %d\n", R->numAlbuns);
-        printf("\n");
+        printf("-------------------------------------------------------------\n");
+        printf("%-15s %-10s %-15s %-5s\n", "Nome", "Tipo", "Estilo", "Albuns");
+        printf("%-15s  %-10s  %-15s %-5d\n", R->nome, R->tipo, R->estiloMusical, R->numAlbuns);
+        printf("-------------------------------------------------------------\n");
         imprimirArtistas(R->Dir);
     }
 }
@@ -56,23 +50,29 @@ int comparaString(char* nomeBusca, char* nome){
     }
 }
 
-int buscaArtista(Artista* R, char* nome){
-    if (R == NULL) return 0;
+void buscaArtista(Artista* R, char* nome, Artista** resultado) {
+    *resultado = NULL; // Inicializa o resultado como NULL
 
-    if (comparaString(R->nome, nome)) {
-        return 1;
-    } else if (strcmp(nome, R->nome) < 0) {
-        return buscaArtista(R->Esq, nome);
-    } else {
-        return buscaArtista(R->Dir, nome);
+    if (R != NULL) {
+        if (comparaString(R->nome, nome)) {
+            *resultado = R; // Encontrou o artista
+        } else if (strcmp(nome, R->nome) < 0) {
+            buscaArtista(R->Esq, nome, resultado); // Continua na subárvore esquerda
+        } else {
+            buscaArtista(R->Dir, nome, resultado); // Continua na subárvore direita
+        }
     }
 }
 
 void cadastrarArtista(Artista** raiz, char* nome, char* tipo, char* estilo) {
-    if (buscaArtista(*raiz, nome)){
-        printf("%s ja existe\n", nome);
+    Artista* artista = NULL;
+    buscaArtista(*raiz, nome, &artista); // Resultado da busca armazenado em 'artista'
+
+    if (artista != NULL) {
+        printf("%s já existe\n", nome);
     } else {
         Artista* novo = criarArtista(nome, tipo, estilo);
-        insere(raiz, novo);
+        insereArtista(raiz, novo);
+        printf("%s cadastrado com sucesso\n", nome);
     }
 }

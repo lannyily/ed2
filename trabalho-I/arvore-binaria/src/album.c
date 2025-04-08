@@ -1,8 +1,8 @@
+#include "../include/album.h"
+#include "../include/artista.h" 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../include/album.h"
-#include "artista.c"
 
 Album* criarAlbum(char* titulo, char* anoLancamento){
     Album* no = (Album*)malloc(sizeof(Album));
@@ -24,10 +24,10 @@ int insereAlbum(Album** R, Album* No){
         *R = No;
     }
     else if (strcmp(No->titulo, (*R)->titulo) < 0) {
-        inseriu = insere(&((*R)->Esq), No);
+        inseriu = insereAlbum(&((*R)->Esq), No);
     }
     else if (strcmp(No->titulo, (*R)->titulo) > 0) {
-        inseriu = insere(&((*R)->Dir), No);
+        inseriu = insereAlbum(&((*R)->Dir), No);
     }
     else {
         inseriu = 1;  
@@ -35,18 +35,38 @@ int insereAlbum(Album** R, Album* No){
     return inseriu;
 }
 
-void cadastrarAlbum(Artista* raiz, char* nomeA, char* titulo, char* anoLancamento){
-    Artista* artista = buscaArtista(raiz, nomeA);
-    
+void cadastrarAlbum(Artista* raiz, char* nomeA, char* titulo, char* anoLancamento) {
+    Artista* artista = NULL;
+    buscaArtista(raiz, nomeA, &artista); // Resultado da busca armazenado em 'artista'
+
     if (artista != NULL) {
-        Album* novoAlbum = criarAlbum(titulo, anoLancamento);
-        if (insereAlbum(&(artista->albuns), novoAlbum)) {
-            artista->numAlbuns++;
-            printf("Álbum \"%s\" cadastrado para o artista \"%s\"\n", titulo, nomeA);
+        Album* album = NULL;
+        buscaAlbum(artista->albuns, titulo, &album); // Resultado da busca armazenado em 'album'
+
+        if (album == NULL) { // Se o álbum não foi encontrado
+            Album* novoAlbum = criarAlbum(titulo, anoLancamento);
+            if (insereAlbum(&(artista->albuns), novoAlbum)) {
+                artista->numAlbuns++;
+                printf("Álbum \"%s\" cadastrado para o artista \"%s\"\n", titulo, nomeA);
+            }
         } else {
             printf("Álbum \"%s\" já existe para o artista \"%s\"\n", titulo, nomeA);
         }
     } else {
         printf("Artista \"%s\" não encontrado!\n", nomeA);
+    }
+}
+
+void buscaAlbum(Album* R, char* nome, Album** resultado) {
+    *resultado = NULL; // Inicializa o resultado como NULL
+
+    if (R != NULL) {
+        if (comparaString(R->titulo, nome)) {
+            *resultado = R; // Encontrou o álbum
+        } else if (strcmp(nome, R->titulo) < 0) {
+            buscaAlbum(R->Esq, nome, resultado); // Continua na subárvore esquerda
+        } else {
+            buscaAlbum(R->Dir, nome, resultado); // Continua na subárvore direita
+        }
     }
 }

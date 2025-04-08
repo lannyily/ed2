@@ -1,28 +1,27 @@
 {
+    "version": "2.0.0",
     "tasks": [
         {
-            "type": "cppbuild",
-            "label": "C/C++: gcc.exe arquivo de build ativo",
-            "command": "C:\\MinGW\\bin\\gcc.exe",
+            "label": "Compilar e Executar",
+            "type": "shell",
+            "command": "gcc",
             "args": [
-                "-fdiagnostics-color=always",
-                "-g",
-                "${file}",
+                "main.c",
+                "artista.c",
+                "album.c",
+                "musica.c",
                 "-o",
-                "${fileDirname}\\${fileBasenameNoExtension}.exe"
-            ],
-            "options": {
-                "cwd": "${fileDirname}"
-            },
-            "problemMatcher": [
-                "$gcc"
+                "main",
+                "-Wall",
+                "&&",
+                ".\\main.exe"
             ],
             "group": {
                 "kind": "build",
                 "isDefault": true
             },
-            "detail": "Tarefa gerada pelo Depurador."
+            "problemMatcher": ["$gcc"],
+            "detail": "Compila e executa o programa automaticamente."
         }
-    ],
-    "version": "2.0.0"
+    ]
 }

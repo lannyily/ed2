@@ -2,12 +2,13 @@
 #include <stdlib.h>
 #include "../include/artista.h"
 #include "../include/album.h"
-#include "artista.c"
+#include "../include/musica.h"
+
 
 int main() {
-    Artista* raiz = NULL;
+    Artista *raiz;
     raiz = NULL;
-    
+
     cadastrarArtista(&raiz, "Dami Lovato", "Solo", "Pop");
     cadastrarArtista(&raiz, "Dami Lovato", "Banda", "Rock");
     cadastrarArtista(&raiz, "Cazuza", "Solo", "MPB");
@@ -16,6 +17,9 @@ int main() {
     cadastrarAlbum(raiz, "Cazuza", "Exagerado", "1985");
 
     imprimirArtistas(raiz);
+
+    printf("Pressione Enter para sair...\n");
+    getchar();
 
     return 0;
 }
