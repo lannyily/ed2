@@ -1,17 +1,10 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
-
-#ifndef ARTISTA_H
-#define ARTISTA_H
 
 typedef struct Album Album;
 
 typedef struct Artista {
     char nome[50];
-    char tipo[10];
-    char estiloMusical[10];
+    char tipo[20];
+    char estiloMusical[20];
     int numAlbuns;
     Album* albuns;
 
@@ -33,4 +26,3 @@ void mostrarAlbunsPorAnoDeArtista(Artista* raiz, char* nomeArtista, char* ano);
 void mostrarMusicasDeAlbum(Artista* raiz, char* nomeArtista, char* tituloAlbum);
 void mostrarAlbunsPorAnoDeTodosArtistas(Artista* R, char* ano);
 void mostrarDadosDeMusica(Artista* raiz, char* tituloMusica);
-#endif

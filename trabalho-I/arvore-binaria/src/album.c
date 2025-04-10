@@ -1,8 +1,9 @@
-#include "../include/album.h"
-#include "../include/artista.h" 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "../Includes/album.h"
+#include "../Includes/artista.h" 
+#include "../Includes/musica.h"
 
 Album* criarAlbum(char* titulo, char* anoLancamento){
     Album* no = (Album*)malloc(sizeof(Album));

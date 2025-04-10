@@ -1,9 +1,9 @@
-#include "../include/artista.h"
-#include "../include/album.h"
-#include "../include/musica.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "../Includes/artista.h"
+#include "../Includes/album.h"
+#include "../Includes/musica.h"
 
 Artista* criarArtista(char* nome, char* tipo, char* estiloM) {
     Artista* no = (Artista*)malloc(sizeof(Artista));

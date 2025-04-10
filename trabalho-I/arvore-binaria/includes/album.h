@@ -1,14 +1,10 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include "../include/artista.h"
 
-#ifndef ALBUM_H
-#define ALBUM_H
+typedef struct Artista Artista;
 
 typedef struct Musica Musica;
 
 typedef struct Album {
-    char titulo[20];
+    char titulo[50];
     char anoDeLancamento[10];
     int quantMusicas; 
     Musica* musicas;
@@ -23,5 +19,3 @@ void cadastrarAlbum(Artista* raiz, char* nomeA, char* titulo, char* anoLancament
 void buscaAlbum(Album* R, char* nome, Album** resultado);
 void imprimirAlbuns(Album* R);
 void imprimirAlbunsPorAno(Album* R, char* ano);
-
-#endif

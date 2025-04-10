@@ -1,6 +1,8 @@
 {
     "files.associations": {
         "artista.h": "c",
-        "album.h": "c"
+        "album.h": "c",
+        "musica.h": "c",
+        "stdlib.h": "c"
     }
 }
