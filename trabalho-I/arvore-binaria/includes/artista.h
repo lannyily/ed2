@@ -1,5 +1,7 @@
+#ifndef ARTISTA_H
+#define ARTISTA_H
 
-typedef struct Album Album;
+#include "album.h"
 
 typedef struct Artista {
     char nome[50];
@@ -10,19 +12,17 @@ typedef struct Artista {
 
     struct Artista* Esq;
     struct Artista* Dir;
-}Artista;
+} Artista;
 
 Artista* criarArtista(char* nome, char* tipo, char* estiloM);
 int insereArtista(Artista** R, Artista* No);
 void imprimirArtistas(Artista* R);
-int comparaString(char* nomeBusca, char* nome);
-void buscaArtista(Artista* R, char* nome, Artista** resultado);
+void buscaArtista(Artista* R, const char* nome, Artista** resultado);
 void cadastrarArtista(Artista** raiz, char* nome, char* tipo, char* estilo);
-void mostrarArtistasPorTipo(Artista* R, char* tipo);
-void mostrarArtistasPorEstilo(Artista* R, char* estilo);
-void mostrarArtistasPorEstiloETipo(Artista* R, char* estilo, char* tipo);
-void mostrarAlbunsDeArtista(Artista* raiz, char* nomeArtista);
-void mostrarAlbunsPorAnoDeArtista(Artista* raiz, char* nomeArtista, char* ano);
 void mostrarMusicasDeAlbum(Artista* raiz, char* nomeArtista, char* tituloAlbum);
-void mostrarAlbunsPorAnoDeTodosArtistas(Artista* R, char* ano);
 void mostrarDadosDeMusica(Artista* raiz, char* tituloMusica);
+void mostrarArtistasPorTipo(Artista* raiz, const char* tipo);
+void mostrarArtistasPorEstilo(Artista* raiz, const char* estilo);
+void mostrarArtistasPorEstiloETipo(Artista* raiz, const char* estilo, const char* tipo);
+void mostrarAlbunsPorAnoDeTodosArtistas(Artista* raiz, const char* ano);
+#endif // ARTISTA_H

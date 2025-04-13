@@ -4,6 +4,30 @@
 #include "../Includes/musica.h"
 #include "../Includes/album.h" 
 #include "../Includes/artista.h"
+#include "../includes/playlist.h"
+
+void cadastrarMusica(struct Artista* raiz, const char* nomeArtista, const char* tituloAlbum, const char* tituloMusica, int duracao) {
+    struct Artista* artista = NULL;
+    buscaArtista(raiz, (char*)nomeArtista, &artista);
+
+    if (artista != NULL) {
+        Album* album = NULL;
+        buscaAlbum(artista->albuns, (char*)tituloAlbum, &album);
+
+        if (album != NULL) {
+            Musica* novaMusica = criarMusica((char*)tituloMusica, duracao);
+            if (insereMusica(&(album->musicas), novaMusica)) {
+                printf("Música \"%s\" cadastrada com sucesso no álbum \"%s\" do artista \"%s\".\n", tituloMusica, tituloAlbum, nomeArtista);
+            } else {
+                printf("Erro ao cadastrar a música \"%s\". Ela já existe no álbum.\n", tituloMusica);
+            }
+        } else {
+            printf("Álbum \"%s\" não encontrado para o artista \"%s\".\n", tituloAlbum, nomeArtista);
+        }
+    } else {
+        printf("Artista \"%s\" não encontrado.\n", nomeArtista);
+    }
+}
 
 Musica* criarMusica(char* titulo, int quantMinutos) {
   Musica* no = (Musica*)malloc(sizeof(Musica));
@@ -59,16 +83,93 @@ void imprimirMusicas(Musica* R) {
     }
 }
 
-void buscaMusica(Musica* R, char* titulo, Musica** resultado) {
-  *resultado = NULL; // Inicializa o resultado como NULL
+Musica* buscarMusica(Musica* R, const char* titulo) {
+    if (R == NULL) {
+        return NULL;
+    }
 
-  if (R != NULL) {
-      if (strcmp(R->titulo, titulo) == 0) {
-          *resultado = R; // Encontrou a música
-      } else if (strcmp(titulo, R->titulo) < 0) {
-          buscaMusica(R->Esq, titulo, resultado); // Continua na subárvore esquerda
-      } else {
-          buscaMusica(R->Dir, titulo, resultado); // Continua na subárvore direita
-      }
-  }
+    if (strcmp(R->titulo, titulo) == 0) {
+        return R;
+    } else if (strcmp(titulo, R->titulo) < 0) {
+        return buscarMusica(R->Esq, titulo);
+    } else {
+        return buscarMusica(R->Dir, titulo);
+    }
+}
+
+// Remove uma música da árvore binária de músicas
+Musica* removerMusica(Musica *raiz, const char *titulo) {
+    if (raiz == NULL) {
+        return NULL;
+    }
+
+    if (strcmp(titulo, raiz->titulo) < 0) {
+        raiz->Esq = removerMusica(raiz->Esq, titulo);
+    } else if (strcmp(titulo, raiz->titulo) > 0) {
+        raiz->Dir = removerMusica(raiz->Dir, titulo);
+    } else {
+        // Encontrou a música
+        if (raiz->Esq == NULL) {
+            Musica *temp = raiz->Dir;
+            free(raiz);
+            return temp;
+        } else if (raiz->Dir == NULL) {
+            Musica *temp = raiz->Esq;
+            free(raiz);
+            return temp;
+        }
+
+        // Substitui pelo menor valor da subárvore direita
+        Musica *temp = raiz->Dir;
+        while (temp->Esq != NULL) {
+            temp = temp->Esq;
+        }
+        strcpy(raiz->titulo, temp->titulo);
+        raiz->Dir = removerMusica(raiz->Dir, temp->titulo);
+    }
+
+    return raiz;
+}
+
+void liberarMusicas(Musica *raiz) {
+    if (raiz != NULL) {
+        liberarMusicas(raiz->Esq);
+        liberarMusicas(raiz->Dir);
+        free(raiz);
+    }
+}
+
+int musicaEmPlaylists(struct Playlist* raiz, const char* titulo) {
+    if (raiz == NULL) {
+        return 0;
+    }
+
+    if (buscarMusica(raiz->musicas, titulo) != NULL) {
+        return 1; // Música encontrada na playlist
+    }
+
+    return musicaEmPlaylists(raiz->esquerda, titulo) || musicaEmPlaylists(raiz->direita, titulo);
+}
+
+void removerMusicaDeAlbum(struct Artista* raiz, struct Playlist* playlists, const char* nomeArtista, const char* tituloAlbum, const char* tituloMusica) {
+    struct Artista* artista = NULL;
+    buscaArtista(raiz, nomeArtista, &artista);
+
+    if (artista != NULL) {
+        Album* album = NULL;
+        buscaAlbum(artista->albuns, tituloAlbum, &album);
+
+        if (album != NULL) {
+            if (!musicaEmPlaylists(playlists, tituloMusica)) {
+                album->musicas = removerMusica(album->musicas, tituloMusica);
+                printf("Música \"%s\" removida do álbum \"%s\" do artista \"%s\".\n", tituloMusica, tituloAlbum, nomeArtista);
+            } else {
+                printf("Música \"%s\" não pode ser removida porque está em uma playlist.\n", tituloMusica);
+            }
+        } else {
+            printf("Álbum \"%s\" não encontrado.\n", tituloAlbum);
+        }
+    } else {
+        printf("Artista \"%s\" não encontrado.\n", nomeArtista);
+    }
 }

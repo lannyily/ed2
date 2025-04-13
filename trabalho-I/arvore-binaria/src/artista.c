@@ -45,26 +45,20 @@ void imprimirArtistas(Artista* R) {
     }
 }
 
-int comparaString(char* nomeBusca, char* nome){
-    if (*nomeBusca != 0) {                                                    
-        if (*nome == 0) return 0;                                            
-        if (*nomeBusca == *nome) return comparaString(++nomeBusca, ++nome); 
-        return 0;                                                            
-    } else {
-        return (*nome == 0); // ambas terminaram juntas? são iguais
-    }
+int comparaString(const char* str1, const char* str2) {
+    return strcmp(str1, str2) == 0;
 }
 
-void buscaArtista(Artista* R, char* nome, Artista** resultado) {
-    *resultado = NULL; // Inicializa o resultado como NULL
+void buscaArtista(Artista* R, const char* nome, Artista** resultado) {
+    *resultado = NULL;
 
     if (R != NULL) {
-        if (comparaString(R->nome, nome)) { // Compara os nomes usando comparaString
-            *resultado = R; // Encontrou o artista
+        if (strcmp(R->nome, nome) == 0) {
+            *resultado = R;
         } else if (strcmp(nome, R->nome) < 0) {
-            buscaArtista(R->Esq, nome, resultado); // Continua na subárvore esquerda
+            buscaArtista(R->Esq, nome, resultado);
         } else {
-            buscaArtista(R->Dir, nome, resultado); // Continua na subárvore direita
+            buscaArtista(R->Dir, nome, resultado);
         }
     }
 }
@@ -83,33 +77,33 @@ void cadastrarArtista(Artista** raiz, char* nome, char* tipo, char* estilo) {
     }
 }
 
-void mostrarArtistasPorTipo(Artista* R, char* tipo) {
-    if (R != NULL) {
-        mostrarArtistasPorTipo(R->Esq, tipo);
-        if (strcmp(R->tipo, tipo) == 0) {
-            printf("Nome: %s, Tipo: %s, Estilo: %s, Albuns: %d\n", R->nome, R->tipo, R->estiloMusical, R->numAlbuns);
+void mostrarArtistasPorTipo(Artista* raiz, const char* tipo) {
+    if (raiz != NULL) {
+        mostrarArtistasPorTipo(raiz->Esq, tipo);
+        if (strcmp(raiz->tipo, tipo) == 0) {
+            printf("Artista: %s, Tipo: %s, Estilo: %s\n", raiz->nome, raiz->tipo, raiz->estiloMusical);
         }
-        mostrarArtistasPorTipo(R->Dir, tipo);
+        mostrarArtistasPorTipo(raiz->Dir, tipo);
     }
 }
 
-void mostrarArtistasPorEstilo(Artista* R, char* estilo) {
-    if (R != NULL) {
-        mostrarArtistasPorEstilo(R->Esq, estilo);
-        if (strcmp(R->estiloMusical, estilo) == 0) {
-            printf("Nome: %s, Tipo: %s, Estilo: %s, Albuns: %d\n", R->nome, R->tipo, R->estiloMusical, R->numAlbuns);
+void mostrarArtistasPorEstilo(Artista* raiz, const char* estilo) {
+    if (raiz != NULL) {
+        mostrarArtistasPorEstilo(raiz->Esq, estilo);
+        if (strcmp(raiz->estiloMusical, estilo) == 0) {
+            printf("Artista: %s, Tipo: %s, Estilo: %s\n", raiz->nome, raiz->tipo, raiz->estiloMusical);
         }
-        mostrarArtistasPorEstilo(R->Dir, estilo);
+        mostrarArtistasPorEstilo(raiz->Dir, estilo);
     }
 }
 
-void mostrarArtistasPorEstiloETipo(Artista* R, char* estilo, char* tipo) {
-    if (R != NULL) {
-        mostrarArtistasPorEstiloETipo(R->Esq, estilo, tipo);
-        if (strcmp(R->estiloMusical, estilo) == 0 && strcmp(R->tipo, tipo) == 0) {
-            printf("Nome: %s, Tipo: %s, Estilo: %s, Albuns: %d\n", R->nome, R->tipo, R->estiloMusical, R->numAlbuns);
+void mostrarArtistasPorEstiloETipo(Artista* raiz, const char* estilo, const char* tipo) {
+    if (raiz != NULL) {
+        mostrarArtistasPorEstiloETipo(raiz->Esq, estilo, tipo);
+        if (strcmp(raiz->estiloMusical, estilo) == 0 && strcmp(raiz->tipo, tipo) == 0) {
+            printf("Artista: %s, Tipo: %s, Estilo: %s\n", raiz->nome, raiz->tipo, raiz->estiloMusical);
         }
-        mostrarArtistasPorEstiloETipo(R->Dir, estilo, tipo);
+        mostrarArtistasPorEstiloETipo(raiz->Dir, estilo, tipo);
     }
 }
 
@@ -156,12 +150,12 @@ void mostrarMusicasDeAlbum(Artista* raiz, char* nomeArtista, char* tituloAlbum) 
     }
 }
 
-void mostrarAlbunsPorAnoDeTodosArtistas(Artista* R, char* ano) {
-    if (R != NULL) {
-        mostrarAlbunsPorAnoDeTodosArtistas(R->Esq, ano);
-        printf("Albuns do artista %s no ano %s:\n", R->nome, ano);
-        imprimirAlbunsPorAno(R->albuns, ano); 
-        mostrarAlbunsPorAnoDeTodosArtistas(R->Dir, ano);
+void mostrarAlbunsPorAnoDeTodosArtistas(Artista* raiz, const char* ano) {
+    if (raiz != NULL) {
+        mostrarAlbunsPorAnoDeTodosArtistas(raiz->Esq, ano);
+        printf("Artista: %s\n", raiz->nome);
+        imprimirAlbunsPorAno(raiz->albuns, (char*)ano);
+        mostrarAlbunsPorAnoDeTodosArtistas(raiz->Dir, ano);
     }
 }
 
@@ -172,7 +166,7 @@ void mostrarDadosDeMusica(Artista* raiz, char* tituloMusica) {
         Album* albumAtual = raiz->albuns;
         while (albumAtual != NULL) {
             Musica* musica = NULL;
-            buscaMusica(albumAtual->musicas, tituloMusica, &musica); 
+            musica = buscarMusica(albumAtual->musicas, tituloMusica); 
 
             if (musica != NULL) {
                 printf("Musica: %s\n", musica->titulo);

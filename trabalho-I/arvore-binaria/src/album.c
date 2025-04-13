@@ -55,17 +55,16 @@ void cadastrarAlbum(Artista* raiz, char* nomeA, char* titulo, char* anoLancament
     }
 }
 
-void buscaAlbum(Album* R, char* nome, Album** resultado) {
-
-    *resultado = NULL; // Inicializa o resultado como NULL
+void buscaAlbum(Album* R, const char* nome, Album** resultado) {
+    *resultado = NULL;
 
     if (R != NULL) {
-        if (comparaString(R->titulo, nome)) {
-            *resultado = R; // Encontrou o álbum
+        if (strcmp(R->titulo, nome) == 0) {
+            *resultado = R;
         } else if (strcmp(nome, R->titulo) < 0) {
-            buscaAlbum(R->Esq, nome, resultado); // Continua na subárvore esquerda
+            buscaAlbum(R->Esq, nome, resultado);
         } else {
-            buscaAlbum(R->Dir, nome, resultado); // Continua na subárvore direita
+            buscaAlbum(R->Dir, nome, resultado);
         }
     }
 }
@@ -89,4 +88,3 @@ void imprimirAlbunsPorAno(Album* R, char* ano) {
         imprimirAlbunsPorAno(R->Dir, ano); // Percorre a subárvore direita
     }
 }
-
