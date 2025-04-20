@@ -264,6 +264,7 @@ int main() {
             case 19:{
                 printf("\n=== Teste de Tempos de Busca ===\n");
                 testeTemposBusca(&raiz);
+                testeBuscaMusicasDeArtista(raiz);
                 break;
             }
             case 0:

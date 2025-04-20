@@ -184,3 +184,39 @@ void mostrarDadosDeMusica(Artista* raiz, char* tituloMusica) {
     }
 }
 
+void mostrarMusicas(Musica* raiz) {
+    if (raiz == NULL) return;
+
+    mostrarMusicas(raiz->Esq);
+    printf("    Música: %s (%d min)\n", raiz->titulo, raiz->quantMinutos);
+    mostrarMusicas(raiz->Dir);
+}
+
+void mostrarAlbuns(Album* raiz) {
+    if (raiz == NULL) return;
+
+    mostrarAlbuns(raiz->Esq);
+    printf("  Álbum: %s (%s)\n", raiz->titulo, raiz->anoDeLancamento);
+    mostrarMusicas(raiz->musicas);
+    mostrarAlbuns(raiz->Dir);
+}
+
+
+void mostrarMusicasDoArtista(Artista* raiz, const char* nomeArtista) {
+    if (raiz == NULL) {
+        printf("Artista '%s' não encontrado.\n", nomeArtista);
+        return;
+    }
+
+    int cmp = strcmp(nomeArtista, raiz->nome);
+    if (cmp < 0) {
+        mostrarMusicasDoArtista(raiz->Esq, nomeArtista);
+    } else if (cmp > 0) {
+        mostrarMusicasDoArtista(raiz->Dir, nomeArtista);
+    } else {
+        // Artista encontrado
+        printf("Músicas do artista: %s\n", raiz->nome);
+        mostrarAlbuns(raiz->albuns);
+    }
+}
+
