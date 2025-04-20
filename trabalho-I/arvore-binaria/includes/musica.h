@@ -15,7 +15,7 @@ typedef struct Musica {
 Musica* criarMusica(char* titulo, int quantMinutos);
 int insereMusica(Musica **R, Musica *No);
 void imprimirMusicas(Musica* R);
-Musica* buscarMusica(Musica* R, const char* titulo);
+void buscarMusica(Musica* R, const char* titulo, Musica** resultado);
 Musica* removerMusica(Musica *raiz, const char *titulo);
 void liberarMusicas(Musica *raiz);
 int musicaEmPlaylists(struct Playlist* raiz, const char* titulo);

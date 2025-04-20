@@ -83,17 +83,17 @@ void imprimirMusicas(Musica* R) {
     }
 }
 
-Musica* buscarMusica(Musica* R, const char* titulo) {
-    if (R == NULL) {
-        return NULL;
-    }
+void buscarMusica(Musica* R, const char* titulo, Musica** resultado) {
+    *resultado = NULL;
 
-    if (strcmp(R->titulo, titulo) == 0) {
-        return R;
-    } else if (strcmp(titulo, R->titulo) < 0) {
-        return buscarMusica(R->Esq, titulo);
-    } else {
-        return buscarMusica(R->Dir, titulo);
+    if (R != NULL){
+        if (strcmp(R->titulo, titulo) == 0) {
+            *resultado = R;
+        } else if (strcmp(titulo, R->titulo) < 0) {
+            buscarMusica(R->Esq, titulo, resultado);
+        } else {
+            buscarMusica(R->Dir, titulo, resultado);
+        }
     }
 }
 
@@ -139,17 +139,22 @@ void liberarMusicas(Musica *raiz) {
     }
 }
 
-int musicaEmPlaylists(struct Playlist* raiz, const char* titulo) {
-    if (raiz == NULL) {
-        return 0;
-    }
+int musicaEmPlaylists(Playlist* raiz, const char* titulo) {
+    Musica* resultado = NULL;
 
-    if (buscarMusica(raiz->musicas, titulo) != NULL) {
-        return 1; // Música encontrada na playlist
+    if (raiz != NULL) {
+        buscarMusica(raiz->musicas, titulo, &resultado);
+        if (resultado != NULL) {
+            return 1; 
+        }
+    
+        if (musicaEmPlaylists(raiz->esquerda, titulo)) return 1;
+        if (musicaEmPlaylists(raiz->direita, titulo)) return 1;
     }
-
-    return musicaEmPlaylists(raiz->esquerda, titulo) || musicaEmPlaylists(raiz->direita, titulo);
+    return 0; 
 }
+
+
 
 void removerMusicaDeAlbum(struct Artista* raiz, struct Playlist* playlists, const char* nomeArtista, const char* tituloAlbum, const char* tituloMusica) {
     struct Artista* artista = NULL;

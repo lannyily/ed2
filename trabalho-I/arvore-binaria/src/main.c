@@ -9,6 +9,7 @@
 int main() {
     Artista *raiz = NULL;
     Playlist *raizPlaylist = NULL;
+    Album *raizAlbum = NULL;
 
     int opcao;
 
@@ -26,10 +27,12 @@ int main() {
         printf("10 - Mostrar todas as musicas de um album e artista\n");
         printf("11 - Mostrar todos os albuns de um ano de todos os artistas\n");
         printf("12 - Mostrar os dados de uma determinada Musica\n");
-        printf("13 - Mostrar dados de uma playlist\n");
-        printf("14 - Remover música de uma playlist\n");
-        printf("15 - Remover uma playlist\n");
-        printf("16 - Remover música de um álbum de um artista\n");
+        printf("13 - Criar uma playlist\n");
+        printf("14 - Inserir musicas em uma playlist\n");
+        printf("15 - Mostrar dados de uma playlist\n");
+        printf("16 - Remover música de uma playlist\n");
+        printf("17 - Remover uma playlist\n");
+        printf("18 - Remover música de um álbum de um artista\n");
         printf(" 0 - SAIR\n");
         printf("----------------------------------------------\n");
         printf("Escolha uma opcao: ");
@@ -164,6 +167,50 @@ int main() {
                 break;
             }
             case 13: {
+                printf("\n=== Criar Playlist ===\n");
+                char playlistNome[100];
+                printf("Digite o nome da playlist: ");
+                scanf(" %[^\n]", playlistNome);
+                Playlist* novaPlaylist = criarPlaylist(playlistNome);
+                inserirPlaylist(raizPlaylist, novaPlaylist);
+            }
+            case 14: {
+                printf("\n=== Inserir musica em uma Playlist ===\n");
+                char playlist[100];
+                printf("Digite o nome da playlist: ");
+                scanf(" %[^\n]", playlist);
+                if (buscarPlaylist(raizPlaylist, playlist)){
+                    char nomeArtista[100], tituloAlbum[100], tituloMusica[100];
+
+                    printf("Digite o nome do artista: ");
+                    scanf(" %[^\n]", nomeArtista);
+                    printf("Digite o título do álbum: ");
+                    scanf(" %[^\n]", tituloAlbum);
+                    printf("Digite o título da música: ");
+                    scanf(" %[^\n]", tituloMusica);
+
+                    Artista* encontrarArtista;
+                    buscaArtista(raiz, nomeArtista, &encontrarArtista);
+
+                    if (encontrarArtista != NULL){
+                        Album* encontrarAlbum;
+                        buscaAlbum(encontrarArtista->albuns, tituloAlbum, &encontrarAlbum);
+                        if (encontrarAlbum != NULL){
+                            Musica* encontrarMusica;
+                            buscarMusica(encontrarAlbum->musicas, tituloMusica, &encontrarMusica);
+                            if (encontrarMusica != NULL){
+                                //inserirMusicasPlaylist(raizPlaylist, encontrarMusica);
+                            }
+                        }
+                    } else {
+                        printf("Artista \"%s\" com o album \"%s\" com a musica \"%s\" nao encontrada\n", nomeArtista, tituloAlbum, tituloMusica);
+                    }
+                    
+                } else {
+                    printf("Playlist \"%s\" nao encontrada\n", playlist);
+                }
+            }
+            case 15: {
                 printf("\n=== Mostrar Dados de uma Playlist ===\n");
                 char nomePlaylist[100];
                 printf("Digite o nome da playlist: ");
@@ -176,7 +223,7 @@ int main() {
                 }
                 break;
             }
-            case 14: {
+            case 16: {
                 printf("\n=== Remover Música de uma Playlist ===\n");
                 char nomePlaylist[100], tituloMusica[100];
                 printf("Digite o nome da playlist: ");
@@ -191,7 +238,7 @@ int main() {
                 }
                 break;
             }
-            case 15: {
+            case 17: {
                 printf("\n=== Remover uma Playlist ===\n");
                 char nomePlaylist[100];
                 printf("Digite o nome da playlist: ");
@@ -199,7 +246,7 @@ int main() {
                 raizPlaylist = removerPlaylist(raizPlaylist, nomePlaylist);
                 break;
             }
-            case 16: {
+            case 18: {
                 printf("\n=== Remover Música de um Álbum de um Artista ===\n");
                 char nomeArtista[100], tituloAlbum[100], tituloMusica[100];
                 printf("Digite o nome do artista: ");

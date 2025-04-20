@@ -5,12 +5,30 @@
 #include "../Includes/artista.h" 
 #include "../Includes/musica.h"
 
+void buscaAlbum(Album* R, const char* nome, Album** resultado) {
+    printf("\nentrou no busca album\n");
+    *resultado = NULL;
+
+    if (R != NULL) {
+        printf("\nentrou aqui???\n");
+        if (strcmp(R->titulo, nome) == 0) {
+            *resultado = R;
+        } else if (strcmp(nome, R->titulo) < 0) {
+            buscaAlbum(R->Esq, nome, resultado);
+        } else {
+            buscaAlbum(R->Dir, nome, resultado);
+        }
+    }
+    printf("\nsaiu do busca album\n");
+}
+
 Album* criarAlbum(char* titulo, char* anoLancamento){
     Album* no = (Album*)malloc(sizeof(Album));
 
     strcpy(no->titulo, titulo);
     strcpy(no->anoDeLancamento, anoLancamento);
     no->quantMusicas = 0;
+    no->musicas = NULL;
 
     no->Dir = NULL;
     no->Esq = NULL;
@@ -52,20 +70,6 @@ void cadastrarAlbum(Artista* raiz, char* nomeA, char* titulo, char* anoLancament
         }
     } else {
         printf("Artista \"%s\" nao encontrado!\n", nomeA);
-    }
-}
-
-void buscaAlbum(Album* R, const char* nome, Album** resultado) {
-    *resultado = NULL;
-
-    if (R != NULL) {
-        if (strcmp(R->titulo, nome) == 0) {
-            *resultado = R;
-        } else if (strcmp(nome, R->titulo) < 0) {
-            buscaAlbum(R->Esq, nome, resultado);
-        } else {
-            buscaAlbum(R->Dir, nome, resultado);
-        }
     }
 }
 

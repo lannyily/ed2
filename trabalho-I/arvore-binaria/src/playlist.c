@@ -8,7 +8,7 @@
 
 
 // Cria uma nova playlist
-Playlist* criarPlaylist(const char *nome) {
+Playlist* criarPlaylist(char *nome) {
     Playlist *nova = (Playlist *)malloc(sizeof(Playlist));
     if (nova != NULL) {
         strncpy(nova->nome, nome, sizeof(nova->nome) - 1);
@@ -39,35 +39,38 @@ Playlist* inserirPlaylist(Playlist *raiz, Playlist *novaPlaylist) {
 
 // Busca uma playlist pelo nome
 Playlist* buscarPlaylist(Playlist* raiz, const char* nome) {
-    if (raiz == NULL || strcmp(raiz->nome, nome) == 0) {
+    if (raiz == NULL) return NULL;
+
+    if (strcmp(raiz->nome, nome) == 0) {
         return raiz;
-    }
-    if (strcmp(nome, raiz->nome) < 0) {
+    } else if (strcmp(nome, raiz->nome) < 0) {
         return buscarPlaylist(raiz->esquerda, nome);
     } else {
         return buscarPlaylist(raiz->direita, nome);
     }
 }
 
-// Insere uma música na árvore binária de músicas de uma playlist
-Musica* inserirMusica(Musica *raiz, Musica *novaMusica) {
-    if (raiz == NULL) {
-        return novaMusica; // Insere a nova música na posição correta
-    }
+/*
+Musica* inserirMusicas(Musica* raiz, Musica* nova) {
+    if (raiz == NULL) return nova;
 
-    if (strcmp(novaMusica->titulo, raiz->titulo) < 0) {
-        raiz->Esq = inserirMusica(raiz->Esq, novaMusica);
-    } else if (strcmp(novaMusica->titulo, raiz->titulo) > 0) {
-        raiz->Dir = inserirMusica(raiz->Dir, novaMusica);
-    } else {
-        printf("Musica \"%s\" ja existe na playlist.\n", novaMusica->titulo);
-    }
+    int cmp = strcmp(nova->titulo, raiz->titulo);
+
+    if (cmp < 0)
+        raiz->Esq = inserirMusica(raiz->Esq, nova);
+    else if (cmp > 0)
+        raiz->Dir = inserirMusica(raiz->Dir, nova);
+    else
+        printf("Música \"%s\" já existe na playlist.\n", nova->titulo);
 
     return raiz;
 }
 
+void inserirMusicaNaPlaylist(Playlist* playlist, Musica* novaMusica) {
+    playlist->musicas = inserirMusica(playlist->musicas, novaMusica);
+}
 
-
+*/
 // Imprime os dados de uma playlist e suas músicas
 void imprimirPlaylist(Playlist *playlist) {
     if (playlist != NULL) {
@@ -79,7 +82,7 @@ void imprimirPlaylist(Playlist *playlist) {
     }
 }
 
-Playlist* removerPlaylist(Playlist *raiz, const char *nome) {
+Playlist* removerPlaylist(Playlist *raiz, char *nome) {
   if (raiz == NULL) {
       return NULL;
   }

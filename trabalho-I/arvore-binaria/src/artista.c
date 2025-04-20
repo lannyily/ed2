@@ -14,6 +14,7 @@ Artista* criarArtista(char* nome, char* tipo, char* estiloM) {
     no->tipo[sizeof(no->tipo) - 1] = '\0';
     strncpy(no->estiloMusical, estiloM, sizeof(no->estiloMusical) - 1);
     no->estiloMusical[sizeof(no->estiloMusical) - 1] = '\0';
+    no->albuns = NULL;
 
     no->numAlbuns = 0;
     no->Esq = NULL;
@@ -166,7 +167,7 @@ void mostrarDadosDeMusica(Artista* raiz, char* tituloMusica) {
         Album* albumAtual = raiz->albuns;
         while (albumAtual != NULL) {
             Musica* musica = NULL;
-            musica = buscarMusica(albumAtual->musicas, tituloMusica); 
+            buscarMusica(albumAtual->musicas, tituloMusica, &musica); 
 
             if (musica != NULL) {
                 printf("Musica: %s\n", musica->titulo);

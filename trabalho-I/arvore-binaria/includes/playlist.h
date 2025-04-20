@@ -9,9 +9,11 @@ typedef struct Playlist {
     struct Playlist *direita;
 } Playlist;
 
-Playlist* criarPlaylist(const char *nome);
+Playlist* criarPlaylist(char *nome);
 Playlist* inserirPlaylist(Playlist *raiz, Playlist *novaPlaylist);
-Playlist* removerPlaylist(Playlist *raiz, const char *nome);
+Playlist* removerPlaylist(Playlist *raiz, char *nome);
+//Musica* inserirMusicas(Musica* raiz, Musica* nova);
+//void inserirMusicaNaPlaylist(Playlist* playlist, Musica* novaMusica);
 Playlist* buscarPlaylist(Playlist* raiz, const char* nome);
 void imprimirPlaylist(Playlist *playlist);
 
