@@ -83,38 +83,45 @@ void imprimirPlaylist(Playlist *playlist) {
 }
 
 Playlist* removerPlaylist(Playlist *raiz, char *nome) {
-  if (raiz == NULL) {
-      return NULL;
-  }
+    if (raiz == NULL) {
+        return NULL;
+    }
 
-  if (strcmp(nome, raiz->nome) < 0) {
-      raiz->esquerda = removerPlaylist(raiz->esquerda, nome);
-  } else if (strcmp(nome, raiz->nome) > 0) {
-      raiz->direita = removerPlaylist(raiz->direita, nome);
-  } else {
-      // Encontrou a playlist
-      liberarMusicas(raiz->musicas); // Libera a árvore de músicas
+    if (strcmp(nome, raiz->nome) < 0) {
+        raiz->esquerda = removerPlaylist(raiz->esquerda, nome);
+    } else if (strcmp(nome, raiz->nome) > 0) {
+        raiz->direita = removerPlaylist(raiz->direita, nome);
+    } else {
+        // Encontrou a playlist
+        liberarMusicas(raiz->musicas); // Libera a árvore de músicas
 
-      if (raiz->esquerda == NULL) {
-          Playlist *temp = raiz->direita;
-          free(raiz);
-          return temp;
-      } else if (raiz->direita == NULL) {
-          Playlist *temp = raiz->esquerda;
-          free(raiz);
-          return temp;
-      }
+        Playlist *temp;
 
-      // Substitui pelo menor valor da subárvore direita
-      Playlist *temp = raiz->direita;
-      while (temp->esquerda != NULL) {
-          temp = temp->esquerda;
-      }
-      strcpy(raiz->nome, temp->nome);
-      raiz->musicas = temp->musicas;
-      raiz->direita = removerPlaylist(raiz->direita, temp->nome);
-  }
+        if (raiz->esquerda == NULL) {
+            temp = raiz->direita;
+            free(raiz);
+            raiz = temp;
+        } else if (raiz->direita == NULL) {
+            temp = raiz->esquerda;
+            free(raiz);
+            raiz = temp;
+        } else {
+            // Substitui pelo menor valor da subárvore direita
+            Playlist *sucessor = raiz->direita;
+            while (sucessor->esquerda != NULL) {
+                sucessor = sucessor->esquerda;
+            }
 
-  return raiz;
+            // Copia os dados do sucessor para a raiz
+            strcpy(raiz->nome, sucessor->nome);
+            raiz->musicas = sucessor->musicas;
+
+            // Remove o sucessor da subárvore direita
+            raiz->direita = removerPlaylist(raiz->direita, sucessor->nome);
+        }
+    }
+
+    return raiz;
 }
+
 

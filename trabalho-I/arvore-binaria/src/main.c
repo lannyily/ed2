@@ -5,6 +5,7 @@
 #include "../Includes/album.h"
 #include "../Includes/musica.h"
 #include "../Includes/playlist.h"
+#include "../Includes/teste.h"
 
 int main() {
     Artista *raiz = NULL;
@@ -33,6 +34,7 @@ int main() {
         printf("16 - Remover música de uma playlist\n");
         printf("17 - Remover uma playlist\n");
         printf("18 - Remover música de um álbum de um artista\n");
+        printf("19 - Teste de Tempo\n");
         printf(" 0 - SAIR\n");
         printf("----------------------------------------------\n");
         printf("Escolha uma opcao: ");
@@ -256,6 +258,12 @@ int main() {
                 printf("Digite o título da música: ");
                 scanf(" %[^\n]", tituloMusica);
                 removerMusicaDeAlbum(raiz, raizPlaylist, nomeArtista, tituloAlbum, tituloMusica);
+                break;
+            }
+
+            case 19:{
+                printf("\n=== Teste de Tempos de Busca ===\n");
+                testeTemposBusca(&raiz);
                 break;
             }
             case 0:
