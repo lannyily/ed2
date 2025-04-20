@@ -71,7 +71,7 @@ void inserirMusicaNaPlaylist(Playlist* playlist, Musica* novaMusica) {
 }
 
 */
-// Imprime os dados de uma playlist e suas músicas
+// Imprime os dados de uma playlist e suas músicas, diminui a quantidade de returns
 void imprimirPlaylist(Playlist *playlist) {
     if (playlist != NULL) {
         printf("Playlist: %s\n", playlist->nome);
