@@ -119,5 +119,5 @@ void testeBuscaMusicasDeArtista(Artista* raiz) {
   fclose(arquivo);
   printf("Teste finalizado. Resultados salvos em tempo_busca_artista.txt\n");
 }
-
+// teste de envio
 
