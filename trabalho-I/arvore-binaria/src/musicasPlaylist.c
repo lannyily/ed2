@@ -62,7 +62,7 @@ void cadastrarMusicasPlaylist(Playlist* raiz, char* nomePlaylist, char* nomeA, c
             printf("Musica \"%s\" ja esta nessa playlist!\n", tituloM);
         } else {
             MusicasPlaylist* novaMusica = criar(nomeA, tituloA, tituloM);
-            if(addMusica(&(raiz->musicas), novaMusica)){
+            if(addMusica(&(encontrarNome->musicas), novaMusica)){
                 printf("Musica \"%s\" adicionada a playlist \"%s\"!\n", tituloM, nomePlaylist);
             }
         }
@@ -106,25 +106,16 @@ MusicasPlaylist *removerMusicaPlaylist(MusicasPlaylist* raiz, const char* titulo
     }
     return raiz;
 }
-/*
-void imprimirMusicasPlaylist(MusicasPlaylist* R, const char* nomePlaylist){
-    Playlist *resultado = NULL;
-    buscarPlaylist(R, nomePlaylist, &resultado);
 
-    if (resultado != NULL){
-        if (R != NULL) {
-            imprimirMusicasPlaylist(R->Esq, nomePlaylist);
+void imprimirMusicasPlaylist(MusicasPlaylist* R){
+    
+    if(R != NULL){
+        
+        imprimirMusicasPlaylist(R->Esq);
 
-            if (strcmp(R->nome, nomePlaylist) == 0) {
-                printf("Artista: %s\n", R->tituloA);
-                printf("Musica: %s\n", R->tituloM);
-                printf("---------------------\n");
-            }
-
-            imprimirMusicasPlaylist(R->Dir, nomePlaylist);
-        }
-    } else {
-        printf("Playlist '%s' não encontrada.\n", nomePlaylist);
+        printf("Musica: %s, Album: %s, Artista: %s\n", R->tituloM, R->tituloA, R->nome);
+        imprimirMusicasPlaylist(R->Dir);
     }
+   
 }
-*/
+

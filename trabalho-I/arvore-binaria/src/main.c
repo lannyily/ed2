@@ -33,9 +33,9 @@ int main() {
         printf("13 - Criar uma playlist\n");
         printf("14 - Inserir musicas em uma playlist\n");
         printf("15 - Mostrar dados de uma playlist\n");
-        printf("16 - Remover música de uma playlist\n");
+        printf("16 - Remover musica de uma playlist\n");
         printf("17 - Remover uma playlist\n");
-        printf("18 - Remover música de um álbum de um artista\n");
+        printf("18 - Remover musica de um album de um artista\n");
         printf("19 - Teste de Tempo\n");
         printf(" 0 - SAIR\n");
         printf("----------------------------------------------\n");
@@ -210,14 +210,24 @@ int main() {
                 break;
             }
             case 13: {
+                /*
                 printf("\n=== Criar Playlist ===\n");
                 char playlistNome[100];
                 printf("Digite o nome da playlist: ");
                 scanf(" %[^\n]", playlistNome);
                 cadastrarPlaylist(&raizPlaylist, playlistNome);
+                */
+
+                cadastrarPlaylist(&raizPlaylist, "rock");
+                cadastrarPlaylist(&raizPlaylist, "pop");
+                cadastrarPlaylist(&raizPlaylist, "mpb");
+                cadastrarPlaylist(&raizPlaylist, "sertanejo");
+                cadastrarPlaylist(&raizPlaylist, "engracadas");
+
                 break;
             }
             case 14: {
+                /*
                 printf("\n=== Inserir musica em uma Playlist ===\n");
                 char playlist[100];
                 printf("Digite o nome da playlist: ");
@@ -248,11 +258,23 @@ int main() {
                 } else {
                     printf("Artista \"%s\" com o album \"%s\" com a musica \"%s\" nao encontrada\n", nomeArtista, tituloAlbum, tituloMusica);
                 }
-                    
+                */
                 
+                cadastrarMusicasPlaylist(raizPlaylist, "rock", "Legião Urbana", "Dois", "Tempo Perdido");
+                cadastrarMusicasPlaylist(raizPlaylist, "rock", "Skank", "Calango", "Te Ver");
+                cadastrarMusicasPlaylist(raizPlaylist, "rock", "Mamonas Assassinas", "Mamonas Assassinas", "Pelados em Santos");
+                cadastrarMusicasPlaylist(raizPlaylist, "pop", "Anitta", "Kisses", "Poquito");
+                cadastrarMusicasPlaylist(raizPlaylist, "pop", "Ludmilla", "Numanice #2", "Maldivas");
+                cadastrarMusicasPlaylist(raizPlaylist, "mpb", "Chico Buarque", "Construção", "Construção");
+                cadastrarMusicasPlaylist(raizPlaylist, "mpb", "Tribalistas", "Tribalistas", "Velha Infância");
+                cadastrarMusicasPlaylist(raizPlaylist, "sertanejo", "Marília Mendonça", "Todos os Cantos", "Supera");
+                cadastrarMusicasPlaylist(raizPlaylist, "sertanejo", "Os Barões da Pisadinha", "Conquistas", "Basta Você Me Ligar");
+                cadastrarMusicasPlaylist(raizPlaylist, "engracadas", "Mamonas Assassinas", "Mamonas Assassinas", "Pelados em Santos");
+
                 break;
             }
             case 15: {
+                //imprimirPlaylist(raizPlaylist);
                 printf("\n=== Mostrar Dados de uma Playlist ===\n");
                 char nomePlaylist[100];
                 printf("Digite o nome da playlist: ");
@@ -260,9 +282,10 @@ int main() {
                 Playlist *playlist;
                 buscarPlaylist(raizPlaylist, nomePlaylist, &playlist);
                 if (playlist != NULL) {
-                    //imprimirPlaylist(playlist);
+                    imprimirMusicasPlaylist(playlist->musicas);
+                    
                 } else {
-                    printf("Playlist \"%s\" não encontrada.\n", nomePlaylist);
+                    printf("Playlist \"%s\" nao encontrada.\n", nomePlaylist);
                 }
                 break;
             }

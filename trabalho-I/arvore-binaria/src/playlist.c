@@ -71,7 +71,6 @@ void cadastrarPlaylist(Playlist** raiz, char* nome){
 }
 
 
-
 Playlist* removerPlaylist(Playlist *raiz, char *nome) {
     if (raiz == NULL) {
         return NULL;
