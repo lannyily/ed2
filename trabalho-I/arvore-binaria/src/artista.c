@@ -220,3 +220,10 @@ void mostrarMusicasDoArtista(Artista* raiz, const char* nomeArtista) {
     }
 }
 
+void liberarArvoreArtistas(Artista* raiz) {
+    if (raiz == NULL) return;
+    liberarArvoreArtistas(raiz->Esq);
+    liberarArvoreArtistas(raiz->Dir);
+    liberarAlbuns(raiz->albuns);
+    free(raiz);
+}

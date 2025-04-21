@@ -22,5 +22,6 @@ void buscaAlbum(Album* R, const char* nome, Album** resultado);
 void imprimirAlbuns(Album* R);
 void imprimirAlbunsPorAno(Album* R, char* ano);
 int comparaString(const char* str1, const char* str2);
+void liberarAlbuns(Album* raiz);
 
 #endif // ALBUM_H

@@ -92,3 +92,12 @@ void imprimirAlbunsPorAno(Album* R, char* ano) {
         imprimirAlbunsPorAno(R->Dir, ano); // Percorre a subárvore direita
     }
 }
+
+
+void liberarAlbuns(Album* raiz) {
+    if (raiz == NULL) return;
+    liberarAlbuns(raiz->Esq);
+    liberarAlbuns(raiz->Dir);
+    liberarMusicas(raiz->musicas);
+    free(raiz);
+}

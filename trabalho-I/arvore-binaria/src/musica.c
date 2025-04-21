@@ -97,6 +97,13 @@ void buscarMusica(Musica* R, const char* titulo, Musica** resultado) {
     }
 }
 
+void liberarMusicas(Musica* raiz) {
+    if (raiz == NULL) return;
+    liberarMusicas(raiz->Esq);
+    liberarMusicas(raiz->Dir);
+    free(raiz);
+}
+
 /*
 
 // Remove uma música da árvore binária de músicas

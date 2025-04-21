@@ -10,76 +10,67 @@
 // Assuma que todas suas structs, funções como criarArtista, criarAlbum, criarMusica, 
 // insereArtista, insereAlbum, insereMusica, buscarArtista, buscarAlbum, etc. já estão declaradas corretamente.
 
-void testeTemposBusca(Artista** raiz) {
-  char nomeArtista[100], tipo[20] = "Solo", estilo[20] = "Pop";
-  char tituloAlbum[] = "AlbumTeste", ano[] = "2024";
+void testeTemposBusca() {
+    const int NUM_TESTES = 30;
+    const int NUM_ARTISTAS = 10000;
+    char tipo[] = "Solo", estilo[] = "Pop", tituloAlbum[] = "AlbumTeste", ano[] = "2024";
+    double acumuladorTempo = 0.0;
 
-  // Inicializar o gerador de números aleatórios
-  srand(time(NULL));  // Isso vai gerar uma semente diferente a cada execução
+    srand(time(NULL));
 
-  clock_t inicio, fim;
-  double totalTempoInsercao = 0.0;
+    FILE* arquivo = fopen("media_tempo_insercao.txt", "w");
+    if (arquivo == NULL) {
+        printf("Erro ao criar arquivo media_tempo_insercao.txt\n");
+        return;
+    }
 
-  // Abrir arquivo para salvar os resultados
-  FILE* arquivo = fopen("tempo_insercao_aleatoria.txt", "w");
-  if (arquivo == NULL) {
-      printf("Erro ao criar arquivo tempo_insercao_aleatoria.txt\n");
-      return;
-  }
+    for (int t = 0; t < NUM_TESTES; t++) {
+        Artista* raiz = NULL;
+        Artista* artistas[NUM_ARTISTAS];
 
-  // Criar um vetor para armazenar os artistas e inserir aleatoriamente
-  Artista* artistas[10000];
+        for (int i = 0; i < NUM_ARTISTAS; i++) {
+            char nomeArtista[100];
+            sprintf(nomeArtista, "Artista_%04d", i + 1);
+            artistas[i] = criarArtista(nomeArtista, tipo, estilo);
+        }
 
-  // Cadastrar os 20 artistas e armazená-los no vetor
-  for (int i = 0; i < 10000; i++) {
-      sprintf(nomeArtista, "Artista_%04d", i + 1);
-      Artista* novo = criarArtista(nomeArtista, tipo, estilo);
-      artistas[i] = novo;
-  }
+        // Inserção aleatória dos artistas
+        clock_t inicio = clock();
 
-  // Inserir os artistas na árvore de forma aleatória
-  for (int i = 0; i < 10000; i++) {
-      int aleatorio = rand() % (10000 - i);  // Escolher aleatoriamente um índice
-      Artista* artistaAleatorio = artistas[aleatorio];
+        for (int i = 0; i < NUM_ARTISTAS; i++) {
+            int aleatorio = rand() % (NUM_ARTISTAS - i);
+            Artista* escolhido = artistas[aleatorio];
 
-      // Mover o artista escolhido para o final do vetor
-      artistas[aleatorio] = artistas[9999 - i];
-      artistas[9999 - i] = artistaAleatorio;
+            artistas[aleatorio] = artistas[NUM_ARTISTAS - 1 - i];
+            artistas[NUM_ARTISTAS - 1 - i] = escolhido;
 
-      inicio = clock();
-      
-      insereArtista(raiz, artistaAleatorio);
+            insereArtista(&raiz, escolhido);
 
-      // Salvar inserção do artista no arquivo
-      // fprintf(arquivo, "Inserção do artista: %s\n", artistaAleatorio->nome);
+            Album* album = criarAlbum(tituloAlbum, ano);
+            insereAlbum(&(escolhido->albuns), album);
 
-      Album* album = criarAlbum(tituloAlbum, ano);
-      insereAlbum(&(artistaAleatorio->albuns), album);
+            for (int j = 1; j <= 5; j++) {
+                char tituloMusica[50];
+                sprintf(tituloMusica, "Musica_%d", j);
+                Musica* m = criarMusica(tituloMusica, 5);
+                insereMusica(&(album->musicas), m);
+            }
+        }
 
-      char tituloMusica[50];
-      for (int j = 1; j <= 5; j++) {
-          sprintf(tituloMusica, "Musica_%d", j);
-          Musica* m = criarMusica(tituloMusica, 5);
-          insereMusica(&(album->musicas), m);
-      }
+        clock_t fim = clock();
+        double tempoExecucao = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
+        acumuladorTempo += tempoExecucao;
 
-      fim = clock();
-      double tempoInsercao = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
-      totalTempoInsercao += tempoInsercao;
+        //fprintf(arquivo, "Execução %d: Tempo = %.10f segundos\n", t + 1, tempoExecucao);
 
-      // Salvar tempo de inserção do artista no arquivo
-      // fprintf(arquivo, "Tempo de inserção: %.20f segundos\n\n", tempoInsercao);
-  }
+        liberarArvoreArtistas(raiz);
+    }
 
-  // Calcular o tempo médio de inserção
-  double tempoMedioInsercao = totalTempoInsercao / 1000.0;
+    double media = acumuladorTempo / NUM_TESTES;
+    fprintf(arquivo, "\nTempo médio de inserção em %d execuções: %.10f segundos\n", NUM_TESTES, media);
 
-  // Salvar no arquivo o tempo médio
-  fprintf(arquivo, "Tempo médio de inserção (10000 repetições): %.20f segundos\n", tempoMedioInsercao);
-
-  fclose(arquivo);
-
-  printf("Resultado salvo em tempo_insercao_aleatoria.txt\n");
+    fclose(arquivo);
+    printf("Teste de tempo finalizado. Resultados salvos em media_tempo_insercao.txt\n");
 }
 
 
