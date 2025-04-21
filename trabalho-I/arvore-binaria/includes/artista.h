@@ -29,4 +29,5 @@ void mostrarAlbunsPorAnoDeTodosArtistas(Artista* raiz, const char* ano);
 void mostrarMusicas(Musica* raiz);
 void mostrarAlbuns(Album* raiz);
 void mostrarMusicasDoArtista(Artista* raiz, const char* nomeArtista);
+void liberarArvoreArtistas(Artista* raiz);
 #endif // ARTISTA_H
