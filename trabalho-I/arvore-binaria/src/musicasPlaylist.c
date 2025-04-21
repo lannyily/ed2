@@ -62,3 +62,58 @@ void cadastrarMusicasPlaylist(Playlist* nomePlaylist, MusicasPlaylist* raiz, cha
         printf("Musica \"%s\" ja esta nessa playlist!\n");
     }
 }
+
+MusicasPlaylist *removerMusicaPlaylist(MusicasPlaylist* raiz, const char* tituloM){
+    if (raiz == NULL){
+        return NULL;
+    }
+
+    if (strcmp(tituloM, raiz->tituloM) < 0){
+        raiz->Esq = removerMusicaPlaylist(raiz->Esq, tituloM);
+    } else if (strcmp(tituloM, raiz->tituloM) > 0){
+        raiz->Dir = removerMusicaPlaylist(raiz->Dir, tituloM);
+    } else {
+        MusicasPlaylist* temp;
+        if (raiz->Esq == NULL){
+            temp = raiz->Dir;
+            free(raiz);
+            raiz = temp;
+        } else if (raiz->Dir == NULL){
+            temp = raiz->Esq;
+            free(raiz);
+            raiz = temp;
+        } else{ // Encontrou a playlist
+            MusicasPlaylist *sucessor = raiz->Dir;
+            while (sucessor->Esq != NULL){
+                sucessor = sucessor->Esq;
+            } 
+
+            strcpy(raiz->nome, sucessor->nome);
+            strcpy(raiz->tituloA, sucessor->tituloA);
+            strcpy(raiz->tituloM, sucessor->tituloM);
+            raiz->Dir = removerMusicaPlaylist(raiz->Dir, sucessor->tituloM); //Remove o nó duplicado, ja que ele foi copiado
+
+        }
+    }
+    return raiz;
+}
+void imprimirMusicasPlaylist(MusicasPlaylist* R, const char* nomePlaylist){
+    Playlist *resultado = NULL;
+    buscarPlaylist(R, nomePlaylist, &resultado);
+
+    if (resultado != NULL){
+        if (R != NULL) {
+            imprimirMusicasPlaylist(R->Esq, nomePlaylist);
+
+            if (strcmp(R->nome, nomePlaylist) == 0) {
+                printf("Artista: %s\n", R->tituloA);
+                printf("Musica: %s\n", R->tituloM);
+                printf("---------------------\n");
+            }
+
+            imprimirMusicasPlaylist(R->Dir, nomePlaylist);
+        }
+    } else {
+        printf("Playlist '%s' não encontrada.\n", nomePlaylist);
+    }
+}

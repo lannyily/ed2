@@ -19,5 +19,7 @@ MusicasPlaylist* criar(char* nomeA, char* tituloA, char* tituloM);
 void buscarMusicaPlaylist(MusicasPlaylist* raiz, char* tituloM, MusicasPlaylist** resultado);
 int addMusica(MusicasPlaylist** R, MusicasPlaylist* musica);
 void cadastrarMusicasPlaylist(struct Playlist* nomePlaylist, MusicasPlaylist* raiz, char* nomeA, char* tituloA, char* tituloM);
+MusicasPlaylist *removerMusicaPlaylist(MusicasPlaylist* raiz, const char* tituloM);
+void imprimirMusicasPlaylist(MusicasPlaylist* R, const char* nomePlaylist);
 
 #endif
