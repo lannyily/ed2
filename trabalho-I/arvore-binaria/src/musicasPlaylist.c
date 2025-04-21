@@ -50,17 +50,26 @@ int addMusica(MusicasPlaylist** R, MusicasPlaylist* musica){
 }
 
 
-void cadastrarMusicasPlaylist(Playlist* nomePlaylist, MusicasPlaylist* raiz, char* nomeA, char* tituloA, char* tituloM){
-    MusicasPlaylist* buscaTitulo = NULL;
-    buscarMusicaPlaylist(raiz, tituloM, &buscaTitulo);
-    if (buscaTitulo == NULL){
-        MusicasPlaylist* novaMusica = criar(nomeA, tituloA, tituloM);
-        if(addMusica(&(nomePlaylist->musicas), novaMusica)){
-            printf("Musica \"%s\" adicionada a playlist \"%s\"!\n");
+void cadastrarMusicasPlaylist(Playlist* raiz, char* nomePlaylist, char* nomeA, char* tituloA, char* tituloM){
+    Playlist* encontrarNome = NULL;
+    buscarPlaylist(raiz, nomePlaylist, &encontrarNome);
+
+    if(encontrarNome != NULL){
+        MusicasPlaylist* buscaTitulo = NULL;
+        buscarMusicaPlaylist(raiz->musicas, tituloM, &buscaTitulo);
+
+        if (buscaTitulo != NULL){
+            printf("Musica \"%s\" ja esta nessa playlist!\n", tituloM);
+        } else {
+            MusicasPlaylist* novaMusica = criar(nomeA, tituloA, tituloM);
+            if(addMusica(&(encontrarNome->musicas), novaMusica)){
+                printf("Musica \"%s\" adicionada a playlist \"%s\"!\n", tituloM, nomePlaylist);
+            }
         }
     } else {
-        printf("Musica \"%s\" ja esta nessa playlist!\n");
+        printf("Playlist \"%s\" nao encontrada\n", nomePlaylist);
     }
+    
 }
 
 MusicasPlaylist *removerMusicaPlaylist(MusicasPlaylist* raiz, const char* tituloM){
@@ -97,23 +106,16 @@ MusicasPlaylist *removerMusicaPlaylist(MusicasPlaylist* raiz, const char* titulo
     }
     return raiz;
 }
-void imprimirMusicasPlaylist(MusicasPlaylist* R, const char* nomePlaylist){
-    Playlist *resultado = NULL;
-    buscarPlaylist(R, nomePlaylist, &resultado);
 
-    if (resultado != NULL){
-        if (R != NULL) {
-            imprimirMusicasPlaylist(R->Esq, nomePlaylist);
+void imprimirMusicasPlaylist(MusicasPlaylist* R){
+    
+    if(R != NULL){
+        
+        imprimirMusicasPlaylist(R->Esq);
 
-            if (strcmp(R->nome, nomePlaylist) == 0) {
-                printf("Artista: %s\n", R->tituloA);
-                printf("Musica: %s\n", R->tituloM);
-                printf("---------------------\n");
-            }
-
-            imprimirMusicasPlaylist(R->Dir, nomePlaylist);
-        }
-    } else {
-        printf("Playlist '%s' não encontrada.\n", nomePlaylist);
+        printf("Musica: %s, Album: %s, Artista: %s\n", R->tituloM, R->tituloA, R->nome);
+        imprimirMusicasPlaylist(R->Dir);
     }
+   
 }
+
