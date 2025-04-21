@@ -38,48 +38,19 @@ Playlist* inserirPlaylist(Playlist *raiz, Playlist *novaPlaylist) {
 }
 
 // Busca uma playlist pelo nome
-Playlist* buscarPlaylist(Playlist* raiz, const char* nome) {
-    if (raiz == NULL) return NULL;
-
-    if (strcmp(raiz->nome, nome) == 0) {
-        return raiz;
-    } else if (strcmp(nome, raiz->nome) < 0) {
-        return buscarPlaylist(raiz->esquerda, nome);
-    } else {
-        return buscarPlaylist(raiz->direita, nome);
+void buscarPlaylist(Playlist* raiz, const char* nome, Playlist** resultado) {
+    *resultado = NULL;
+    
+    if (raiz != NULL){
+        if (strcmp(raiz->nome, nome) == 0) {
+            *resultado = raiz;
+        } else if (strcmp(nome, raiz->nome) < 0) {
+            buscarPlaylist(raiz->esquerda, nome, resultado);
+        } else {
+            buscarPlaylist(raiz->direita, nome, resultado);
+        }
     }
-}
-
-/*
-Musica* inserirMusicas(Musica* raiz, Musica* nova) {
-    if (raiz == NULL) return nova;
-
-    int cmp = strcmp(nova->titulo, raiz->titulo);
-
-    if (cmp < 0)
-        raiz->Esq = inserirMusica(raiz->Esq, nova);
-    else if (cmp > 0)
-        raiz->Dir = inserirMusica(raiz->Dir, nova);
-    else
-        printf("Música \"%s\" já existe na playlist.\n", nova->titulo);
-
-    return raiz;
-}
-
-void inserirMusicaNaPlaylist(Playlist* playlist, Musica* novaMusica) {
-    playlist->musicas = inserirMusica(playlist->musicas, novaMusica);
-}
-
-*/
-// Imprime os dados de uma playlist e suas músicas, diminui a quantidade de returns
-void imprimirPlaylist(Playlist *playlist) {
-    if (playlist != NULL) {
-        printf("Playlist: %s\n", playlist->nome);
-        printf("Músicas:\n");
-        imprimirMusicas(playlist->musicas); 
-    } else {
-        printf("Playlist não encontrada.\n");
-    }
+    
 }
 
 Playlist* removerPlaylist(Playlist *raiz, char *nome) {
@@ -93,7 +64,7 @@ Playlist* removerPlaylist(Playlist *raiz, char *nome) {
         raiz->direita = removerPlaylist(raiz->direita, nome);
     } else {
         // Encontrou a playlist
-        liberarMusicas(raiz->musicas); // Libera a árvore de músicas
+       // liberarMusicas(raiz->musicas); // Libera a árvore de músicas
 
         Playlist *temp;
 
@@ -123,5 +94,3 @@ Playlist* removerPlaylist(Playlist *raiz, char *nome) {
 
     return raiz;
 }
-
-

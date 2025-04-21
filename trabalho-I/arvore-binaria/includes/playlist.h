@@ -1,10 +1,11 @@
 #ifndef PLAYLIST_H
 #define PLAYLIST_H
 #include "musica.h"
+#include "musicasPlaylist.h"
 
 typedef struct Playlist {
     char nome[100];
-    Musica *musicas;
+    MusicasPlaylist *musicas;
     struct Playlist *esquerda;
     struct Playlist *direita;
 } Playlist;
@@ -12,9 +13,6 @@ typedef struct Playlist {
 Playlist* criarPlaylist(char *nome);
 Playlist* inserirPlaylist(Playlist *raiz, Playlist *novaPlaylist);
 Playlist* removerPlaylist(Playlist *raiz, char *nome);
-//Musica* inserirMusicas(Musica* raiz, Musica* nova);
-//void inserirMusicaNaPlaylist(Playlist* playlist, Musica* novaMusica);
-Playlist* buscarPlaylist(Playlist* raiz, const char* nome);
-void imprimirPlaylist(Playlist *playlist);
+void buscarPlaylist(Playlist* raiz, const char* nome, Playlist** resultado);
 
 #endif // PLAYLIST_H

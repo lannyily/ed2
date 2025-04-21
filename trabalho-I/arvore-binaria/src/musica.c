@@ -97,6 +97,8 @@ void buscarMusica(Musica* R, const char* titulo, Musica** resultado) {
     }
 }
 
+/*
+
 // Remove uma música da árvore binária de músicas
 Musica* removerMusica(Musica *raiz, const char *titulo) {
     if (raiz == NULL) {
@@ -178,3 +180,4 @@ void removerMusicaDeAlbum(struct Artista* raiz, struct Playlist* playlists, cons
         printf("Artista \"%s\" não encontrado.\n", nomeArtista);
     }
 }
+*/

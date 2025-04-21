@@ -6,11 +6,11 @@
 #include "../Includes/musica.h"
 
 void buscaAlbum(Album* R, const char* nome, Album** resultado) {
-    printf("\nentrou no busca album\n");
+    
     *resultado = NULL;
 
     if (R != NULL) {
-        printf("\nentrou aqui???\n");
+        
         if (strcmp(R->titulo, nome) == 0) {
             *resultado = R;
         } else if (strcmp(nome, R->titulo) < 0) {
@@ -19,7 +19,7 @@ void buscaAlbum(Album* R, const char* nome, Album** resultado) {
             buscaAlbum(R->Dir, nome, resultado);
         }
     }
-    printf("\nsaiu do busca album\n");
+    
 }
 
 Album* criarAlbum(char* titulo, char* anoLancamento){
