@@ -1,20 +1,18 @@
 #ifndef ARTISTA_H
 #define ARTISTA_H
 
-#include "albumAvl.h"
+#include "album.h"
 
-typedef struct Artista{
-  char nome[50];
-  char tipo[20];
-  char estiloMusical[20];
-  int numAlbuns;
-  Album *albuns;
+typedef struct Artista {
+    char nome[50];
+    char tipo[20];
+    char estiloMusical[20];
+    int numAlbuns;
+    Album* albuns;
 
-  struct Artista *esq;
-  struct Artista *dir;
-  int fatorBalanceamento;
-  int altura;
-}Artista;
+    struct Artista* Esq;
+    struct Artista* Dir;
+} Artista;
 
 Artista* criarArtista(char* nome, char* tipo, char* estiloM);
 int insereArtista(Artista** R, Artista* No);
@@ -26,5 +24,10 @@ void mostrarDadosDeMusica(Artista* raiz, char* tituloMusica);
 void mostrarArtistasPorTipo(Artista* raiz, const char* tipo);
 void mostrarArtistasPorEstilo(Artista* raiz, const char* estilo);
 void mostrarArtistasPorEstiloETipo(Artista* raiz, const char* estilo, const char* tipo);
+int temAlbumDoAno(Album* raiz, const char* ano);
 void mostrarAlbunsPorAnoDeTodosArtistas(Artista* raiz, const char* ano);
-#endif
+void mostrarMusicas(Musica* raiz);
+void mostrarAlbuns(Album* raiz);
+void mostrarMusicasDoArtista(Artista* raiz, const char* nomeArtista);
+void liberarArvoreArtistas(Artista* raiz);
+#endif // ARTISTA_H
