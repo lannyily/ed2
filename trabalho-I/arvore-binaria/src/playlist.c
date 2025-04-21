@@ -81,8 +81,8 @@ Playlist* removerPlaylist(Playlist *raiz, char *nome) {
     } else if (strcmp(nome, raiz->nome) > 0) {
         raiz->direita = removerPlaylist(raiz->direita, nome);
     } else {
-        // Encontrou a playlist
-       // liberarMusicas(raiz->musicas); // Libera a árvore de músicas
+        printf("Playlist \"%s\" removida!\n");
+        liberarPlaylists(raiz); // Libera a árvore de músicas
 
         Playlist *temp;
 
@@ -112,3 +112,21 @@ Playlist* removerPlaylist(Playlist *raiz, char *nome) {
 
     return raiz;
 }
+
+void liberarMusicasPlaylist(MusicasPlaylist *raiz) {
+    if (raiz != NULL) {
+        liberarMusicasPlaylist(raiz->Esq);
+        liberarMusicasPlaylist(raiz->Dir);
+        free(raiz);
+    }
+}
+
+void liberarPlaylists(Playlist *raiz) {
+    if (raiz != NULL) {
+        liberarPlaylists(raiz->esquerda);
+        liberarPlaylists(raiz->direita);
+        liberarMusicasPlaylist(raiz->musicas); // libera as músicas dessa playlist
+        free(raiz);
+    }
+}
+

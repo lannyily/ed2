@@ -19,7 +19,7 @@ MusicasPlaylist* criar(char* nomeA, char* tituloA, char* tituloM){
     return no;
 }
 
-void buscarMusicaPlaylist(MusicasPlaylist* raiz, char* tituloM, MusicasPlaylist** resultado){
+void buscarMusicaPlaylist(MusicasPlaylist* raiz, const char* tituloM, MusicasPlaylist** resultado){
     *resultado = NULL;
 
     if (raiz != NULL){
@@ -82,6 +82,9 @@ MusicasPlaylist *removerMusicaPlaylist(MusicasPlaylist* raiz, const char* titulo
     } else if (strcmp(tituloM, raiz->tituloM) > 0){
         raiz->Dir = removerMusicaPlaylist(raiz->Dir, tituloM);
     } else {
+
+        printf("Musica \"%s\" removida da playlist!\n", raiz->tituloM);
+
         MusicasPlaylist* temp;
         if (raiz->Esq == NULL){
             temp = raiz->Dir;

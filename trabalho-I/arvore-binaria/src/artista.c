@@ -23,16 +23,21 @@ Artista* criarArtista(char* nome, char* tipo, char* estiloM) {
 }
 
 int insereArtista(Artista** raiz, Artista* novo) {
+    int inseriu = 0;
+
     if (*raiz == NULL) {
         *raiz = novo; // Insere o novo artista na posição correta
-        return 1;
+        inseriu = 1;
+    } else {
+        int comparacao = strcasecmp(novo->nome, (*raiz)->nome);
+        if (comparacao < 0) {
+            inseriu = insereArtista(&(*raiz)->Esq, novo); // Insere na subárvore esquerda
+        } else if (comparacao > 0) {
+            inseriu = insereArtista(&(*raiz)->Dir, novo); // Insere na subárvore direita
+        }
     }
-    if (strcasecmp(novo->nome, (*raiz)->nome) < 0) {
-        return insereArtista(&(*raiz)->Esq, novo); // Insere na subárvore esquerda
-    } else if (strcasecmp(novo->nome, (*raiz)->nome) > 0) {
-        return insereArtista(&(*raiz)->Dir, novo); // Insere na subárvore direita
-    }
-    return 0; // Artista já existe
+    
+    return inseriu; // Artista já existe
 }
 
 void imprimirArtistas(Artista* R) {
@@ -69,11 +74,11 @@ void cadastrarArtista(Artista** raiz, char* nome, char* tipo, char* estilo) {
     buscaArtista(*raiz, nome, &artista); // Resultado da busca armazenado em 'artista'
 
     if (artista != NULL) {
-        printf("Artista \"%s\" já existe. Ignorando duplicata.\n", nome);
+        printf("Artista \"%s\" ja existe!\n", nome);
     } else {
         Artista* novo = criarArtista(nome, tipo, estilo);
         if (insereArtista(raiz, novo)) {
-            printf("Artista \"%s\" cadastrado com sucesso.\n", nome);
+            printf("Artista \"%s\" cadastrado com sucesso!\n", nome);
         }
     }
 }
@@ -113,10 +118,10 @@ void mostrarAlbunsDeArtista(Artista* raiz, char* nomeArtista) {
     buscaArtista(raiz, nomeArtista, &artista);
 
     if (artista != NULL) {
-        printf("Albuns do artista %s:\n", artista->nome);
+        printf("Albuns do artista \"%s\":\n", artista->nome);
         imprimirAlbuns(artista->albuns);
     } else {
-        printf("Artista %s nao encontrado.\n", nomeArtista);
+        printf("Artista \"%s\" nao encontrado!\n", nomeArtista);
     }
 }
 
@@ -125,10 +130,10 @@ void mostrarAlbunsPorAnoDeArtista(Artista* raiz, char* nomeArtista, char* ano) {
     buscaArtista(raiz, nomeArtista, &artista);
 
     if (artista != NULL) {
-        printf("Albuns do artista %s no ano %s:\n", artista->nome, ano);
+        printf("Albuns do artista \"%s\" no ano \"%s\":\n", artista->nome, ano);
         imprimirAlbunsPorAno(artista->albuns, ano);
     } else {
-        printf("Artista %s nao encontrado.\n", nomeArtista);
+        printf("Artista \"%s\" nao encontrado!\n", nomeArtista);
     }
 }
 
@@ -141,21 +146,33 @@ void mostrarMusicasDeAlbum(Artista* raiz, char* nomeArtista, char* tituloAlbum) 
         buscaAlbum(artista->albuns, tituloAlbum, &album);
 
         if (album != NULL) {
-            printf("Musicas do album %s do artista %s:\n", album->titulo, artista->nome);
+            printf("Musicas do album \"%s\" do artista \"%s\":\n", album->titulo, artista->nome);
             imprimirMusicas(album->musicas); 
         } else {
-            printf("Album %s nao encontrado para o artista %s.\n", tituloAlbum, nomeArtista);
+            printf("Album \"%s\" nao encontrado para o artista \"%s\"!\n", tituloAlbum, nomeArtista);
         }
     } else {
-        printf("Artista %s nao encontrado.\n", nomeArtista);
+        printf("Artista \"%s\" nao encontrado.\n", nomeArtista);
     }
+}
+
+int temAlbumDoAno(Album* raiz, const char* ano) {
+    return raiz != NULL && (
+        strcmp(raiz->anoDeLancamento, ano) == 0 ||
+        temAlbumDoAno(raiz->Esq, ano) ||
+        temAlbumDoAno(raiz->Dir, ano)
+    );
 }
 
 void mostrarAlbunsPorAnoDeTodosArtistas(Artista* raiz, const char* ano) {
     if (raiz != NULL) {
         mostrarAlbunsPorAnoDeTodosArtistas(raiz->Esq, ano);
-        printf("Artista: %s\n", raiz->nome);
-        imprimirAlbunsPorAno(raiz->albuns, (char*)ano);
+
+        if (temAlbumDoAno(raiz->albuns, ano)) {
+            printf("Artista: \"%s\"\n", raiz->nome);
+            imprimirAlbunsPorAno(raiz->albuns, (char*)ano);
+        }
+
         mostrarAlbunsPorAnoDeTodosArtistas(raiz->Dir, ano);
     }
 }
@@ -203,20 +220,21 @@ void mostrarAlbuns(Album* raiz) {
 
 
 void mostrarMusicasDoArtista(Artista* raiz, const char* nomeArtista) {
-    if (raiz == NULL) {
-        printf("Artista '%s' não encontrado.\n", nomeArtista);
-        return;
+    if (raiz != NULL) {
+        int cmp = strcmp(nomeArtista, raiz->nome);
+        if (cmp < 0) {
+            mostrarMusicasDoArtista(raiz->Esq, nomeArtista);
+        } else if (cmp > 0) {
+            mostrarMusicasDoArtista(raiz->Dir, nomeArtista);
+        } else {
+            // Artista encontrado
+            printf("Musicas do artista: %s\n", raiz->nome);
+            mostrarAlbuns(raiz->albuns);
+        }
+        
+    } else{
+        printf("Artista \"%s\" nao encontrado.\n", nomeArtista);
     }
-
-    int cmp = strcmp(nomeArtista, raiz->nome);
-    if (cmp < 0) {
-        mostrarMusicasDoArtista(raiz->Esq, nomeArtista);
-    } else if (cmp > 0) {
-        mostrarMusicasDoArtista(raiz->Dir, nomeArtista);
-    } else {
-        // Artista encontrado
-        printf("Músicas do artista: %s\n", raiz->nome);
-        mostrarAlbuns(raiz->albuns);
-    }
+    
 }
 

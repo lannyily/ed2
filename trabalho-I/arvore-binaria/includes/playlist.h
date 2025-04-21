@@ -15,5 +15,7 @@ int inserirPlaylist(Playlist **raiz, Playlist *novaPlaylist);
 void cadastrarPlaylist(Playlist** raiz, char* nome);
 Playlist* removerPlaylist(Playlist *raiz, char *nome);
 void buscarPlaylist(Playlist* raiz, const char* nome, Playlist** resultado);
+void liberarMusicasPlaylist(MusicasPlaylist *raiz);
+void liberarPlaylists(Playlist *raiz);
 
 #endif // PLAYLIST_H

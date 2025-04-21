@@ -24,6 +24,7 @@ void mostrarDadosDeMusica(Artista* raiz, char* tituloMusica);
 void mostrarArtistasPorTipo(Artista* raiz, const char* tipo);
 void mostrarArtistasPorEstilo(Artista* raiz, const char* estilo);
 void mostrarArtistasPorEstiloETipo(Artista* raiz, const char* estilo, const char* tipo);
+int temAlbumDoAno(Album* raiz, const char* ano);
 void mostrarAlbunsPorAnoDeTodosArtistas(Artista* raiz, const char* ano);
 void mostrarMusicas(Musica* raiz);
 void mostrarAlbuns(Album* raiz);

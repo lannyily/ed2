@@ -56,16 +56,16 @@ int main() {
                 scanf(" %[^\n]", estilo);
                 cadastrarArtista(&raiz, nome, tipo, estilo);
                 */
-                cadastrarArtista(&raiz, "Legião Urbana", "Banda", "Rock");
+                cadastrarArtista(&raiz, "Legiao Urbana", "Banda", "Rock");
                 cadastrarArtista(&raiz, "Anitta", "Solo", "Pop");
                 cadastrarArtista(&raiz, "Chico Buarque", "Solo", "MPB");
-                cadastrarArtista(&raiz, "Os Barões da Pisadinha", "Banda", "Forró");
+                cadastrarArtista(&raiz, "Os Baroes da Pisadinha", "Banda", "Forro");
                 cadastrarArtista(&raiz, "Ludmilla", "Solo", "Funk");
                 cadastrarArtista(&raiz, "Skank", "Banda", "Pop Rock");
-                cadastrarArtista(&raiz, "Ivete Sangalo", "Solo", "Axé");
+                cadastrarArtista(&raiz, "Ivete Sangalo", "Solo", "Axe");
                 cadastrarArtista(&raiz, "Tribalistas", "Banda", "MPB");
-                cadastrarArtista(&raiz, "Marília Mendonça", "Solo", "Sertanejo");
-                cadastrarArtista(&raiz, "Mamonas Assassinas", "Banda", "Rock Cômico");
+                cadastrarArtista(&raiz, "Marilia Mendonca", "Solo", "Sertanejo");
+                cadastrarArtista(&raiz, "Mamonas Assassinas", "Banda", "Rock Comico");
 
                 break;
             }
@@ -75,21 +75,21 @@ int main() {
                 char nomeArtista[100], tituloAlbum[100], ano[10];
                 printf("Digite o nome do artista: ");
                 scanf(" %[^\n]", nomeArtista);
-                printf("Digite o título do álbum: ");
+                printf("Digite o titulo do álbum: ");
                 scanf(" %[^\n]", tituloAlbum);
-                printf("Digite o ano de lançamento: ");
+                printf("Digite o ano de lancamento: ");
                 scanf(" %[^\n]", ano);
                 cadastrarAlbum(raiz, nomeArtista, tituloAlbum, ano);
                 */
-                cadastrarAlbum(raiz, "Legião Urbana", "Dois", "1986");
+                cadastrarAlbum(raiz, "Legiao Urbana", "Dois", "1986");
                 cadastrarAlbum(raiz, "Anitta", "Kisses", "2019");
-                cadastrarAlbum(raiz, "Chico Buarque", "Construção", "1971");
-                cadastrarAlbum(raiz, "Os Barões da Pisadinha", "Conquistas", "2020");
+                cadastrarAlbum(raiz, "Chico Buarque", "Construcao", "1971");
+                cadastrarAlbum(raiz, "Os Baroes da Pisadinha", "Conquistas", "2020");
                 cadastrarAlbum(raiz, "Ludmilla", "Numanice #2", "2022");
                 cadastrarAlbum(raiz, "Skank", "Calango", "1994");
                 cadastrarAlbum(raiz, "Ivete Sangalo", "Festa", "2001");
                 cadastrarAlbum(raiz, "Tribalistas", "Tribalistas", "2002");
-                cadastrarAlbum(raiz, "Marília Mendonça", "Todos os Cantos", "2019");
+                cadastrarAlbum(raiz, "Marilia Mendonca", "Todos os Cantos", "2019");
                 cadastrarAlbum(raiz, "Mamonas Assassinas", "Mamonas Assassinas", "1995");
 
                 break;
@@ -109,15 +109,16 @@ int main() {
                 scanf("%d", &duracao);
                 cadastrarMusica(raiz, nomeArtista, tituloAlbum, tituloMusica, duracao);
                 */
-                cadastrarMusica(raiz, "Legião Urbana", "Dois", "Tempo Perdido", 5);
+                cadastrarMusica(raiz, "Legiao Urbana", "Dois", "Tempo Perdido", 5);
                 cadastrarMusica(raiz, "Anitta", "Kisses", "Poquito", 3);
-                cadastrarMusica(raiz, "Chico Buarque", "Construção", "Construção", 6);
-                cadastrarMusica(raiz, "Os Barões da Pisadinha", "Conquistas", "Basta Você Me Ligar", 3);
+                cadastrarMusica(raiz, "Anitta", "Kisses", "teste", 3);
+                cadastrarMusica(raiz, "Chico Buarque", "Construcao", "Construcao", 6);
+                cadastrarMusica(raiz, "Os Baroes da Pisadinha", "Conquistas", "Basta Voce Me Ligar", 3);
                 cadastrarMusica(raiz, "Ludmilla", "Numanice #2", "Maldivas", 4);
                 cadastrarMusica(raiz, "Skank", "Calango", "Te Ver", 3);
                 cadastrarMusica(raiz, "Ivete Sangalo", "Festa", "Festa", 4);
-                cadastrarMusica(raiz, "Tribalistas", "Tribalistas", "Velha Infância", 5);
-                cadastrarMusica(raiz, "Marília Mendonça", "Todos os Cantos", "Supera", 4);
+                cadastrarMusica(raiz, "Tribalistas", "Tribalistas", "Velha Infancia", 5);
+                cadastrarMusica(raiz, "Marilia Mendonca", "Todos os Cantos", "Supera", 4);
                 cadastrarMusica(raiz, "Mamonas Assassinas", "Mamonas Assassinas", "Pelados em Santos", 3);
 
                 break;
@@ -163,7 +164,7 @@ int main() {
                 if (artista != NULL) {
                     imprimirAlbuns(artista->albuns);
                 } else {
-                    printf("Artista \"%s\" não encontrado.\n", nomeArtista);
+                    printf("Artista \"%s\" nao encontrado.\n", nomeArtista);
                 }
                 break;
             }
@@ -179,16 +180,16 @@ int main() {
                 if (artista != NULL) {
                     imprimirAlbunsPorAno(artista->albuns, ano);
                 } else {
-                    printf("Artista \"%s\" não encontrado.\n", nomeArtista);
+                    printf("Artista \"%s\" nao encontrado.\n", nomeArtista);
                 }
                 break;
             }
             case 10: {
-                printf("\n=== Mostrar Músicas de um Album e Artista ===\n");
+                printf("\n=== Mostrar Musicas de um Album e Artista ===\n");
                 char nomeArtista[100], tituloAlbum[100];
                 printf("Digite o nome do artista: ");
                 scanf(" %[^\n]", nomeArtista);
-                printf("Digite o título do álbum: ");
+                printf("Digite o titulo do album: ");
                 scanf(" %[^\n]", tituloAlbum);
                 mostrarMusicasDeAlbum(raiz, nomeArtista, tituloAlbum);
                 break;
@@ -202,9 +203,9 @@ int main() {
                 break;
             }
             case 12: {
-                printf("\n=== Mostrar Dados de uma Música ===\n");
+                printf("\n=== Mostrar Dados de uma Musica ===\n");
                 char tituloMusica[100];
-                printf("Digite o título da música: ");
+                printf("Digite o titulo da musica: ");
                 scanf(" %[^\n]", tituloMusica);
                 mostrarDadosDeMusica(raiz, tituloMusica);
                 break;
@@ -239,7 +240,7 @@ int main() {
                 scanf(" %[^\n]", nomeArtista);
                 printf("Digite o título do álbum: ");
                 scanf(" %[^\n]", tituloAlbum);
-                printf("Digite o título da música: ");
+                printf("Digite o título da musica: ");
                 scanf(" %[^\n]", tituloMusica);
 
                 Artista* encontrarArtista;
@@ -260,21 +261,20 @@ int main() {
                 }
                 */
                 
-                cadastrarMusicasPlaylist(raizPlaylist, "rock", "Legião Urbana", "Dois", "Tempo Perdido");
+                cadastrarMusicasPlaylist(raizPlaylist, "rock", "Legiao Urbana", "Dois", "Tempo Perdido");
                 cadastrarMusicasPlaylist(raizPlaylist, "rock", "Skank", "Calango", "Te Ver");
                 cadastrarMusicasPlaylist(raizPlaylist, "rock", "Mamonas Assassinas", "Mamonas Assassinas", "Pelados em Santos");
                 cadastrarMusicasPlaylist(raizPlaylist, "pop", "Anitta", "Kisses", "Poquito");
                 cadastrarMusicasPlaylist(raizPlaylist, "pop", "Ludmilla", "Numanice #2", "Maldivas");
-                cadastrarMusicasPlaylist(raizPlaylist, "mpb", "Chico Buarque", "Construção", "Construção");
-                cadastrarMusicasPlaylist(raizPlaylist, "mpb", "Tribalistas", "Tribalistas", "Velha Infância");
-                cadastrarMusicasPlaylist(raizPlaylist, "sertanejo", "Marília Mendonça", "Todos os Cantos", "Supera");
-                cadastrarMusicasPlaylist(raizPlaylist, "sertanejo", "Os Barões da Pisadinha", "Conquistas", "Basta Você Me Ligar");
+                cadastrarMusicasPlaylist(raizPlaylist, "mpb", "Chico Buarque", "Construcao", "Construcao");
+                cadastrarMusicasPlaylist(raizPlaylist, "mpb", "Tribalistas", "Tribalistas", "Velha Infancia");
+                cadastrarMusicasPlaylist(raizPlaylist, "sertanejo", "Marilia Mendonca", "Todos os Cantos", "Supera");
+                cadastrarMusicasPlaylist(raizPlaylist, "sertanejo", "Os Baroes da Pisadinha", "Conquistas", "Basta Voce Me Ligar");
                 cadastrarMusicasPlaylist(raizPlaylist, "engracadas", "Mamonas Assassinas", "Mamonas Assassinas", "Pelados em Santos");
 
                 break;
             }
             case 15: {
-                //imprimirPlaylist(raizPlaylist);
                 printf("\n=== Mostrar Dados de uma Playlist ===\n");
                 char nomePlaylist[100];
                 printf("Digite o nome da playlist: ");
@@ -290,18 +290,18 @@ int main() {
                 break;
             }
             case 16: {
-                printf("\n=== Remover Música de uma Playlist ===\n");
+                printf("\n=== Remover Musica de uma Playlist ===\n");
                 char nomePlaylist[100], tituloMusica[100];
                 printf("Digite o nome da playlist: ");
                 scanf(" %[^\n]", nomePlaylist);
-                printf("Digite o título da música: ");
+                printf("Digite o titulo da música: ");
                 scanf(" %[^\n]", tituloMusica);
                 Playlist *playlist;
                 buscarPlaylist(raizPlaylist, nomePlaylist, &playlist);
                 if (playlist != NULL) {
-                   // playlist->musicas = removerMusica(playlist->musicas, tituloMusica);
+                   playlist->musicas = removerMusicaPlaylist(playlist->musicas, tituloMusica);
                 } else {
-                    printf("Playlist \"%s\" não encontrada.\n", nomePlaylist);
+                    printf("Playlist \"%s\" nao encontrada.\n", nomePlaylist);
                 }
                 break;
             }
@@ -310,19 +310,19 @@ int main() {
                 char nomePlaylist[100];
                 printf("Digite o nome da playlist: ");
                 scanf(" %[^\n]", nomePlaylist);
-               // raizPlaylist = removerPlaylist(raizPlaylist, nomePlaylist);
+                raizPlaylist = removerPlaylist(raizPlaylist, nomePlaylist);
                 break;
             }
             case 18: {
-                printf("\n=== Remover Música de um Álbum de um Artista ===\n");
+                printf("\n=== Remover Musica de um Album de um Artista ===\n");
                 char nomeArtista[100], tituloAlbum[100], tituloMusica[100];
                 printf("Digite o nome do artista: ");
                 scanf(" %[^\n]", nomeArtista);
-                printf("Digite o título do álbum: ");
+                printf("Digite o titulo do album: ");
                 scanf(" %[^\n]", tituloAlbum);
-                printf("Digite o título da música: ");
+                printf("Digite o titulo da musica: ");
                 scanf(" %[^\n]", tituloMusica);
-              //  removerMusicaDeAlbum(raiz, raizPlaylist, nomeArtista, tituloAlbum, tituloMusica);
+                removerMusicaDeAlbum(raiz, raizPlaylist, nomeArtista, tituloAlbum, tituloMusica);
                 break;
             }
 
@@ -337,7 +337,7 @@ int main() {
                 exit(0);
                 break;
             default:
-                printf("Opção inválida, tente novamente!\n");
+                printf("Opcao invalida, tente novamente!\n");
                 break;
         }
     } while (opcao != 0);

@@ -17,15 +17,15 @@ void cadastrarMusica(struct Artista* raiz, const char* nomeArtista, const char* 
         if (album != NULL) {
             Musica* novaMusica = criarMusica((char*)tituloMusica, duracao);
             if (insereMusica(&(album->musicas), novaMusica)) {
-                printf("Música \"%s\" cadastrada com sucesso no álbum \"%s\" do artista \"%s\".\n", tituloMusica, tituloAlbum, nomeArtista);
+                printf("Musica \"%s\" cadastrada com sucesso no album \"%s\" do artista \"%s\"!\n", tituloMusica, tituloAlbum, nomeArtista);
             } else {
-                printf("Erro ao cadastrar a música \"%s\". Ela já existe no álbum.\n", tituloMusica);
+                printf("Erro ao cadastrar a musica \"%s\"! Ela ja existe no album!\n", tituloMusica);
             }
         } else {
-            printf("Álbum \"%s\" não encontrado para o artista \"%s\".\n", tituloAlbum, nomeArtista);
+            printf("Album \"%s\" nao encontrado para o artista \"%s\".\n", tituloAlbum, nomeArtista);
         }
     } else {
-        printf("Artista \"%s\" não encontrado.\n", nomeArtista);
+        printf("Artista \"%s\" nao encontrado.\n", nomeArtista);
     }
 }
 
@@ -42,43 +42,47 @@ Musica* criarMusica(char* titulo, int quantMinutos) {
 }
 
 int insereMusica(Musica** R, Musica* No) {
+    int inseriu = 0; 
+
     if (*R == NULL) {
         *R = No;
-        return 1; // Retorna 1 para indicar que a música foi inserida com sucesso
+        inseriu = 1; // Retorna 1 para indicar que a música foi inserida com sucesso
+    } else{
+        int comparacao = strcmp(No->titulo, (*R)->titulo);
+
+        if (comparacao < 0) {
+            inseriu = insereMusica(&((*R)->Esq), No); // Tenta inserir na subárvore esquerda
+        } else if (comparacao > 0) {
+            inseriu = insereMusica(&((*R)->Dir), No); // Tenta inserir na subárvore direita
+        }
     }
 
-    if (strcmp(No->titulo, (*R)->titulo) < 0) {
-        return insereMusica(&((*R)->Esq), No); // Tenta inserir na subárvore esquerda
-    } else if (strcmp(No->titulo, (*R)->titulo) > 0) {
-        return insereMusica(&((*R)->Dir), No); // Tenta inserir na subárvore direita
-    }
-
-    return 0; // Retorna 0 se a música já existir
+    return inseriu; // Retorna 0 se a música já existir
 }
 
 void CadastrarMusica(Album* raiz, char* nomeAlbum, char* titulo, int quantMinutos) {
-  Album *album;
-  album = NULL;
+    Album *album;
+    album = NULL;
 
-  buscaAlbum(raiz, nomeAlbum, &album); 
+    buscaAlbum(raiz, nomeAlbum, &album); 
 
-  if (album != NULL) {
-      Musica* novaMusica = criarMusica(titulo, quantMinutos);
-      if (insereMusica(&(album->musicas), novaMusica)) {
-          album->quantMusicas++;
-          printf("A musica \"%s\" foi cadastrada no álbum \"%s\"\n", titulo, nomeAlbum);
-      } else {
-          printf("A musica \"%s\" ja está cadastrada no álbum \"%s\"\n", titulo, nomeAlbum);
-      }
-  } else {
-      printf("Álbum \"%s\" nao encontrado!\n", nomeAlbum);
-  }
+    if (album != NULL) {
+        Musica* novaMusica = criarMusica(titulo, quantMinutos);
+        if (insereMusica(&(album->musicas), novaMusica)) {
+            album->quantMusicas++;
+            printf("A musica \"%s\" foi cadastrada no album \"%s\"\n", titulo, nomeAlbum);
+        } else {
+            printf("A musica \"%s\" ja esta cadastrada no album \"%s\"\n", titulo, nomeAlbum);
+        }
+    } else {
+        printf("Album \"%s\" nao encontrado!\n", nomeAlbum);
+    }
 }
 
 void imprimirMusicas(Musica* R) {
     if (R != NULL) {
         imprimirMusicas(R->Esq); // Percorre a subárvore esquerda
-        printf("Título: %s, Duração: %d minutos\n", R->titulo, R->quantMinutos);
+        printf("Titulo: %s, Duracao: %d minutos\n", R->titulo, R->quantMinutos);
         imprimirMusicas(R->Dir); // Percorre a subárvore direita
     }
 }
@@ -97,7 +101,6 @@ void buscarMusica(Musica* R, const char* titulo, Musica** resultado) {
     }
 }
 
-/*
 
 // Remove uma música da árvore binária de músicas
 Musica* removerMusica(Musica *raiz, const char *titulo) {
@@ -110,6 +113,7 @@ Musica* removerMusica(Musica *raiz, const char *titulo) {
     } else if (strcmp(titulo, raiz->titulo) > 0) {
         raiz->Dir = removerMusica(raiz->Dir, titulo);
     } else {
+        printf("Musica \"%s\" removida!\n", titulo);
         // Encontrou a música
         if (raiz->Esq == NULL) {
             Musica *temp = raiz->Dir;
@@ -133,19 +137,11 @@ Musica* removerMusica(Musica *raiz, const char *titulo) {
     return raiz;
 }
 
-void liberarMusicas(Musica *raiz) {
-    if (raiz != NULL) {
-        liberarMusicas(raiz->Esq);
-        liberarMusicas(raiz->Dir);
-        free(raiz);
-    }
-}
-
 int musicaEmPlaylists(Playlist* raiz, const char* titulo) {
-    Musica* resultado = NULL;
+    MusicasPlaylist* resultado = NULL;
 
     if (raiz != NULL) {
-        buscarMusica(raiz->musicas, titulo, &resultado);
+        buscarMusicaPlaylist(raiz->musicas, titulo, &resultado);
         if (resultado != NULL) {
             return 1; 
         }
@@ -155,8 +151,6 @@ int musicaEmPlaylists(Playlist* raiz, const char* titulo) {
     }
     return 0; 
 }
-
-
 
 void removerMusicaDeAlbum(struct Artista* raiz, struct Playlist* playlists, const char* nomeArtista, const char* tituloAlbum, const char* tituloMusica) {
     struct Artista* artista = NULL;
@@ -169,15 +163,14 @@ void removerMusicaDeAlbum(struct Artista* raiz, struct Playlist* playlists, cons
         if (album != NULL) {
             if (!musicaEmPlaylists(playlists, tituloMusica)) {
                 album->musicas = removerMusica(album->musicas, tituloMusica);
-                printf("Música \"%s\" removida do álbum \"%s\" do artista \"%s\".\n", tituloMusica, tituloAlbum, nomeArtista);
+                printf("Musica \"%s\" removida do album \"%s\" do artista \"%s\"!\n", tituloMusica, tituloAlbum, nomeArtista);
             } else {
-                printf("Música \"%s\" não pode ser removida porque está em uma playlist.\n", tituloMusica);
+                printf("Musica \"%s\" nao pode ser removida porque esta em uma playlist!\n", tituloMusica);
             }
         } else {
-            printf("Álbum \"%s\" não encontrado.\n", tituloAlbum);
+            printf("Album \"%s\" nao encontrado!\n", tituloAlbum);
         }
     } else {
-        printf("Artista \"%s\" não encontrado.\n", nomeArtista);
+        printf("Artista \"%s\" nao encontrado!\n", nomeArtista);
     }
 }
-*/
