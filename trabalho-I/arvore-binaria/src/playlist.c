@@ -7,36 +7,6 @@
 #include "../Includes/musica.h"
 
 
-// Cria uma nova playlist
-Playlist* criarPlaylist(char *nome) {
-    Playlist *nova = (Playlist *)malloc(sizeof(Playlist));
-    if (nova != NULL) {
-        strncpy(nova->nome, nome, sizeof(nova->nome) - 1);
-        nova->nome[sizeof(nova->nome) - 1] = '\0';
-        nova->musicas = NULL; 
-        nova->esquerda = NULL;
-        nova->direita = NULL;
-    }
-    return nova;
-}
-
-// Insere uma playlist na árvore binária de playlists
-Playlist* inserirPlaylist(Playlist *raiz, Playlist *novaPlaylist) {
-    if (raiz == NULL) {
-      return novaPlaylist; // Insere a nova playlist na posição correta
-    }
-
-    if (strcmp(novaPlaylist->nome, raiz->nome) < 0) {
-        raiz->esquerda = inserirPlaylist(raiz->esquerda, novaPlaylist);
-    } else if (strcmp(novaPlaylist->nome, raiz->nome) > 0) {
-        raiz->direita = inserirPlaylist(raiz->direita, novaPlaylist);
-    } else {
-        printf("Playlist \"%s\" ja existe.\n", novaPlaylist->nome);
-    }
-
-    return raiz;
-}
-
 // Busca uma playlist pelo nome
 void buscarPlaylist(Playlist* raiz, const char* nome, Playlist** resultado) {
     *resultado = NULL;
@@ -52,6 +22,55 @@ void buscarPlaylist(Playlist* raiz, const char* nome, Playlist** resultado) {
     }
     
 }
+
+// Cria uma nova playlist
+Playlist* criarPlaylist(char *nome) {
+    Playlist *nova = (Playlist *)malloc(sizeof(Playlist));
+    
+    strcpy(nova->nome, nome);
+    nova->musicas = NULL; 
+    nova->esquerda = NULL;
+    nova->direita = NULL;
+    
+    return nova;
+}
+
+// Insere uma playlist na árvore binária de playlists
+int inserirPlaylist(Playlist **raiz, Playlist *novaPlaylist) {
+    int inseriu = 0;
+
+    if (*raiz == NULL) {
+        *raiz = novaPlaylist;
+        inseriu = 1;
+    } else {
+        int comparacao = strcmp(novaPlaylist->nome, (*raiz)->nome);
+
+        if (comparacao < 0) {
+            inseriu = inserirPlaylist(&((*raiz)->esquerda), novaPlaylist);
+        } else if (comparacao > 0) {
+            inseriu = inserirPlaylist(&((*raiz)->direita), novaPlaylist);
+        }
+        // Se for igual, não insere e mantém inseriu = 0
+    }
+
+    return inseriu;
+}
+
+
+void cadastrarPlaylist(Playlist** raiz, char* nome){
+    Playlist* playlist = NULL;
+    buscarPlaylist(*raiz, nome, &playlist);
+    if(playlist != NULL){
+        printf("Playlist \"%s\" já existe!\n", nome);
+    } else {
+        Playlist* novaPlaylist = criarPlaylist(nome);
+        if(inserirPlaylist(raiz, novaPlaylist)){
+            printf("Playlist \"%s\" adicionada!\n", nome);
+        }
+    }
+}
+
+
 
 Playlist* removerPlaylist(Playlist *raiz, char *nome) {
     if (raiz == NULL) {

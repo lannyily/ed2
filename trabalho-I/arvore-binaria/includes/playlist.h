@@ -11,7 +11,8 @@ typedef struct Playlist {
 } Playlist;
 
 Playlist* criarPlaylist(char *nome);
-Playlist* inserirPlaylist(Playlist *raiz, Playlist *novaPlaylist);
+int inserirPlaylist(Playlist **raiz, Playlist *novaPlaylist);
+void cadastrarPlaylist(Playlist** raiz, char* nome);
 Playlist* removerPlaylist(Playlist *raiz, char *nome);
 void buscarPlaylist(Playlist* raiz, const char* nome, Playlist** resultado);
 

@@ -214,8 +214,7 @@ int main() {
                 char playlistNome[100];
                 printf("Digite o nome da playlist: ");
                 scanf(" %[^\n]", playlistNome);
-                Playlist* novaPlaylist = criarPlaylist(playlistNome);
-                inserirPlaylist(raizPlaylist, novaPlaylist);
+                cadastrarPlaylist(&raizPlaylist, playlistNome);
                 break;
             }
             case 14: {
@@ -223,39 +222,34 @@ int main() {
                 char playlist[100];
                 printf("Digite o nome da playlist: ");
                 scanf(" %[^\n]", playlist);
-                Playlist* encontrarPlaylist;
-                buscarPlaylist(raizPlaylist, playlist, &encontrarPlaylist);
+            
+                char nomeArtista[100], tituloAlbum[100], tituloMusica[100];
 
-                if (encontrarPlaylist != NULL){
-                    char nomeArtista[100], tituloAlbum[100], tituloMusica[100];
+                printf("Digite o nome do artista: ");
+                scanf(" %[^\n]", nomeArtista);
+                printf("Digite o título do álbum: ");
+                scanf(" %[^\n]", tituloAlbum);
+                printf("Digite o título da música: ");
+                scanf(" %[^\n]", tituloMusica);
 
-                    printf("Digite o nome do artista: ");
-                    scanf(" %[^\n]", nomeArtista);
-                    printf("Digite o título do álbum: ");
-                    scanf(" %[^\n]", tituloAlbum);
-                    printf("Digite o título da música: ");
-                    scanf(" %[^\n]", tituloMusica);
+                Artista* encontrarArtista;
+                buscaArtista(raiz, nomeArtista, &encontrarArtista);
 
-                    Artista* encontrarArtista;
-                    buscaArtista(raiz, nomeArtista, &encontrarArtista);
-
-                    if (encontrarArtista != NULL){
-                        Album* encontrarAlbum;
-                        buscaAlbum(encontrarArtista->albuns, tituloAlbum, &encontrarAlbum);
-                        if (encontrarAlbum != NULL){
-                            Musica* encontrarMusica;
-                            buscarMusica(encontrarAlbum->musicas, tituloMusica, &encontrarMusica);
-                            if (encontrarMusica != NULL){
-                                cadastrarMusicasPlaylist(encontrarPlaylist, raizMusicasPlaylist, encontrarArtista->nome, encontrarAlbum->titulo, encontrarMusica->titulo);
-                            }
+                if (encontrarArtista != NULL){
+                    Album* encontrarAlbum;
+                    buscaAlbum(encontrarArtista->albuns, tituloAlbum, &encontrarAlbum);
+                    if (encontrarAlbum != NULL){
+                        Musica* encontrarMusica;
+                        buscarMusica(encontrarAlbum->musicas, tituloMusica, &encontrarMusica);
+                        if (encontrarMusica != NULL){
+                            cadastrarMusicasPlaylist(raizPlaylist, playlist, encontrarArtista->nome, encontrarAlbum->titulo, encontrarMusica->titulo);
                         }
-                    } else {
-                        printf("Artista \"%s\" com o album \"%s\" com a musica \"%s\" nao encontrada\n", nomeArtista, tituloAlbum, tituloMusica);
                     }
-                    
                 } else {
-                    printf("Playlist \"%s\" nao encontrada\n", playlist);
+                    printf("Artista \"%s\" com o album \"%s\" com a musica \"%s\" nao encontrada\n", nomeArtista, tituloAlbum, tituloMusica);
                 }
+                    
+                
                 break;
             }
             case 15: {
@@ -311,7 +305,7 @@ int main() {
 
             case 19:{
                 printf("\n=== Teste de Tempos de Busca ===\n");
-                testeTemposBusca(&raiz);
+                //testeTemposBusca(&raiz);
                 //testeBuscaMusicasDeArtista(raiz);
                 break;
             }
