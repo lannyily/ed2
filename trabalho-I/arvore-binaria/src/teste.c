@@ -28,30 +28,30 @@ void testeTemposBusca(Artista** raiz) {
   }
 
   // Criar um vetor para armazenar os artistas e inserir aleatoriamente
-  Artista* artistas[50];
+  Artista* artistas[10000];
 
   // Cadastrar os 20 artistas e armazená-los no vetor
-  for (int i = 0; i < 50; i++) {
+  for (int i = 0; i < 10000; i++) {
       sprintf(nomeArtista, "Artista_%04d", i + 1);
       Artista* novo = criarArtista(nomeArtista, tipo, estilo);
       artistas[i] = novo;
   }
 
   // Inserir os artistas na árvore de forma aleatória
-  for (int i = 0; i < 50; i++) {
-      int aleatorio = rand() % (50 - i);  // Escolher aleatoriamente um índice
+  for (int i = 0; i < 10000; i++) {
+      int aleatorio = rand() % (10000 - i);  // Escolher aleatoriamente um índice
       Artista* artistaAleatorio = artistas[aleatorio];
 
       // Mover o artista escolhido para o final do vetor
-      artistas[aleatorio] = artistas[49 - i];
-      artistas[49 - i] = artistaAleatorio;
+      artistas[aleatorio] = artistas[9999 - i];
+      artistas[9999 - i] = artistaAleatorio;
 
       inicio = clock();
       
       insereArtista(raiz, artistaAleatorio);
 
       // Salvar inserção do artista no arquivo
-      fprintf(arquivo, "Inserção do artista: %s\n", artistaAleatorio->nome);
+      // fprintf(arquivo, "Inserção do artista: %s\n", artistaAleatorio->nome);
 
       Album* album = criarAlbum(tituloAlbum, ano);
       insereAlbum(&(artistaAleatorio->albuns), album);
@@ -68,14 +68,14 @@ void testeTemposBusca(Artista** raiz) {
       totalTempoInsercao += tempoInsercao;
 
       // Salvar tempo de inserção do artista no arquivo
-      fprintf(arquivo, "Tempo de inserção: %.50f segundos\n\n", tempoInsercao);
+      // fprintf(arquivo, "Tempo de inserção: %.20f segundos\n\n", tempoInsercao);
   }
 
   // Calcular o tempo médio de inserção
-  double tempoMedioInsercao = totalTempoInsercao / 50.0;
+  double tempoMedioInsercao = totalTempoInsercao / 1000.0;
 
   // Salvar no arquivo o tempo médio
-  fprintf(arquivo, "Tempo médio de inserção (50 repetições): %.50f segundos\n", tempoMedioInsercao);
+  fprintf(arquivo, "Tempo médio de inserção (10000 repetições): %.20f segundos\n", tempoMedioInsercao);
 
   fclose(arquivo);
 
