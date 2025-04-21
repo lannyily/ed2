@@ -101,6 +101,5 @@ void liberarAlbuns(Album* raiz) {
     if (raiz == NULL) return;
     liberarAlbuns(raiz->Esq);
     liberarAlbuns(raiz->Dir);
-    liberarMusicas(raiz->musicas);
     free(raiz);
 }

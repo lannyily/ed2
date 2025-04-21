@@ -5,6 +5,71 @@
 #include "../Includes/album.h"
 #include "../Includes/musica.h"
 
+int maior(int x, int y) {
+    if (x > y){
+        return x;
+    } else {
+        return y;
+    }
+}
+
+int pegaAltura(Artista* raiz){
+    int altura = 0;
+    if(raiz != NULL){
+        int alturaEsq = pegaAltura(raiz->Esq);
+        int alturaDir = pegaAltura(raiz->Dir);
+
+        if(alturaEsq > alturaDir){
+            altura = alturaEsq + 1;
+        } else {
+            altura = alturaDir + 1;
+        }
+    }
+    return altura;
+}
+
+void rotacaoSimplesDireita(Artista** raiz){
+    if((*raiz)->Esq != NULL){
+        Artista* aux = (*raiz)->Esq;
+        (*raiz)->Esq = aux->Dir;
+        aux->Dir = *raiz;
+        (*raiz)->altura = maior(pegaAltura((*raiz)->Esq), pegaAltura((*raiz)->Dir)) + 1;
+        aux->altura = maior(pegaAltura(aux->Esq), (*raiz)->altura) + 1;
+        (*raiz) = aux;
+    }
+}
+
+void rotacaoSimplesEsquerda(Artista** raiz){
+    if((*raiz)->Dir != NULL){
+        Artista* aux = (*raiz)->Dir;
+        (*raiz)->Dir = aux->Esq;
+        aux->Esq = *raiz;
+        (*raiz)->altura = maior(pegaAltura((*raiz)->Esq), pegaAltura((*raiz)->Dir)) + 1;
+        aux->altura = maior(pegaAltura(aux->Dir), (*raiz)->altura) + 1;
+        (*raiz) = aux;
+    }
+}
+
+void rotacaoDuplaDireita(Artista** raiz){
+    rotacaoSimplesEsquerda(&(*raiz)->Esq);
+    rotacaoSimplesDireita(&(*raiz));
+}
+
+void rotacaoDuplaEsquerda(Artista** raiz){
+    rotacaoSimplesDireita(&(*raiz)->Dir);
+    rotacaoSimplesEsquerda(&(*raiz));
+}
+
+int alturaNo(Artista* raiz){
+    return raiz == NULL ? -1 : raiz->altura;
+}
+
+int fatorBalanceamento(Artista* raiz){
+    int bl;
+    bl = raiz != NULL ? abs(alturaNo(raiz->Esq) - alturaNo(raiz->Dir)) : 0;
+    return bl;
+}
+
 Artista* criarArtista(char* nome, char* tipo, char* estiloM) {
     Artista* no = (Artista*)malloc(sizeof(Artista));
 
@@ -22,7 +87,7 @@ Artista* criarArtista(char* nome, char* tipo, char* estiloM) {
     return no;
 }
 
-int insereArtista(Artista** raiz, Artista* novo) {
+int insereArtista(Artista** raiz, Artista* novo, char* nome) {
     int inseriu = 0;
 
     if (*raiz == NULL) {
@@ -31,10 +96,28 @@ int insereArtista(Artista** raiz, Artista* novo) {
     } else {
         int comparacao = strcasecmp(novo->nome, (*raiz)->nome);
         if (comparacao < 0) {
-            inseriu = insereArtista(&(*raiz)->Esq, novo); // Insere na subárvore esquerda
+            if (inseriu = insereArtista(&(*raiz)->Esq, novo, nome) == 1){ // Insere na subárvore esquerda
+                if(fatorBalanceamento(*raiz) >= 2){
+                    if(strcmp((*raiz)->Esq->nome, nome) == 1){
+                        rotacaoSimplesDireita(&(*raiz));
+                    }else {
+                        rotacaoDuplaDireita(&(*raiz));
+                    }
+                }
+            }
+             
         } else if (comparacao > 0) {
-            inseriu = insereArtista(&(*raiz)->Dir, novo); // Insere na subárvore direita
+            if (inseriu = insereArtista(&(*raiz)->Dir, novo, nome) == 1){ // Insere na subárvore direita
+                if(fatorBalanceamento(*raiz) >= 2){
+                    if(strcmp((*raiz)->Dir->nome, nome) == -1){
+                        rotacaoSimplesEsquerda(&(*raiz));
+                    }else {
+                        rotacaoDuplaEsquerda(&(*raiz));
+                    }
+                }
+            } 
         }
+        (*raiz)->altura = pegaAltura((*raiz));
     }
     
     return inseriu; // Artista já existe
@@ -77,7 +160,7 @@ void cadastrarArtista(Artista** raiz, char* nome, char* tipo, char* estilo) {
         printf("Artista \"%s\" ja existe!\n", nome);
     } else {
         Artista* novo = criarArtista(nome, tipo, estilo);
-        if (insereArtista(raiz, novo)) {
+        if (insereArtista(raiz, novo, nome)) {
             printf("Artista \"%s\" cadastrado com sucesso!\n", nome);
         }
     }

@@ -5,7 +5,6 @@
 #include "../Includes/album.h"
 #include "../Includes/musica.h"
 #include "../Includes/playlist.h"
-#include "../Includes/teste.h"
 #include "../includes/musicasPlaylist.h"
 
 int main() {

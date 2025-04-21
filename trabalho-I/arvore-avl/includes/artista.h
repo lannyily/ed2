@@ -9,13 +9,22 @@ typedef struct Artista {
     char estiloMusical[20];
     int numAlbuns;
     Album* albuns;
+    int altura;
 
     struct Artista* Esq;
     struct Artista* Dir;
 } Artista;
 
+int maior(int x, int y);
+int pegaAltura(Artista* raiz);
+void rotacaoSimplesDireita(Artista** raiz);
+void rotacaoSimplesEsquerda(Artista** raiz);
+void rotacaoDuplaDireita(Artista** raiz);
+void rotacaoDuplaEsquerda(Artista** raiz);
+int alturaNo(Artista* raiz);
+int fatorBalanceamento(Artista* raiz);
 Artista* criarArtista(char* nome, char* tipo, char* estiloM);
-int insereArtista(Artista** R, Artista* No);
+int insereArtista(Artista** raiz, Artista* novo, char* nome);
 void imprimirArtistas(Artista* R);
 void buscaArtista(Artista* R, const char* nome, Artista** resultado);
 void cadastrarArtista(Artista** raiz, char* nome, char* tipo, char* estilo);
@@ -30,4 +39,5 @@ void mostrarMusicas(Musica* raiz);
 void mostrarAlbuns(Album* raiz);
 void mostrarMusicasDoArtista(Artista* raiz, const char* nomeArtista);
 void liberarArvoreArtistas(Artista* raiz);
+
 #endif // ARTISTA_H
