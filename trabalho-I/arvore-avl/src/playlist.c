@@ -190,6 +190,30 @@ Playlist* removerPlaylist(Playlist *raiz, char *nome) {
             raiz->direita = removerPlaylist(raiz->direita, sucessor->nome);
         }
     }
+        // Atualiza altura
+    raiz->altura = 1 + maiorPlaylist(alturaNoPlaylist(raiz->esquerda), alturaNoPlaylist(raiz->direita));
+
+    // Calcula fator de balanceamento
+    int fb = fatorBalanceamentoPlaylist(raiz);
+
+    // Caso Esquerda Pesado
+    if (fb > 1) {
+        if (fatorBalanceamentoPlaylist(raiz->esquerda) >= 0) {
+            rotacaoSimplesDireitaPlaylist(&raiz);
+        } else {
+            rotacaoDuplaDireitaPlaylist(&raiz);
+        }
+    }
+
+    // Caso Direita Pesado
+    else if (fb < -1) {
+        if (fatorBalanceamentoPlaylist(raiz->direita) <= 0) {
+            rotacaoSimplesEsquerdaPlaylist(&raiz);
+        } else {
+            rotacaoDuplaEsquerdaPlaylist(&raiz);
+        }
+    }
+
 
     return raiz;
 }

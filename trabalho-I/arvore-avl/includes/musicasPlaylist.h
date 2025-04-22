@@ -30,6 +30,6 @@ int addMusica(MusicasPlaylist** R, MusicasPlaylist* musica, char* tituloM);
 void cadastrarMusicasPlaylist(struct Playlist* raiz, char* nomePlaylist, char* nomeA, char* tituloA, char* tituloM);
 MusicasPlaylist *removerMusicaPlaylist(MusicasPlaylist* raiz, const char* tituloM);
 void imprimirMusicasPlaylist(MusicasPlaylist* R);
-MusicasPlaylist *removerMusicaPlaylist(MusicasPlaylist* raiz, const char* tituloM);
+
 
 #endif
