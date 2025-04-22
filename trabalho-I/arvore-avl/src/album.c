@@ -5,6 +5,72 @@
 #include "../Includes/artista.h" 
 #include "../Includes/musica.h"
 
+
+int maiorAlbum(int x, int y) {
+    if (x > y){
+        return x;
+    } else {
+        return y;
+    }
+}
+
+int pegaAlturaAlbum(Album* raiz){
+    int altura = 0;
+    if(raiz != NULL){
+        int alturaEsq = pegaAlturaAlbum(raiz->Esq);
+        int alturaDir = pegaAlturaAlbum(raiz->Dir);
+
+        if(alturaEsq > alturaDir){
+            altura = alturaEsq + 1;
+        } else {
+            altura = alturaDir + 1;
+        }
+    }
+    return altura;
+}
+
+void rotacaoSimplesDireitaAlbum(Album** raiz){
+    if((*raiz)->Esq != NULL){
+        Album* aux = (*raiz)->Esq;
+        (*raiz)->Esq = aux->Dir;
+        aux->Dir = *raiz;
+        (*raiz)->altura = maiorAlbum(pegaAlturaAlbum((*raiz)->Esq), pegaAlturaAlbum((*raiz)->Dir)) + 1;
+        aux->altura = maiorAlbum(pegaAlturaAlbum(aux->Esq), (*raiz)->altura) + 1;
+        (*raiz) = aux;
+    }
+}
+
+void rotacaoSimplesEsquerdaAlbum(Album** raiz){
+    if((*raiz)->Dir != NULL){
+        Album* aux = (*raiz)->Dir;
+        (*raiz)->Dir = aux->Esq;
+        aux->Esq = *raiz;
+        (*raiz)->altura = maiorAlbum(pegaAlturaAlbum((*raiz)->Esq), pegaAlturaAlbum((*raiz)->Dir)) + 1;
+        aux->altura = maiorAlbum(pegaAlturaAlbum(aux->Dir), (*raiz)->altura) + 1;
+        (*raiz) = aux;
+    }
+}
+
+void rotacaoDuplaDireitaAlbum(Album** raiz){
+    rotacaoSimplesEsquerdaAlbum(&(*raiz)->Esq);
+    rotacaoSimplesDireitaAlbum(&(*raiz));
+}
+
+void rotacaoDuplaEsquerdaAlbum(Album** raiz){
+    rotacaoSimplesDireitaAlbum(&(*raiz)->Dir);
+    rotacaoSimplesEsquerdaAlbum(&(*raiz));
+}
+
+int alturaNoAlbum(Album* raiz){
+    return raiz == NULL ? -1 : raiz->altura;
+}
+
+int fatorBalanceamentoAlbum(Album* raiz){
+    int bl;
+    bl = raiz != NULL ? abs(alturaNoAlbum(raiz->Esq) - alturaNoAlbum(raiz->Dir)) : 0;
+    return bl;
+}
+
 void buscaAlbum(Album* R, const char* nome, Album** resultado) {
     
     *resultado = NULL;
@@ -36,7 +102,7 @@ Album* criarAlbum(char* titulo, char* anoLancamento){
     return no; 
 }
 
-int insereAlbum(Album** R, Album* No) {
+int insereAlbum(Album** R, Album* No, char* titulo) {
     int inseriu = 0;
     if (*R == NULL) {
         *R = No;
@@ -45,10 +111,27 @@ int insereAlbum(Album** R, Album* No) {
         int comparacao = strcmp(No->titulo, (*R)->titulo);
 
         if (comparacao < 0) {
-            inseriu = insereAlbum(&((*R)->Esq), No); // Insere na subárvore esquerda
+            if (inseriu = insereAlbum(&(*R)->Esq, No, titulo) == 1){ // Insere na subárvore esquerda
+                if(fatorBalanceamentoAlbum(*R) >= 2){
+                    if(strcmp((*R)->Esq->titulo, titulo) == 1){
+                        rotacaoSimplesDireitaAlbum(&(*R));
+                    }else {
+                        rotacaoDuplaDireitaAlbum(&(*R));
+                    }
+                }
+            } // Insere na subárvore esquerda
         } else if (comparacao > 0) {
-            inseriu = insereAlbum(&((*R)->Dir), No); // Insere na subárvore direita
+            if (inseriu = insereAlbum(&(*R)->Dir, No, titulo) == 1){ // Insere na subárvore direita
+                if(fatorBalanceamentoAlbum(*R) >= 2){
+                    if(strcmp((*R)->Dir->titulo, titulo) == -1){
+                        rotacaoSimplesEsquerdaAlbum(&(*R));
+                    }else {
+                        rotacaoDuplaEsquerdaAlbum(&(*R));
+                    }
+                }
+            }  // Insere na subárvore direita
         }
+        (*R)->altura = pegaAlturaAlbum((*R));
     }
 
     return inseriu; // Álbum já existe
@@ -64,7 +147,7 @@ void cadastrarAlbum(Artista* raiz, char* nomeA, char* titulo, char* anoLancament
 
         if (album == NULL) { // Se o álbum não foi encontrado
             Album* novoAlbum = criarAlbum(titulo, anoLancamento);
-            if (insereAlbum(&(artista->albuns), novoAlbum)) {
+            if (insereAlbum(&(artista->albuns), novoAlbum, titulo)) {
                 artista->numAlbuns++; // Incrementa a quantidade de álbuns
                 printf("Album \"%s\" cadastrado para o artista \"%s\"\n", titulo, nomeA);
             }

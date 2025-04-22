@@ -15,14 +15,14 @@ typedef struct Artista {
     struct Artista* Dir;
 } Artista;
 
-int maior(int x, int y);
-int pegaAltura(Artista* raiz);
-void rotacaoSimplesDireita(Artista** raiz);
-void rotacaoSimplesEsquerda(Artista** raiz);
-void rotacaoDuplaDireita(Artista** raiz);
-void rotacaoDuplaEsquerda(Artista** raiz);
-int alturaNo(Artista* raiz);
-int fatorBalanceamento(Artista* raiz);
+int maiorArtista(int x, int y);
+int pegaAlturaArtista(Artista* raiz);
+void rotacaoSimplesDireitaArtista(Artista** raiz);
+void rotacaoSimplesEsquerdaArtista(Artista** raiz);
+void rotacaoDuplaDireitaArtista(Artista** raiz);
+void rotacaoDuplaEsquerdaArtista(Artista** raiz);
+int alturaNoArtista(Artista* raiz);
+int fatorBalanceamentoArtista(Artista* raiz);
 Artista* criarArtista(char* nome, char* tipo, char* estiloM);
 int insereArtista(Artista** raiz, Artista* novo, char* nome);
 void imprimirArtistas(Artista* R);

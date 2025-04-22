@@ -5,7 +5,7 @@
 #include "../Includes/album.h"
 #include "../Includes/musica.h"
 
-int maior(int x, int y) {
+int maiorArtista(int x, int y) {
     if (x > y){
         return x;
     } else {
@@ -13,11 +13,11 @@ int maior(int x, int y) {
     }
 }
 
-int pegaAltura(Artista* raiz){
+int pegaAlturaArtista(Artista* raiz){
     int altura = 0;
     if(raiz != NULL){
-        int alturaEsq = pegaAltura(raiz->Esq);
-        int alturaDir = pegaAltura(raiz->Dir);
+        int alturaEsq = pegaAlturaArtista(raiz->Esq);
+        int alturaDir = pegaAlturaArtista(raiz->Dir);
 
         if(alturaEsq > alturaDir){
             altura = alturaEsq + 1;
@@ -28,45 +28,45 @@ int pegaAltura(Artista* raiz){
     return altura;
 }
 
-void rotacaoSimplesDireita(Artista** raiz){
+void rotacaoSimplesDireitaArtista(Artista** raiz){
     if((*raiz)->Esq != NULL){
         Artista* aux = (*raiz)->Esq;
         (*raiz)->Esq = aux->Dir;
         aux->Dir = *raiz;
-        (*raiz)->altura = maior(pegaAltura((*raiz)->Esq), pegaAltura((*raiz)->Dir)) + 1;
-        aux->altura = maior(pegaAltura(aux->Esq), (*raiz)->altura) + 1;
+        (*raiz)->altura = maiorArtista(pegaAlturaArtista((*raiz)->Esq), pegaAlturaArtista((*raiz)->Dir)) + 1;
+        aux->altura = maiorArtista(pegaAlturaArtista(aux->Esq), (*raiz)->altura) + 1;
         (*raiz) = aux;
     }
 }
 
-void rotacaoSimplesEsquerda(Artista** raiz){
+void rotacaoSimplesEsquerdaArtista(Artista** raiz){
     if((*raiz)->Dir != NULL){
         Artista* aux = (*raiz)->Dir;
         (*raiz)->Dir = aux->Esq;
         aux->Esq = *raiz;
-        (*raiz)->altura = maior(pegaAltura((*raiz)->Esq), pegaAltura((*raiz)->Dir)) + 1;
-        aux->altura = maior(pegaAltura(aux->Dir), (*raiz)->altura) + 1;
+        (*raiz)->altura = maiorArtista(pegaAlturaArtista((*raiz)->Esq), pegaAlturaArtista((*raiz)->Dir)) + 1;
+        aux->altura = maiorArtista(pegaAlturaArtista(aux->Dir), (*raiz)->altura) + 1;
         (*raiz) = aux;
     }
 }
 
-void rotacaoDuplaDireita(Artista** raiz){
-    rotacaoSimplesEsquerda(&(*raiz)->Esq);
-    rotacaoSimplesDireita(&(*raiz));
+void rotacaoDuplaDireitaArtista(Artista** raiz){
+    rotacaoSimplesEsquerdaArtista(&(*raiz)->Esq);
+    rotacaoSimplesDireitaArtista(&(*raiz));
 }
 
-void rotacaoDuplaEsquerda(Artista** raiz){
-    rotacaoSimplesDireita(&(*raiz)->Dir);
-    rotacaoSimplesEsquerda(&(*raiz));
+void rotacaoDuplaEsquerdaArtista(Artista** raiz){
+    rotacaoSimplesDireitaArtista(&(*raiz)->Dir);
+    rotacaoSimplesEsquerdaArtista(&(*raiz));
 }
 
-int alturaNo(Artista* raiz){
+int alturaNoArtista(Artista* raiz){
     return raiz == NULL ? -1 : raiz->altura;
 }
 
-int fatorBalanceamento(Artista* raiz){
+int fatorBalanceamentoArtista(Artista* raiz){
     int bl;
-    bl = raiz != NULL ? abs(alturaNo(raiz->Esq) - alturaNo(raiz->Dir)) : 0;
+    bl = raiz != NULL ? abs(alturaNoArtista(raiz->Esq) - alturaNoArtista(raiz->Dir)) : 0;
     return bl;
 }
 
@@ -97,30 +97,30 @@ int insereArtista(Artista** raiz, Artista* novo, char* nome) {
         int comparacao = strcasecmp(novo->nome, (*raiz)->nome);
         if (comparacao < 0) {
             if (inseriu = insereArtista(&(*raiz)->Esq, novo, nome) == 1){ // Insere na subárvore esquerda
-                if(fatorBalanceamento(*raiz) >= 2){
+                if(fatorBalanceamentoArtista(*raiz) >= 2){
                     if(strcmp((*raiz)->Esq->nome, nome) == 1){
-                        rotacaoSimplesDireita(&(*raiz));
+                        rotacaoSimplesDireitaArtista(&(*raiz));
                     }else {
-                        rotacaoDuplaDireita(&(*raiz));
+                        rotacaoDuplaDireitaArtista(&(*raiz));
                     }
                 }
             }
              
         } else if (comparacao > 0) {
             if (inseriu = insereArtista(&(*raiz)->Dir, novo, nome) == 1){ // Insere na subárvore direita
-                if(fatorBalanceamento(*raiz) >= 2){
+                if(fatorBalanceamentoArtista(*raiz) >= 2){
                     if(strcmp((*raiz)->Dir->nome, nome) == -1){
-                        rotacaoSimplesEsquerda(&(*raiz));
+                        rotacaoSimplesEsquerdaArtista(&(*raiz));
                     }else {
-                        rotacaoDuplaEsquerda(&(*raiz));
+                        rotacaoDuplaEsquerdaArtista(&(*raiz));
                     }
                 }
             } 
         }
-        (*raiz)->altura = pegaAltura((*raiz));
+        (*raiz)->altura = pegaAlturaArtista((*raiz));
     }
     
-    return inseriu; // Artista já existe
+    return inseriu;
 }
 
 void imprimirArtistas(Artista* R) {
