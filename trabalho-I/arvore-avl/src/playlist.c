@@ -7,6 +7,71 @@
 #include "../Includes/musica.h"
 
 
+int maiorPlaylist(int x, int y) {
+    if (x > y){
+        return x;
+    } else {
+        return y;
+    }
+}
+
+int pegaAlturaPlaylist(Playlist* raiz){
+    int altura = 0;
+    if(raiz != NULL){
+        int alturaEsq = pegaAlturaPlaylist(raiz->esquerda);
+        int alturaDir = pegaAlturaPlaylist(raiz->direita);
+
+        if(alturaEsq > alturaDir){
+            altura = alturaEsq + 1;
+        } else {
+            altura = alturaDir + 1;
+        }
+    }
+    return altura;
+}
+
+void rotacaoSimplesDireitaPlaylist(Playlist** raiz){
+    if((*raiz)->esquerda != NULL){
+        Playlist* aux = (*raiz)->esquerda;
+        (*raiz)->esquerda = aux->direita;
+        aux->direita = *raiz;
+        (*raiz)->altura = maiorPlaylist(pegaAlturaPlaylist((*raiz)->esquerda), pegaAlturaPlaylist((*raiz)->direita)) + 1;
+        aux->altura = maiorPlaylist(pegaAlturaPlaylist(aux->esquerda), (*raiz)->altura) + 1;
+        (*raiz) = aux;
+    }
+}
+
+void rotacaoSimplesEsquerdaPlaylist(Playlist** raiz){
+    if((*raiz)->direita != NULL){
+        Playlist* aux = (*raiz)->direita;
+        (*raiz)->direita = aux->esquerda;
+        aux->esquerda = *raiz;
+        (*raiz)->altura = maiorPlaylist(pegaAlturaPlaylist((*raiz)->esquerda), pegaAlturaPlaylist((*raiz)->direita)) + 1;
+        aux->altura = maiorPlaylist(pegaAlturaPlaylist(aux->direita), (*raiz)->altura) + 1;
+        (*raiz) = aux;
+    }
+}
+
+void rotacaoDuplaDireitaPlaylist(Playlist** raiz){
+    rotacaoSimplesEsquerdaPlaylist(&(*raiz)->esquerda);
+    rotacaoSimplesDireitaPlaylist(&(*raiz));
+}
+
+void rotacaoDuplaEsquerdaPlaylist(Playlist** raiz){
+    rotacaoSimplesDireitaPlaylist(&(*raiz)->direita);
+    rotacaoSimplesEsquerdaPlaylist(&(*raiz));
+}
+
+int alturaNoPlaylist(Playlist* raiz){
+    return raiz == NULL ? -1 : raiz->altura;
+}
+
+int fatorBalanceamentoPlaylist(Playlist* raiz){
+    int bl;
+    bl = raiz != NULL ? abs(alturaNoPlaylist(raiz->esquerda) - alturaNoPlaylist(raiz->direita)) : 0;
+    return bl;
+}
+
 // Busca uma playlist pelo nome
 void buscarPlaylist(Playlist* raiz, const char* nome, Playlist** resultado) {
     *resultado = NULL;
@@ -36,7 +101,7 @@ Playlist* criarPlaylist(char *nome) {
 }
 
 // Insere uma playlist na árvore binária de playlists
-int inserirPlaylist(Playlist **raiz, Playlist *novaPlaylist) {
+int inserirPlaylist(Playlist **raiz, Playlist *novaPlaylist, char* nome) {
     int inseriu = 0;
 
     if (*raiz == NULL) {
@@ -46,11 +111,27 @@ int inserirPlaylist(Playlist **raiz, Playlist *novaPlaylist) {
         int comparacao = strcmp(novaPlaylist->nome, (*raiz)->nome);
 
         if (comparacao < 0) {
-            inseriu = inserirPlaylist(&((*raiz)->esquerda), novaPlaylist);
+            if(inseriu = inserirPlaylist(&((*raiz)->esquerda), novaPlaylist, nome) == 1){
+                if(fatorBalanceamentoPlaylist(*raiz) >= 2){
+                    if (strcmp((*raiz)->esquerda->nome, nome) == 1){
+                        rotacaoSimplesDireitaPlaylist(&(*raiz));
+                    } else {
+                        rotacaoDuplaDireitaPlaylist(&(*raiz));
+                    }
+                }
+            }
         } else if (comparacao > 0) {
-            inseriu = inserirPlaylist(&((*raiz)->direita), novaPlaylist);
+           if( inseriu = inserirPlaylist(&((*raiz)->direita), novaPlaylist, nome) == 1){
+                if(fatorBalanceamentoPlaylist(*raiz) >= 2){
+                    if(strcmp((*raiz)->direita->nome, nome) == -1){
+                        rotacaoSimplesEsquerdaPlaylist(&(*raiz));
+                    }else {
+                        rotacaoDuplaEsquerdaPlaylist(&(*raiz));
+                    }
+                }
+           }
         }
-        // Se for igual, não insere e mantém inseriu = 0
+        (*raiz)->altura = pegaAlturaPlaylist((*raiz));
     }
 
     return inseriu;
@@ -64,7 +145,7 @@ void cadastrarPlaylist(Playlist** raiz, char* nome){
         printf("Playlist \"%s\" já existe!\n", nome);
     } else {
         Playlist* novaPlaylist = criarPlaylist(nome);
-        if(inserirPlaylist(raiz, novaPlaylist)){
+        if(inserirPlaylist(raiz, novaPlaylist, nome)){
             printf("Playlist \"%s\" adicionada!\n", nome);
         }
     }

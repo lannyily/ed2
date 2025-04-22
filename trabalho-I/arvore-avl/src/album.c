@@ -148,7 +148,7 @@ void cadastrarAlbum(Artista* raiz, char* nomeA, char* titulo, char* anoLancament
         if (album == NULL) { // Se o álbum não foi encontrado
             Album* novoAlbum = criarAlbum(titulo, anoLancamento);
             if (insereAlbum(&(artista->albuns), novoAlbum, titulo)) {
-                artista->numAlbuns++; // Incrementa a quantidade de álbuns
+                artista->numAlbuns++; 
                 printf("Album \"%s\" cadastrado para o artista \"%s\"\n", titulo, nomeA);
             }
         } else {

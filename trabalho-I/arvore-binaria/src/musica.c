@@ -17,6 +17,7 @@ void cadastrarMusica(struct Artista* raiz, const char* nomeArtista, const char* 
         if (album != NULL) {
             Musica* novaMusica = criarMusica((char*)tituloMusica, duracao);
             if (insereMusica(&(album->musicas), novaMusica)) {
+                album->quantMusicas++;
                 printf("Musica \"%s\" cadastrada com sucesso no album \"%s\" do artista \"%s\"!\n", tituloMusica, tituloAlbum, nomeArtista);
             } else {
                 printf("Erro ao cadastrar a musica \"%s\"! Ela ja existe no album!\n", tituloMusica);
@@ -58,25 +59,6 @@ int insereMusica(Musica** R, Musica* No) {
     }
 
     return inseriu; // Retorna 0 se a música já existir
-}
-
-void CadastrarMusica(Album* raiz, char* nomeAlbum, char* titulo, int quantMinutos) {
-    Album *album;
-    album = NULL;
-
-    buscaAlbum(raiz, nomeAlbum, &album); 
-
-    if (album != NULL) {
-        Musica* novaMusica = criarMusica(titulo, quantMinutos);
-        if (insereMusica(&(album->musicas), novaMusica)) {
-            album->quantMusicas++;
-            printf("A musica \"%s\" foi cadastrada no album \"%s\"\n", titulo, nomeAlbum);
-        } else {
-            printf("A musica \"%s\" ja esta cadastrada no album \"%s\"\n", titulo, nomeAlbum);
-        }
-    } else {
-        printf("Album \"%s\" nao encontrado!\n", nomeAlbum);
-    }
 }
 
 void imprimirMusicas(Musica* R) {
