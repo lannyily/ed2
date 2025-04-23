@@ -188,6 +188,25 @@ MusicasPlaylist *removerMusicaPlaylist(MusicasPlaylist* raiz, const char* titulo
 
         }
     }
+
+    raiz->altura = 1 + maiorMusicasPlaylist(alturaNoMusicasPlaylist(raiz->Esq), alturaNoMusicasPlaylist(raiz->Dir));
+
+    int fb = fatorBalanceamentoMusicasPlaylist(raiz);
+
+    if(fb > 1){
+        if(fatorBalanceamentoMusicasPlaylist(raiz->Esq) >= 0){
+            rotacaoSimplesDireitaMusicasPlaylist(&raiz);
+        } else {
+            rotacaoDuplaDireitaMusicasPlaylist(&raiz);
+        }
+    } else if (fb < -1){
+        if(fatorBalanceamentoMusicasPlaylist(raiz->Dir) <= 0){
+            rotacaoSimplesEsquerdaMusicasPlaylist(&raiz);
+        } else {
+            rotacaoDuplaEsquerdaMusicasPlaylist(&raiz);
+        }
+    }
+
     return raiz;
 }
 

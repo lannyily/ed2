@@ -199,6 +199,25 @@ Musica* removerMusica(Musica *raiz, const char *titulo) {
         raiz->Dir = removerMusica(raiz->Dir, temp->titulo);
     }
 
+    raiz->altura = 1 + maiorMusica(alturaNoMusica(raiz->Esq), alturaNoMusica(raiz->Dir));
+
+    int fb = fatorBalanceamentoMusica(raiz);
+
+    if(fb > 1){
+        if(fatorBalanceamentoMusica(raiz->Esq) >= 0){
+            rotacaoSimplesDireitaMusica(&raiz);
+        } else {
+            rotacaoDuplaDireitaMusica(&raiz);
+        }
+    } else if (fb < -1){
+        if(fatorBalanceamentoMusica(raiz->Dir) <= 0){
+            rotacaoSimplesEsquerdaMusica(&raiz);
+        } else {
+            rotacaoDuplaEsquerdaMusica(&raiz);
+        }
+    }
+
+
     return raiz;
 }
 

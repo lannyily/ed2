@@ -230,7 +230,7 @@ void liberarPlaylists(Playlist *raiz) {
     if (raiz != NULL) {
         liberarPlaylists(raiz->esquerda);
         liberarPlaylists(raiz->direita);
-        liberarMusicasPlaylist(raiz->musicas); // libera as músicas dessa playlist
+        liberarMusicasPlaylist(raiz->musicas);
         free(raiz);
     }
 }
