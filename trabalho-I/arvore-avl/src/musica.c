@@ -6,72 +6,104 @@
 #include "../Includes/artista.h"
 #include "../includes/playlist.h"
 
-int maiorMusica(int x, int y) {
-    if (x > y){
-        return x;
+
+
+int maiorM(int alt1, int alt2){
+    if(alt1 > alt2){
+        return alt1;
     } else {
-        return y;
+        return alt2;
     }
 }
 
-int pegaAlturaMusica(Musica* raiz){
-    int altura = 0;
-    if(raiz != NULL){
-        int alturaEsq = pegaAlturaMusica(raiz->Esq);
-        int alturaDir = pegaAlturaMusica(raiz->Dir);
 
+int pegaAlturaM(Musica* raiz){
+    int altura = 0;
+
+    if (raiz != NULL){
+        int alturaEsq = pegaAlturaM(raiz->Esq);
+        int alturaDir = pegaAlturaM(raiz->Dir);
         if(alturaEsq > alturaDir){
             altura = alturaEsq + 1;
         } else {
             altura = alturaDir + 1;
         }
     }
+
     return altura;
 }
 
-void rotacaoSimplesDireitaMusica(Musica** raiz){
-    if((*raiz)->Esq != NULL){
-        Musica* aux = (*raiz)->Esq;
-        (*raiz)->Esq = aux->Dir;
-        aux->Dir = *raiz;
-        (*raiz)->altura = maiorMusica(pegaAlturaMusica((*raiz)->Esq), pegaAlturaMusica((*raiz)->Dir)) + 1;
-        aux->altura = maiorMusica(pegaAlturaMusica(aux->Esq), (*raiz)->altura) + 1;
-        (*raiz) = aux;
+int alturaNoM(Musica* no){
+    if (no == NULL) {
+        return -1;
+    } else {
+        return no->altura;
     }
 }
 
-void rotacaoSimplesEsquerdaMusica(Musica** raiz){
+void rotacaoEsqM(Musica** raiz){
     if((*raiz)->Dir != NULL){
+        
         Musica* aux = (*raiz)->Dir;
         (*raiz)->Dir = aux->Esq;
         aux->Esq = *raiz;
-        (*raiz)->altura = maiorMusica(pegaAlturaMusica((*raiz)->Esq), pegaAlturaMusica((*raiz)->Dir)) + 1;
-        aux->altura = maiorMusica(pegaAlturaMusica(aux->Dir), (*raiz)->altura) + 1;
+
+
+        (*raiz)->altura = maiorM(alturaNoM((*raiz)->Esq), alturaNoM((*raiz)->Dir)) + 1;
+        aux->altura = maiorM(alturaNoM(aux->Dir), (*raiz)->altura) + 1;
+
+        (*raiz) = aux;
+    }
+
+}
+
+
+void rotacaoDirM(Musica** raiz){
+    if((*raiz)->Esq != NULL){
+        
+        Musica* aux = (*raiz)->Esq;
+        (*raiz)->Esq = aux->Dir;
+        aux->Dir = *raiz;
+
+        (*raiz)->altura = maiorM(alturaNoM((*raiz)->Esq), alturaNoM((*raiz)->Dir)) + 1;
+        aux->altura = maiorM(alturaNoM(aux->Esq), (*raiz)->altura) + 1;
+
         (*raiz) = aux;
     }
 }
 
-void rotacaoDuplaDireitaMusica(Musica** raiz){
-    rotacaoSimplesEsquerdaMusica(&(*raiz)->Esq);
-    rotacaoSimplesDireitaMusica(&(*raiz));
-}
-
-void rotacaoDuplaEsquerdaMusica(Musica** raiz){
-    rotacaoSimplesDireitaMusica(&(*raiz)->Dir);
-    rotacaoSimplesEsquerdaMusica(&(*raiz));
-}
-
-int alturaNoMusica(Musica* raiz){
-    return raiz == NULL ? -1 : raiz->altura;
-}
-
-int fatorBalanceamentoMusica(Musica* raiz){
+int fatorBalanceamentoM(Musica* raiz){
     int bl;
-    bl = raiz != NULL ? abs(alturaNoMusica(raiz->Esq) - alturaNoMusica(raiz->Dir)) : 0;
+    if (raiz != NULL) {
+        bl = alturaNoM(raiz->Esq) - alturaNoM(raiz->Dir);
+    } else {
+        bl = 0;
+    }
     return bl;
 }
 
-void cadastrarMusica(Artista* raiz, const char* nomeArtista, const char* tituloAlbum, const char* tituloMusica, int duracao) {
+void balanceamentoM(Musica** raiz){
+    int fb = fatorBalanceamentoM(*raiz);
+    
+
+    if (fb == 2) {  
+        
+        int fbEsq = fatorBalanceamentoM((*raiz)->Esq);
+        if (fbEsq < 0) {  
+            rotacaoEsqM(&(*raiz)->Esq);  
+        }
+        rotacaoDirM(raiz);
+    } else if (fb == -2) {  
+       
+        int fbDir = fatorBalanceamentoM((*raiz)->Dir);
+        if (fbDir > 0) {  
+            rotacaoDirM(&(*raiz)->Dir);
+        }
+        rotacaoEsqM(raiz);
+    }
+}
+
+void cadastrarMusica(struct Artista* raiz,  char* nomeArtista,  char* tituloAlbum,  char* tituloMusica, int duracao) {
     struct Artista* artista = NULL;
     buscaArtista(raiz, (char*)nomeArtista, &artista);
 
@@ -81,7 +113,7 @@ void cadastrarMusica(Artista* raiz, const char* nomeArtista, const char* tituloA
 
         if (album != NULL) {
             Musica* novaMusica = criarMusica((char*)tituloMusica, duracao);
-            if (insereMusica(&(album->musicas), novaMusica, tituloMusica)) {
+            if (insereMusica(&(album->musicas), novaMusica)) {
                 album->quantMusicas++;
                 printf("Musica \"%s\" cadastrada com sucesso no album \"%s\" do artista \"%s\"!\n", tituloMusica, tituloAlbum, nomeArtista);
             } else {
@@ -107,52 +139,41 @@ Musica* criarMusica(char* titulo, int quantMinutos) {
   return no; 
 }
 
-int insereMusica(Musica** R, Musica* No, const char* tituloMusica) {
-    int inseriu = 0; 
+int insereMusica(Musica** R, Musica* No) {
+    int inseriu = 1; 
 
     if (*R == NULL) {
         *R = No;
-        inseriu = 1; // Retorna 1 para indicar que a música foi inserida com sucesso
+        
     } else{
         int comparacao = strcmp(No->titulo, (*R)->titulo);
 
         if (comparacao < 0) {
-            if(inseriu = insereMusica(&((*R)->Esq), No, tituloMusica) == 1){
-                if(fatorBalanceamentoMusica(*R) >= 2){
-                    if (strcmp((*R)->Esq->titulo, tituloMusica) == 1){
-                        rotacaoSimplesDireitaMusica(&(*R));
-                    } else {
-                        rotacaoDuplaDireitaMusica(&(*R));
-                    }
-                }
-            } 
+            if (insereMusica(&((*R)->Esq), No)){
+                (*R)->altura = maiorM(alturaNoM((*R)->Esq), alturaNoM((*R)->Dir)) + 1;
+                balanceamentoM(R);
+            }
         } else if (comparacao > 0) {
-            if (inseriu = insereMusica(&((*R)->Dir), No, tituloMusica) == 1){
-                if(fatorBalanceamentoMusica(*R) >= 2){
-                    if(strcmp((*R)->Dir->titulo, tituloMusica) == -1){
-                        rotacaoSimplesEsquerdaMusica(&(*R));
-                    }else {
-                        rotacaoDuplaEsquerdaMusica(&(*R));
-                    }
-                } 
-            } // Tenta inserir na subárvore direita
+            if(insereMusica(&((*R)->Dir), No)){
+                (*R)->altura = maiorM(alturaNoM((*R)->Esq), alturaNoM((*R)->Dir)) + 1;
+                balanceamentoM(R);
+            }
         }
-        (*R)->altura = pegaAlturaMusica((*R));
     }
 
-    return inseriu; // Retorna 0 se a música já existir
+    return inseriu; 
 }
-
 
 void imprimirMusicas(Musica* R) {
     if (R != NULL) {
-        imprimirMusicas(R->Esq); // Percorre a subárvore esquerda
+
+        imprimirMusicas(R->Esq); 
         printf("Titulo: %s, Duracao: %d minutos\n", R->titulo, R->quantMinutos);
-        imprimirMusicas(R->Dir); // Percorre a subárvore direita
+        imprimirMusicas(R->Dir); 
     }
 }
 
-void buscarMusica(Musica* R, const char* titulo, Musica** resultado) {
+void buscarMusica(Musica* R,  char* titulo, Musica** resultado) {
     *resultado = NULL;
 
     if (R != NULL){
@@ -166,62 +187,86 @@ void buscarMusica(Musica* R, const char* titulo, Musica** resultado) {
     }
 }
 
-
-// Remove uma música da árvore binária de músicas
-Musica* removerMusica(Musica *raiz, const char *titulo) {
-    if (raiz == NULL) {
-        return NULL;
-    }
-
-    if (strcmp(titulo, raiz->titulo) < 0) {
-        raiz->Esq = removerMusica(raiz->Esq, titulo);
-    } else if (strcmp(titulo, raiz->titulo) > 0) {
-        raiz->Dir = removerMusica(raiz->Dir, titulo);
-    } else {
-        printf("Musica \"%s\" removida!\n", titulo);
-        // Encontrou a música
-        if (raiz->Esq == NULL) {
-            Musica *temp = raiz->Dir;
-            free(raiz);
-            return temp;
-        } else if (raiz->Dir == NULL) {
-            Musica *temp = raiz->Esq;
-            free(raiz);
-            return temp;
-        }
-
-        // Substitui pelo menor valor da subárvore direita
-        Musica *temp = raiz->Dir;
-        while (temp->Esq != NULL) {
-            temp = temp->Esq;
-        }
-        strcpy(raiz->titulo, temp->titulo);
-        raiz->Dir = removerMusica(raiz->Dir, temp->titulo);
-    }
-
-    raiz->altura = 1 + maiorMusica(alturaNoMusica(raiz->Esq), alturaNoMusica(raiz->Dir));
-
-    int fb = fatorBalanceamentoMusica(raiz);
-
-    if(fb > 1){
-        if(fatorBalanceamentoMusica(raiz->Esq) >= 0){
-            rotacaoSimplesDireitaMusica(&raiz);
-        } else {
-            rotacaoDuplaDireitaMusica(&raiz);
-        }
-    } else if (fb < -1){
-        if(fatorBalanceamentoMusica(raiz->Dir) <= 0){
-            rotacaoSimplesEsquerdaMusica(&raiz);
-        } else {
-            rotacaoDuplaEsquerdaMusica(&raiz);
-        }
-    }
-
-
-    return raiz;
+int ehFilhoM(Musica* m) {
+    return (m->Esq == NULL && m->Dir == NULL);
 }
 
-int musicaEmPlaylists(Playlist* raiz, const char* titulo) {
+
+
+Musica* souFilhoM(Musica* m) {
+    Musica* resultado;
+    if (m->Esq != NULL && m->Dir == NULL) {
+        resultado = m->Esq;
+    } else if (m->Dir != NULL && m->Esq == NULL) {
+        resultado = m->Dir;
+    } else {
+        resultado = NULL;
+    }
+    return resultado;
+}
+
+
+
+Musica* enderecoMenorEsqM(Musica* m) {
+    Musica* atual = m;
+    while (atual != NULL && atual->Esq != NULL) {
+        atual = atual->Esq;
+    }
+    return atual;
+}
+
+int removerMusica(Musica** raiz, char* titulo){
+    int removeu = 1;
+
+    if(*raiz != NULL){
+        if(strcmp(titulo, (*raiz)->titulo) == 0){
+           
+            Musica *filho, *aux;
+
+            if(ehFilhoM(*raiz)){
+                
+                aux = *raiz;
+                *raiz = NULL;
+                free(aux);
+            } else {
+                
+                if((filho = souFilhoM(*raiz)) != NULL){
+                    
+                    aux = *raiz;
+                    *raiz = filho;
+                    free(aux);
+
+                } else {
+                    Musica* menor;
+                    menor = enderecoMenorEsqM((*raiz)->Dir);
+                     
+                    strcpy((*raiz)->titulo, menor->titulo);
+                    removerMusica(&((*raiz)->Dir), menor->titulo);
+
+                }
+            }
+        } else {
+            if(strcmp(titulo, (*raiz)->titulo) < 0){
+                removeu = removerMusica(&((*raiz)->Esq), titulo);
+            } else {
+                removeu = removerMusica(&((*raiz)->Dir), titulo);
+            }
+        }
+
+        if(*raiz != NULL){
+            (*raiz)->altura = maiorM(alturaNoM((*raiz)->Esq), alturaNoM((*raiz)->Dir)) + 1;
+            balanceamentoM(raiz);   
+        }
+
+    } else {
+        printf("Musica \"%s\" nao encontrada!\n", titulo);
+        removeu = 0;
+    }
+    return removeu;
+}
+
+
+int musicaEmPlaylists(Playlist* raiz,  char* titulo) {
     MusicasPlaylist* resultado = NULL;
 
     if (raiz != NULL) {
@@ -236,7 +281,7 @@ int musicaEmPlaylists(Playlist* raiz, const char* titulo) {
     return 0; 
 }
 
-void removerMusicaDeAlbum(struct Artista* raiz, struct Playlist* playlists, const char* nomeArtista, const char* tituloAlbum, const char* tituloMusica) {
+void removerMusicaDeAlbum(struct Artista* raiz, struct Playlist* playlists,  char* nomeArtista,  char* tituloAlbum,  char* tituloMusica) {
     struct Artista* artista = NULL;
     buscaArtista(raiz, nomeArtista, &artista);
 
@@ -246,7 +291,7 @@ void removerMusicaDeAlbum(struct Artista* raiz, struct Playlist* playlists, cons
 
         if (album != NULL) {
             if (!musicaEmPlaylists(playlists, tituloMusica)) {
-                album->musicas = removerMusica(album->musicas, tituloMusica);
+                removerMusica(&album->musicas, tituloMusica);
                 printf("Musica \"%s\" removida do album \"%s\" do artista \"%s\"!\n", tituloMusica, tituloAlbum, nomeArtista);
             } else {
                 printf("Musica \"%s\" nao pode ser removida porque esta em uma playlist!\n", tituloMusica);
@@ -256,5 +301,13 @@ void removerMusicaDeAlbum(struct Artista* raiz, struct Playlist* playlists, cons
         }
     } else {
         printf("Artista \"%s\" nao encontrado!\n", nomeArtista);
+    }
+}
+
+void liberarMusicas(Musica* raiz) {
+    if (raiz != NULL) {
+        liberarMusicas(raiz->Esq);
+        liberarMusicas(raiz->Dir);
+        free(raiz);
     }
 }

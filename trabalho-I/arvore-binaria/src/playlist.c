@@ -7,8 +7,8 @@
 #include "../Includes/musica.h"
 
 
-// Busca uma playlist pelo nome
-void buscarPlaylist(Playlist* raiz, const char* nome, Playlist** resultado) {
+
+void buscarPlaylist(Playlist* raiz,  char* nome, Playlist** resultado) {
     *resultado = NULL;
     
     if (raiz != NULL){
@@ -23,7 +23,7 @@ void buscarPlaylist(Playlist* raiz, const char* nome, Playlist** resultado) {
     
 }
 
-// Cria uma nova playlist
+
 Playlist* criarPlaylist(char *nome) {
     Playlist *nova = (Playlist *)malloc(sizeof(Playlist));
     
@@ -35,13 +35,12 @@ Playlist* criarPlaylist(char *nome) {
     return nova;
 }
 
-// Insere uma playlist na árvore binária de playlists
 int inserirPlaylist(Playlist **raiz, Playlist *novaPlaylist) {
-    int inseriu = 0;
+    int inseriu = 1;
 
     if (*raiz == NULL) {
         *raiz = novaPlaylist;
-        inseriu = 1;
+        
     } else {
         int comparacao = strcmp(novaPlaylist->nome, (*raiz)->nome);
 
@@ -50,7 +49,7 @@ int inserirPlaylist(Playlist **raiz, Playlist *novaPlaylist) {
         } else if (comparacao > 0) {
             inseriu = inserirPlaylist(&((*raiz)->direita), novaPlaylist);
         }
-        // Se for igual, não insere e mantém inseriu = 0
+        
     }
 
     return inseriu;
@@ -71,61 +70,81 @@ void cadastrarPlaylist(Playlist** raiz, char* nome){
 }
 
 
-Playlist* removerPlaylist(Playlist *raiz, char *nome) {
-    if (raiz == NULL) {
-        return NULL;
-    }
+int ehFilho(Playlist* p) {
+    return (p->esquerda == NULL && p->direita == NULL);
+}
 
-    if (strcmp(nome, raiz->nome) < 0) {
-        raiz->esquerda = removerPlaylist(raiz->esquerda, nome);
-    } else if (strcmp(nome, raiz->nome) > 0) {
-        raiz->direita = removerPlaylist(raiz->direita, nome);
+
+Playlist* souFilho(Playlist* p) {
+    Playlist* resultado;
+    if (p->esquerda != NULL && p->direita == NULL) {
+        resultado = p->esquerda;
+    } else if (p->direita != NULL && p->esquerda == NULL) {
+        resultado = p->direita;
     } else {
-        printf("Playlist \"%s\" removida!\n");
-        liberarPlaylists(raiz); // Libera a árvore de músicas
+        resultado = NULL;
+    }
+    return resultado;
+}
 
-        Playlist *temp;
 
-        if (raiz->esquerda == NULL) {
-            temp = raiz->direita;
-            free(raiz);
-            raiz = temp;
-        } else if (raiz->direita == NULL) {
-            temp = raiz->esquerda;
-            free(raiz);
-            raiz = temp;
-        } else {
-            // Substitui pelo menor valor da subárvore direita
-            Playlist *sucessor = raiz->direita;
-            while (sucessor->esquerda != NULL) {
-                sucessor = sucessor->esquerda;
+Playlist* enderecoMenorEsq(Playlist* p) {
+    Playlist* atual = p;
+    while (atual != NULL && atual->esquerda != NULL) {
+        atual = atual->esquerda;
+    }
+    return atual;
+}
+
+int removerPlaylist(Playlist** raiz, char* nome){
+   
+    int removeu = 1;
+
+    if(*raiz != NULL){
+        if(strcmp(nome, (*raiz)->nome) == 0){
+           
+            Playlist *filho, *aux;
+            if(ehFilho(*raiz)){
+                printf("Playlist removida!\n");
+                aux = *raiz;
+                *raiz = NULL;
+                liberarMusicasPlaylist(aux->musicas);
+                free(aux);
+            } else {
+                
+                if((filho = souFilho(*raiz)) != NULL){
+                    printf("Playlist  removida!\n");
+                    aux = *raiz;
+                    *raiz = filho;
+                    liberarMusicasPlaylist(aux->musicas);
+                    free(aux);
+                } else {
+                    Playlist* menor;
+                    menor = enderecoMenorEsq((*raiz)->direita);
+                     
+                    strcpy((*raiz)->nome, menor->nome);
+                    removerPlaylist(&((*raiz)->direita), menor->nome);
+                }
             }
-
-            // Copia os dados do sucessor para a raiz
-            strcpy(raiz->nome, sucessor->nome);
-            raiz->musicas = sucessor->musicas;
-
-            // Remove o sucessor da subárvore direita
-            raiz->direita = removerPlaylist(raiz->direita, sucessor->nome);
+        } else {
+            if(strcmp(nome, (*raiz)->nome) < 0){
+                removeu = removerPlaylist(&((*raiz)->esquerda), nome);
+            } else {
+                removeu = removerPlaylist(&((*raiz)->direita), nome);
+            }
         }
+    } else {
+        printf("Playlist \"%s\" nao encontrada!\n", nome);
+        removeu = 0;
     }
-
-    return raiz;
+    return removeu;
 }
 
-void liberarMusicasPlaylist(MusicasPlaylist *raiz) {
-    if (raiz != NULL) {
-        liberarMusicasPlaylist(raiz->Esq);
-        liberarMusicasPlaylist(raiz->Dir);
-        free(raiz);
-    }
-}
-
-void liberarPlaylists(Playlist *raiz) {
+void liberarPlaylists(Playlist* raiz) {
     if (raiz != NULL) {
         liberarPlaylists(raiz->esquerda);
         liberarPlaylists(raiz->direita);
-        liberarMusicasPlaylist(raiz->musicas); // libera as músicas dessa playlist
+        liberarMusicasPlaylist(raiz->musicas); 
         free(raiz);
     }
 }

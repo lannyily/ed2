@@ -3,7 +3,7 @@
 
 #include "musica.h"
 
-// Declaração antecipada para evitar dependência circular
+
 struct Artista;
 
 typedef struct Album {
@@ -11,26 +11,27 @@ typedef struct Album {
     char anoDeLancamento[5];
     int quantMusicas;
     Musica *musicas;
+
     int altura;
+    
     struct Album *Esq;
     struct Album *Dir;
 } Album;
 
-int maiorAlbum(int x, int y);
-int pegaAlturaAlbum(Album* raiz);
-void rotacaoSimplesDireitaAlbum(Album** raiz);
-void rotacaoSimplesEsquerdaAlbum(Album** raiz);
-void rotacaoDuplaDireitaAlbum(Album** raiz);
-void rotacaoDuplaEsquerdaAlbum(Album** raiz);
-int alturaNoAlbum(Album* raiz);
-int fatorBalanceamentoAlbum(Album* raiz);
+void rotacaoEsqAl(Album** raiz);
+void rotacaoDirAl(Album** raiz);
+int maiorAl(int alt1, int alt2);
+int pegaAlturaAl(Album* raiz);
+int alturaNoAl(Album* no);
+int fatorBalanceamentoAl(Album* raiz);
+void balanceamentoAl(Album** raiz);
 Album* criarAlbum(char* titulo, char* anoLancamento);
-int insereAlbum(Album** R, Album* No, char* titulo);
+int insereAlbum(Album** R, Album* No);
 void cadastrarAlbum(struct Artista* raiz, char* nomeA, char* titulo, char* anoLancamento); 
-void buscaAlbum(Album* R, const char* nome, Album** resultado);
+void buscaAlbum(Album* R,  char* nome, Album** resultado);
 void imprimirAlbuns(Album* R);
 void imprimirAlbunsPorAno(Album* R, char* ano);
-int comparaString(const char* str1, const char* str2);
+int comparaString( char* str1,  char* str2);
 void liberarAlbuns(Album* raiz);
 
-#endif // ALBUM_H
+#endif 

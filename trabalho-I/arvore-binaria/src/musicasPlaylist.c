@@ -19,7 +19,7 @@ MusicasPlaylist* criar(char* nomeA, char* tituloA, char* tituloM){
     return no;
 }
 
-void buscarMusicaPlaylist(MusicasPlaylist* raiz, const char* tituloM, MusicasPlaylist** resultado){
+void buscarMusicaPlaylist(MusicasPlaylist* raiz,  char* tituloM, MusicasPlaylist** resultado){
     *resultado = NULL;
 
     if (raiz != NULL){
@@ -34,11 +34,11 @@ void buscarMusicaPlaylist(MusicasPlaylist* raiz, const char* tituloM, MusicasPla
 }
 
 int addMusica(MusicasPlaylist** R, MusicasPlaylist* musica){
-    int inseriu = 0;
+    int inseriu = 1;
 
     if (*R == NULL){
         *R = musica;
-        inseriu = 1;
+        
     }
 
     if (strcmp(musica->tituloM, (*R)->tituloM) < 0){
@@ -72,42 +72,73 @@ void cadastrarMusicasPlaylist(Playlist* raiz, char* nomePlaylist, char* nomeA, c
     
 }
 
-MusicasPlaylist *removerMusicaPlaylist(MusicasPlaylist* raiz, const char* tituloM){
-    if (raiz == NULL){
-        return NULL;
-    }
+int ehFilhoMP(MusicasPlaylist* mp) {
+    return (mp->Esq == NULL && mp->Dir == NULL);
+}
 
-    if (strcmp(tituloM, raiz->tituloM) < 0){
-        raiz->Esq = removerMusicaPlaylist(raiz->Esq, tituloM);
-    } else if (strcmp(tituloM, raiz->tituloM) > 0){
-        raiz->Dir = removerMusicaPlaylist(raiz->Dir, tituloM);
+
+MusicasPlaylist* souFilhoMP(MusicasPlaylist* mp) {
+    MusicasPlaylist* resultado;
+    if (mp->Esq != NULL && mp->Dir == NULL) {
+        resultado = mp->Esq;
+    } else if (mp->Dir != NULL && mp->Esq == NULL) {
+        resultado = mp->Dir;
     } else {
-
-        printf("Musica \"%s\" removida da playlist!\n", raiz->tituloM);
-
-        MusicasPlaylist* temp;
-        if (raiz->Esq == NULL){
-            temp = raiz->Dir;
-            free(raiz);
-            raiz = temp;
-        } else if (raiz->Dir == NULL){
-            temp = raiz->Esq;
-            free(raiz);
-            raiz = temp;
-        } else{ // Encontrou a playlist
-            MusicasPlaylist *sucessor = raiz->Dir;
-            while (sucessor->Esq != NULL){
-                sucessor = sucessor->Esq;
-            } 
-
-            strcpy(raiz->nome, sucessor->nome);
-            strcpy(raiz->tituloA, sucessor->tituloA);
-            strcpy(raiz->tituloM, sucessor->tituloM);
-            raiz->Dir = removerMusicaPlaylist(raiz->Dir, sucessor->tituloM); //Remove o nó duplicado, ja que ele foi copiado
-
-        }
+        resultado = NULL;
     }
-    return raiz;
+    return resultado;
+}
+
+
+MusicasPlaylist* enderecoMenorEsqMP(MusicasPlaylist* mp) {
+    MusicasPlaylist* atual = mp;
+    while (atual != NULL && atual->Esq != NULL) {
+        atual = atual->Esq;
+    }
+    return atual;
+}
+
+int removerMusicaPlaylist(MusicasPlaylist** raiz, char* tituloM){
+    int removeu = 1;
+
+    if(*raiz != NULL){
+        if(strcmp(tituloM, (*raiz)->tituloM) == 0){
+           
+            MusicasPlaylist *filho, *aux;
+
+            if(ehFilhoMP(*raiz)){
+                printf("Musica removida da Playlist!\n");
+                aux = *raiz;
+                *raiz = NULL;
+                free(aux);
+            } else {
+                
+                if((filho = souFilhoMP(*raiz)) != NULL){
+                    printf("Musica removida da Playlist!\n");
+                    aux = *raiz;
+                    *raiz = filho;
+                    free(aux);
+                } else {
+                    MusicasPlaylist* menor;
+                    menor = enderecoMenorEsqMP((*raiz)->Dir);
+                     
+                    strcpy((*raiz)->tituloM, menor->tituloM);
+                    removerMusicaPlaylist(&((*raiz)->Dir), menor->tituloM);
+
+                }
+            }
+        } else {
+            if(strcmp(tituloM, (*raiz)->tituloM) < 0){
+                removeu = removerMusicaPlaylist(&((*raiz)->Esq), tituloM);
+            } else {
+                removeu = removerMusicaPlaylist(&((*raiz)->Dir), tituloM);
+            }
+        }
+    } else {
+        printf("Musica \"%s\" nao encontrada!\n", tituloM);
+        removeu = 0;
+    }
+    return removeu;
 }
 
 void imprimirMusicasPlaylist(MusicasPlaylist* R){
@@ -122,3 +153,10 @@ void imprimirMusicasPlaylist(MusicasPlaylist* R){
    
 }
 
+void liberarMusicasPlaylist(MusicasPlaylist* raiz) {
+    if (raiz != NULL) {
+        liberarMusicasPlaylist(raiz->Esq);
+        liberarMusicasPlaylist(raiz->Dir);
+        free(raiz);
+    }
+}

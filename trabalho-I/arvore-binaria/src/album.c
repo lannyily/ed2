@@ -5,7 +5,7 @@
 #include "../Includes/artista.h" 
 #include "../Includes/musica.h"
 
-void buscaAlbum(Album* R, const char* nome, Album** resultado) {
+void buscaAlbum(Album* R,  char* nome, Album** resultado) {
     
     *resultado = NULL;
 
@@ -37,35 +37,36 @@ Album* criarAlbum(char* titulo, char* anoLancamento){
 }
 
 int insereAlbum(Album** R, Album* No) {
-    int inseriu = 0;
+    int inseriu = 1;
     if (*R == NULL) {
         *R = No;
-        inseriu = 1; // Inserção bem-sucedida
+        
     } else {
         int comparacao = strcmp(No->titulo, (*R)->titulo);
 
         if (comparacao < 0) {
-            inseriu = insereAlbum(&((*R)->Esq), No); // Insere na subárvore esquerda
+            inseriu = insereAlbum(&((*R)->Esq), No); 
         } else if (comparacao > 0) {
-            inseriu = insereAlbum(&((*R)->Dir), No); // Insere na subárvore direita
+            inseriu = insereAlbum(&((*R)->Dir), No); 
         }
     }
 
-    return inseriu; // Álbum já existe
+    return inseriu; 
 }
 
 void cadastrarAlbum(Artista* raiz, char* nomeA, char* titulo, char* anoLancamento) {
     Artista* artista = NULL;
-    buscaArtista(raiz, nomeA, &artista); // Resultado da busca armazenado em 'artista'
+    buscaArtista(raiz, nomeA, &artista);
 
     if (artista != NULL) {
         Album* album = NULL;
-        buscaAlbum(artista->albuns, titulo, &album); // Resultado da busca armazenado em 'album'
+        buscaAlbum(artista->albuns, titulo, &album); 
 
-        if (album == NULL) { // Se o álbum não foi encontrado
+
+        if (album == NULL) { 
             Album* novoAlbum = criarAlbum(titulo, anoLancamento);
             if (insereAlbum(&(artista->albuns), novoAlbum)) {
-                artista->numAlbuns++; // Incrementa a quantidade de álbuns
+                artista->numAlbuns++; 
                 printf("Album \"%s\" cadastrado para o artista \"%s\"\n", titulo, nomeA);
             }
         } else {
@@ -78,29 +79,29 @@ void cadastrarAlbum(Artista* raiz, char* nomeA, char* titulo, char* anoLancament
 
 void imprimirAlbuns(Album* R) {
     if (R != NULL) {
-        imprimirAlbuns(R->Esq); // Percorre a subárvore esquerda
-        printf("Titulo: %s, Ano de Lancamento: %s, Quantidade de Musicas: %d\n", 
-               R->titulo, R->anoDeLancamento, R->quantMusicas);
-        imprimirAlbuns(R->Dir); // Percorre a subárvore direita
+        imprimirAlbuns(R->Esq); 
+
+        printf("Titulo: %s, Ano de Lancamento: %s, Quantidade de Musicas: %d\n", R->titulo, R->anoDeLancamento, R->quantMusicas);
+        imprimirAlbuns(R->Dir); 
     }
 }
 
 void imprimirAlbunsPorAno(Album* R, char* ano) {
     if (R != NULL) {
-        imprimirAlbunsPorAno(R->Esq, ano); // Percorre a subárvore esquerda
+        imprimirAlbunsPorAno(R->Esq, ano); 
         if (strcmp(R->anoDeLancamento, ano) == 0) {
-            printf("Titulo: %s, Ano de Lancamento: %s, Quantidade de Musicas: %d\n", 
-                   R->titulo, R->anoDeLancamento, R->quantMusicas);
+            printf("Titulo: %s, Ano de Lancamento: %s, Quantidade de Musicas: %d\n", R->titulo, R->anoDeLancamento, R->quantMusicas);
         }
-        imprimirAlbunsPorAno(R->Dir, ano); // Percorre a subárvore direita
+        imprimirAlbunsPorAno(R->Dir, ano); 
     }
 }
 
-
 void liberarAlbuns(Album* raiz) {
-    if (raiz == NULL) return;
-    liberarAlbuns(raiz->Esq);
-    liberarAlbuns(raiz->Dir);
-    liberarMusicas(raiz->musicas);
-    free(raiz);
+    if (raiz != NULL) {
+        liberarAlbuns(raiz->Esq);
+        liberarAlbuns(raiz->Dir);
+        liberarMusicas(raiz->musicas); 
+        free(raiz);
+    }
 }
+

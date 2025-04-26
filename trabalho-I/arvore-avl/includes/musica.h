@@ -1,33 +1,37 @@
 #ifndef MUSICA_H
 #define MUSICA_H
 
-// Declarações antecipadas
 struct Artista;
 struct Playlist;
 
 typedef struct Musica {
     char titulo[50];
     int quantMinutos;
+
     int altura;
+
     struct Musica *Esq;
     struct Musica *Dir;
 } Musica;
 
-int maiorMusica(int x, int y);
-int pegaAlturaMusica(Musica* raiz);
-void rotacaoSimplesDireitaMusica(Musica** raiz);
-void rotacaoSimplesEsquerdaMusica(Musica** raiz);
-void rotacaoDuplaDireitaMusica(Musica** raiz);
-void rotacaoDuplaEsquerdaMusica(Musica** raiz);
-int alturaNoMusica(Musica* raiz);
-int fatorBalanceamentoMusica(Musica* raiz);
+void rotacaoEsqM(Musica** raiz);
+void rotacaoDirM(Musica** raiz);
+int maiorM(int alt1, int alt2);
+int pegaAlturaM(Musica* raiz);
+int alturaNoM(Musica* no);
+int fatorBalanceamentoM(Musica* raiz);
+void balanceamentoM(Musica** raiz);
 Musica* criarMusica(char* titulo, int quantMinutos);
-int insereMusica(Musica** R, Musica* No, const char* tituloMusica);
+int insereMusica(Musica **R, Musica *No);
 void imprimirMusicas(Musica* R);
-void buscarMusica(Musica* R, const char* titulo, Musica** resultado);
-void cadastrarMusica(struct Artista* raiz, const char* nomeArtista, const char* tituloAlbum, const char* tituloMusica, int duracao);
-Musica* removerMusica(Musica *raiz, const char *titulo);
-int musicaEmPlaylists(struct Playlist* raiz, const char* titulo);
-void removerMusicaDeAlbum(struct Artista* raiz, struct Playlist* playlists, const char* nomeArtista, const char* tituloAlbum, const char* tituloMusica);
+void buscarMusica(Musica* R, char* titulo, Musica** resultado);
+void cadastrarMusica(struct Artista* raiz, char* nomeArtista, char* tituloAlbum, char* tituloMusica, int duracao);
+int ehFilhoM(Musica* m);
+Musica* souFilhoM(Musica* m);
+Musica* enderecoMenorEsqM(Musica* m);
+int removerMusica(Musica** raiz, char* titulo);
+int musicaEmPlaylists(struct Playlist* raiz, char* titulo);
+void removerMusicaDeAlbum(struct Artista* raiz, struct Playlist* playlists, char* nomeArtista, char* tituloAlbum, char* tituloMusica);
+void liberarMusicas(Musica* raiz);
 
-#endif // MUSICA_H
+#endif 

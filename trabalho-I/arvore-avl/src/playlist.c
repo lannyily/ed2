@@ -6,74 +6,127 @@
 #include "../Includes/album.h"
 #include "../Includes/musica.h"
 
-
-int maiorPlaylist(int x, int y) {
-    if (x > y){
-        return x;
+int maiorP(int alt1, int alt2){
+    if(alt1 > alt2){
+        return alt1;
     } else {
-        return y;
+        return alt2;
     }
 }
 
-int pegaAlturaPlaylist(Playlist* raiz){
+int pegaAlturaP(Playlist* raiz){
     int altura = 0;
-    if(raiz != NULL){
-        int alturaEsq = pegaAlturaPlaylist(raiz->esquerda);
-        int alturaDir = pegaAlturaPlaylist(raiz->direita);
 
+    if (raiz != NULL){
+        int alturaEsq = pegaAlturaP(raiz->esquerda);
+        int alturaDir = pegaAlturaP(raiz->direita);
         if(alturaEsq > alturaDir){
             altura = alturaEsq + 1;
         } else {
             altura = alturaDir + 1;
         }
     }
+
     return altura;
 }
 
-void rotacaoSimplesDireitaPlaylist(Playlist** raiz){
-    if((*raiz)->esquerda != NULL){
-        Playlist* aux = (*raiz)->esquerda;
-        (*raiz)->esquerda = aux->direita;
-        aux->direita = *raiz;
-        (*raiz)->altura = maiorPlaylist(pegaAlturaPlaylist((*raiz)->esquerda), pegaAlturaPlaylist((*raiz)->direita)) + 1;
-        aux->altura = maiorPlaylist(pegaAlturaPlaylist(aux->esquerda), (*raiz)->altura) + 1;
-        (*raiz) = aux;
+int alturaNoP(Playlist* no){
+    if (no == NULL) {
+        return -1;
+    } else {
+        return no->altura;
     }
 }
 
-void rotacaoSimplesEsquerdaPlaylist(Playlist** raiz){
+void rotacaoEsqP(Playlist** raiz){
     if((*raiz)->direita != NULL){
+        
         Playlist* aux = (*raiz)->direita;
         (*raiz)->direita = aux->esquerda;
         aux->esquerda = *raiz;
-        (*raiz)->altura = maiorPlaylist(pegaAlturaPlaylist((*raiz)->esquerda), pegaAlturaPlaylist((*raiz)->direita)) + 1;
-        aux->altura = maiorPlaylist(pegaAlturaPlaylist(aux->direita), (*raiz)->altura) + 1;
+
+
+        (*raiz)->altura = maiorP(alturaNoP((*raiz)->esquerda), alturaNoP((*raiz)->direita)) + 1;
+        aux->altura = maiorP(alturaNoP(aux->direita), (*raiz)->altura) + 1;
+
         (*raiz) = aux;
     }
 }
 
-void rotacaoDuplaDireitaPlaylist(Playlist** raiz){
-    rotacaoSimplesEsquerdaPlaylist(&(*raiz)->esquerda);
-    rotacaoSimplesDireitaPlaylist(&(*raiz));
+
+void rotacaoDirP(Playlist** raiz){
+    if((*raiz)->esquerda != NULL){
+        
+        Playlist* aux = (*raiz)->esquerda;
+        (*raiz)->esquerda = aux->direita;
+        aux->direita = *raiz;
+
+        (*raiz)->altura = maiorP(alturaNoP((*raiz)->esquerda), alturaNoP((*raiz)->direita)) + 1;
+        aux->altura = maiorP(alturaNoP(aux->esquerda), (*raiz)->altura) + 1;
+
+        (*raiz) = aux;
+    }
 }
 
-void rotacaoDuplaEsquerdaPlaylist(Playlist** raiz){
-    rotacaoSimplesDireitaPlaylist(&(*raiz)->direita);
-    rotacaoSimplesEsquerdaPlaylist(&(*raiz));
-}
-
-int alturaNoPlaylist(Playlist* raiz){
-    return raiz == NULL ? -1 : raiz->altura;
-}
-
-int fatorBalanceamentoPlaylist(Playlist* raiz){
+int fatorBalanceamentoP(Playlist* raiz){
     int bl;
-    bl = raiz != NULL ? abs(alturaNoPlaylist(raiz->esquerda) - alturaNoPlaylist(raiz->direita)) : 0;
+    if (raiz != NULL) {
+        bl = alturaNoP(raiz->esquerda) - alturaNoP(raiz->direita);
+    } else {
+        bl = 0;
+    }
     return bl;
 }
 
-// Busca uma playlist pelo nome
-void buscarPlaylist(Playlist* raiz, const char* nome, Playlist** resultado) {
+void balanceamentoP(Playlist** raiz){
+    int fb = fatorBalanceamentoP(*raiz);
+    
+
+    if (fb == 2) {  
+        
+        int fbEsq = fatorBalanceamentoP((*raiz)->esquerda);
+        if (fbEsq < 0) {  
+            rotacaoEsqP(&(*raiz)->esquerda);  
+        }
+        rotacaoDirP(raiz);
+    } else if (fb == -2) {  
+       
+        int fbDir = fatorBalanceamentoP((*raiz)->direita);
+        if (fbDir > 0) {  
+            rotacaoDirP(&(*raiz)->direita);
+        }
+        rotacaoEsqP(raiz);
+    }
+
+}
+
+int inserirPlaylist(Playlist **raiz, Playlist *novaPlaylist) {
+    int inseriu = 1;
+
+    if (*raiz == NULL) {
+        *raiz = novaPlaylist;
+        
+    } else {
+        int comparacao = strcmp(novaPlaylist->nome, (*raiz)->nome);
+
+        if (comparacao < 0) {
+            if(inserirPlaylist(&((*raiz)->esquerda), novaPlaylist)){
+                (*raiz)->altura = maiorP(alturaNoP((*raiz)->esquerda), alturaNoP((*raiz)->direita)) + 1;
+                balanceamentoP(raiz);
+            }
+        } else if (comparacao > 0) {
+            if(inserirPlaylist(&((*raiz)->direita), novaPlaylist)){
+                (*raiz)->altura = maiorP(alturaNoP((*raiz)->esquerda), alturaNoP((*raiz)->direita)) + 1;
+                balanceamentoP(raiz);
+            }
+        }
+        
+    }
+
+    return inseriu;
+}
+
+void buscarPlaylist(Playlist* raiz,  char* nome, Playlist** resultado) {
     *resultado = NULL;
     
     if (raiz != NULL){
@@ -88,7 +141,7 @@ void buscarPlaylist(Playlist* raiz, const char* nome, Playlist** resultado) {
     
 }
 
-// Cria uma nova playlist
+
 Playlist* criarPlaylist(char *nome) {
     Playlist *nova = (Playlist *)malloc(sizeof(Playlist));
     
@@ -100,42 +153,7 @@ Playlist* criarPlaylist(char *nome) {
     return nova;
 }
 
-// Insere uma playlist na árvore binária de playlists
-int inserirPlaylist(Playlist **raiz, Playlist *novaPlaylist, char* nome) {
-    int inseriu = 0;
 
-    if (*raiz == NULL) {
-        *raiz = novaPlaylist;
-        inseriu = 1;
-    } else {
-        int comparacao = strcmp(novaPlaylist->nome, (*raiz)->nome);
-
-        if (comparacao < 0) {
-            if(inseriu = inserirPlaylist(&((*raiz)->esquerda), novaPlaylist, nome) == 1){
-                if(fatorBalanceamentoPlaylist(*raiz) >= 2){
-                    if (strcmp((*raiz)->esquerda->nome, nome) == 1){
-                        rotacaoSimplesDireitaPlaylist(&(*raiz));
-                    } else {
-                        rotacaoDuplaDireitaPlaylist(&(*raiz));
-                    }
-                }
-            }
-        } else if (comparacao > 0) {
-           if( inseriu = inserirPlaylist(&((*raiz)->direita), novaPlaylist, nome) == 1){
-                if(fatorBalanceamentoPlaylist(*raiz) >= 2){
-                    if(strcmp((*raiz)->direita->nome, nome) == -1){
-                        rotacaoSimplesEsquerdaPlaylist(&(*raiz));
-                    }else {
-                        rotacaoDuplaEsquerdaPlaylist(&(*raiz));
-                    }
-                }
-           }
-        }
-        (*raiz)->altura = pegaAlturaPlaylist((*raiz));
-    }
-
-    return inseriu;
-}
 
 
 void cadastrarPlaylist(Playlist** raiz, char* nome){
@@ -145,92 +163,94 @@ void cadastrarPlaylist(Playlist** raiz, char* nome){
         printf("Playlist \"%s\" já existe!\n", nome);
     } else {
         Playlist* novaPlaylist = criarPlaylist(nome);
-        if(inserirPlaylist(raiz, novaPlaylist, nome)){
+        if(inserirPlaylist(raiz, novaPlaylist)){
             printf("Playlist \"%s\" adicionada!\n", nome);
         }
     }
 }
 
 
-Playlist* removerPlaylist(Playlist *raiz, char *nome) {
-    if (raiz == NULL) {
-        return NULL;
-    }
+int ehFilho(Playlist* p) {
+    return (p->esquerda == NULL && p->direita == NULL);
+}
 
-    if (strcmp(nome, raiz->nome) < 0) {
-        raiz->esquerda = removerPlaylist(raiz->esquerda, nome);
-    } else if (strcmp(nome, raiz->nome) > 0) {
-        raiz->direita = removerPlaylist(raiz->direita, nome);
+
+Playlist* souFilho(Playlist* p) {
+    Playlist* resultado;
+    if (p->esquerda != NULL && p->direita == NULL) {
+        resultado = p->esquerda;
+    } else if (p->direita != NULL && p->esquerda == NULL) {
+        resultado = p->direita;
     } else {
-        printf("Playlist \"%s\" removida!\n");
-        liberarPlaylists(raiz); // Libera a árvore de músicas
+        resultado = NULL;
+    }
+    return resultado;
+}
 
-        Playlist *temp;
 
-        if (raiz->esquerda == NULL) {
-            temp = raiz->direita;
-            free(raiz);
-            raiz = temp;
-        } else if (raiz->direita == NULL) {
-            temp = raiz->esquerda;
-            free(raiz);
-            raiz = temp;
-        } else {
-            // Substitui pelo menor valor da subárvore direita
-            Playlist *sucessor = raiz->direita;
-            while (sucessor->esquerda != NULL) {
-                sucessor = sucessor->esquerda;
+Playlist* enderecoMenorEsq(Playlist* p) {
+    Playlist* atual = p;
+    while (atual != NULL && atual->esquerda != NULL) {
+        atual = atual->esquerda;
+    }
+    return atual;
+}
+
+int removerPlaylist(Playlist** raiz, char* nome){
+   
+    int removeu = 1;
+
+    if(*raiz != NULL){
+        if(strcmp(nome, (*raiz)->nome) == 0){
+           
+            Playlist *filho, *aux;
+            if(ehFilho(*raiz)){
+                printf("Playlist removida!\n");
+                aux = *raiz;
+                *raiz = NULL;
+                liberarMusicasPlaylist(aux->musicas);
+                free(aux);
+            } else {
+                
+                if((filho = souFilho(*raiz)) != NULL){
+                    printf("Playlist  removida!\n");
+                    aux = *raiz;
+                    *raiz = filho;
+                    liberarMusicasPlaylist(aux->musicas);
+                    free(aux);
+                } else {
+                    Playlist* menor;
+                    menor = enderecoMenorEsq((*raiz)->direita);
+                     
+                    strcpy((*raiz)->nome, menor->nome);
+                    removerPlaylist(&((*raiz)->direita), menor->nome);
+                }
             }
-
-            // Copia os dados do sucessor para a raiz
-            strcpy(raiz->nome, sucessor->nome);
-            raiz->musicas = sucessor->musicas;
-
-            // Remove o sucessor da subárvore direita
-            raiz->direita = removerPlaylist(raiz->direita, sucessor->nome);
-        }
-    }
-        // Atualiza altura
-    raiz->altura = 1 + maiorPlaylist(alturaNoPlaylist(raiz->esquerda), alturaNoPlaylist(raiz->direita));
-
-    // Calcula fator de balanceamento
-    int fb = fatorBalanceamentoPlaylist(raiz);
-
-    // Caso Esquerda Pesado
-    if (fb > 1) {
-        if (fatorBalanceamentoPlaylist(raiz->esquerda) >= 0) {
-            rotacaoSimplesDireitaPlaylist(&raiz);
         } else {
-            rotacaoDuplaDireitaPlaylist(&raiz);
+            if(strcmp(nome, (*raiz)->nome) < 0){
+                removeu = removerPlaylist(&((*raiz)->esquerda), nome);
+            } else {
+                removeu = removerPlaylist(&((*raiz)->direita), nome);
+            }
         }
-    }
 
-    // Caso Direita Pesado
-    else if (fb < -1) {
-        if (fatorBalanceamentoPlaylist(raiz->direita) <= 0) {
-            rotacaoSimplesEsquerdaPlaylist(&raiz);
-        } else {
-            rotacaoDuplaEsquerdaPlaylist(&raiz);
+        if(*raiz != NULL){
+            (*raiz)->altura = maiorP(alturaNoP((*raiz)->esquerda), alturaNoP((*raiz)->direita)) + 1;
+            balanceamentoP(raiz);
         }
+
+    } else {
+        printf("Playlist \"%s\" nao encontrada!\n", nome);
+        removeu = 0;
     }
-
-
-    return raiz;
+    return removeu;
 }
 
-void liberarMusicasPlaylist(MusicasPlaylist *raiz) {
-    if (raiz != NULL) {
-        liberarMusicasPlaylist(raiz->Esq);
-        liberarMusicasPlaylist(raiz->Dir);
-        free(raiz);
-    }
-}
-
-void liberarPlaylists(Playlist *raiz) {
+void liberarPlaylists(Playlist* raiz) {
     if (raiz != NULL) {
         liberarPlaylists(raiz->esquerda);
         liberarPlaylists(raiz->direita);
-        liberarMusicasPlaylist(raiz->musicas);
+        liberarMusicasPlaylist(raiz->musicas); 
         free(raiz);
     }
 }

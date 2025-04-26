@@ -5,6 +5,7 @@
 #include "../Includes/album.h"
 #include "../Includes/musica.h"
 #include "../Includes/playlist.h"
+#include "../Includes/teste.h"
 #include "../includes/musicasPlaylist.h"
 
 int main() {
@@ -293,12 +294,12 @@ int main() {
                 char nomePlaylist[100], tituloMusica[100];
                 printf("Digite o nome da playlist: ");
                 scanf(" %[^\n]", nomePlaylist);
-                printf("Digite o titulo da música: ");
+                printf("Digite o titulo da musica: ");
                 scanf(" %[^\n]", tituloMusica);
                 Playlist *playlist;
                 buscarPlaylist(raizPlaylist, nomePlaylist, &playlist);
                 if (playlist != NULL) {
-                   playlist->musicas = removerMusicaPlaylist(playlist->musicas, tituloMusica);
+                    removerMusicaPlaylist(&playlist->musicas, tituloMusica);
                 } else {
                     printf("Playlist \"%s\" nao encontrada.\n", nomePlaylist);
                 }
@@ -309,7 +310,8 @@ int main() {
                 char nomePlaylist[100];
                 printf("Digite o nome da playlist: ");
                 scanf(" %[^\n]", nomePlaylist);
-                raizPlaylist = removerPlaylist(raizPlaylist, nomePlaylist);
+                removerPlaylist(&raizPlaylist, nomePlaylist);
+
                 break;
             }
             case 18: {
@@ -333,6 +335,9 @@ int main() {
             }
             case 0:
                 printf("Saindo do programa...\n");
+                liberarArtistas(raiz);
+                liberarPlaylists(raizPlaylist);
+
                 exit(0);
                 break;
             default:

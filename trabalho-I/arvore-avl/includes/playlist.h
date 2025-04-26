@@ -5,26 +5,30 @@
 
 typedef struct Playlist {
     char nome[100];
-    int altura;
     MusicasPlaylist *musicas;
+
+    int altura;
+
     struct Playlist *esquerda;
     struct Playlist *direita;
 } Playlist;
 
-int maiorPlaylist(int x, int y);
-int pegaAlturaPlaylist(Playlist* raiz);
-void rotacaoSimplesDireitaPlaylist(Playlist** raiz);
-void rotacaoSimplesEsquerdaPlaylist(Playlist** raiz);
-void rotacaoDuplaDireitaPlaylist(Playlist** raiz);
-void rotacaoDuplaEsquerdaPlaylist(Playlist** raiz);
-int alturaNoPlaylist(Playlist* raiz);
-int fatorBalanceamentoPlaylist(Playlist* raiz);
-Playlist* criarPlaylist(char *nome);
-int inserirPlaylist(Playlist **raiz, Playlist *novaPlaylist, char* nome);
-void cadastrarPlaylist(Playlist** raiz, char* nome);
-Playlist* removerPlaylist(Playlist *raiz, char *nome);
-void buscarPlaylist(Playlist* raiz, const char* nome, Playlist** resultado);
-void liberarMusicasPlaylist(MusicasPlaylist *raiz);
-void liberarPlaylists(Playlist *raiz);
 
-#endif // PLAYLIST_H
+int maiorP(int alt1, int alt2);
+int pegaAlturaP(Playlist* raiz);
+int alturaNoP(Playlist* no);
+void rotacaoEsqP(Playlist** raiz);
+void rotacaoDirP(Playlist** raiz);
+int fatorBalanceamentoP(Playlist* raiz);
+void balanceamentoP(Playlist** raiz);
+Playlist* criarPlaylist(char *nome);
+int inserirPlaylist(Playlist **raiz, Playlist *novaPlaylist);
+void cadastrarPlaylist(Playlist** raiz, char* nome);
+int ehFilho(Playlist* p);
+Playlist* souFilho(Playlist* p);
+Playlist* enderecoMenorEsq(Playlist* p);
+int removerPlaylist(Playlist** raiz, char* nome);
+void buscarPlaylist(Playlist* raiz,  char* nome, Playlist** resultado);
+void liberarPlaylists(Playlist* raiz);
+
+#endif 
