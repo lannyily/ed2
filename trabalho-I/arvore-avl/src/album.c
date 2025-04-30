@@ -14,23 +14,6 @@ int maiorAl(int alt1, int alt2){
     }
 }
 
-int pegaAlturaAl(Album* raiz){
-    
-    int altura = 0;
-
-    if (raiz != NULL){
-        int alturaEsq = pegaAlturaAl(raiz->Esq);
-        int alturaDir = pegaAlturaAl(raiz->Dir);
-        if(alturaEsq > alturaDir){
-            altura = alturaEsq + 1;
-        } else {
-            altura = alturaDir + 1;
-        }
-    }
-
-    return altura;
-}
-
 int alturaNoAl(Album* no){
     
     if (no == NULL) {

@@ -18,7 +18,6 @@ typedef struct MusicasPlaylist{
 }MusicasPlaylist;
 
 int maiorMP(int alt1, int alt2);
-int pegaAlturaMP(MusicasPlaylist* raiz);
 int alturaNoMP(MusicasPlaylist* no);
 void rotacaoEsqMP(MusicasPlaylist** raiz);
 void rotacaoDirMP(MusicasPlaylist** raiz);

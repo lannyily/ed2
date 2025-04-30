@@ -19,7 +19,6 @@ typedef struct Artista {
 void rotacaoEsqA(Artista** raiz);
 void rotacaoDirA(Artista** raiz);
 int maiorA(int alt1, int alt2);
-int pegaAlturaA(Artista* raiz);
 int alturaNoA(Artista* no);
 int fatorBalanceamentoA(Artista* raiz);
 void balanceamentoA(Artista** raiz);

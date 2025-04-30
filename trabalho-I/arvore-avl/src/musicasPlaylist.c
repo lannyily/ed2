@@ -7,6 +7,9 @@
 #include "../Includes/musica.h"
 #include "../includes/musicasPlaylist.h"
 
+
+
+
 int maiorMP(int alt1, int alt2){
     if(alt1 > alt2){
         return alt1;
@@ -15,21 +18,7 @@ int maiorMP(int alt1, int alt2){
     }
 }
 
-int pegaAlturaMP(MusicasPlaylist* raiz){
-    int altura = 0;
 
-    if (raiz != NULL){
-        int alturaEsq = pegaAlturaMP(raiz->Esq);
-        int alturaDir = pegaAlturaMP(raiz->Esq);
-        if(alturaEsq > alturaDir){
-            altura = alturaEsq + 1;
-        } else {
-            altura = alturaDir + 1;
-        }
-    }
-
-    return altura;
-}
 
 
 int alturaNoMP(MusicasPlaylist* no){

@@ -17,22 +17,6 @@ int maiorM(int alt1, int alt2){
 }
 
 
-int pegaAlturaM(Musica* raiz){
-    int altura = 0;
-
-    if (raiz != NULL){
-        int alturaEsq = pegaAlturaM(raiz->Esq);
-        int alturaDir = pegaAlturaM(raiz->Dir);
-        if(alturaEsq > alturaDir){
-            altura = alturaEsq + 1;
-        } else {
-            altura = alturaDir + 1;
-        }
-    }
-
-    return altura;
-}
-
 int alturaNoM(Musica* no){
     if (no == NULL) {
         return -1;

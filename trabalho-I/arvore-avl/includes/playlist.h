@@ -15,7 +15,6 @@ typedef struct Playlist {
 
 
 int maiorP(int alt1, int alt2);
-int pegaAlturaP(Playlist* raiz);
 int alturaNoP(Playlist* no);
 void rotacaoEsqP(Playlist** raiz);
 void rotacaoDirP(Playlist** raiz);

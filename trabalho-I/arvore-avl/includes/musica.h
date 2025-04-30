@@ -17,7 +17,6 @@ typedef struct Musica {
 void rotacaoEsqM(Musica** raiz);
 void rotacaoDirM(Musica** raiz);
 int maiorM(int alt1, int alt2);
-int pegaAlturaM(Musica* raiz);
 int alturaNoM(Musica* no);
 int fatorBalanceamentoM(Musica* raiz);
 void balanceamentoM(Musica** raiz);
