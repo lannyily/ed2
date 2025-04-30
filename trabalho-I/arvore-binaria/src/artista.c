@@ -198,7 +198,7 @@ void mostrarMusicas(Musica* raiz) {
     if (raiz == NULL) return;
 
     mostrarMusicas(raiz->Esq);
-    printf("    Música: %s (%d min)\n", raiz->titulo, raiz->quantMinutos);
+    printf("    Musica: %s (%d min)\n", raiz->titulo, raiz->quantMinutos);
     mostrarMusicas(raiz->Dir);
 }
 
@@ -206,7 +206,7 @@ void mostrarAlbuns(Album* raiz) {
     if (raiz == NULL) return;
 
     mostrarAlbuns(raiz->Esq);
-    printf("  Álbum: %s (%s)\n", raiz->titulo, raiz->anoDeLancamento);
+    printf("  Album: %s (%s)\n", raiz->titulo, raiz->anoDeLancamento);
     mostrarMusicas(raiz->musicas);
     mostrarAlbuns(raiz->Dir);
 }

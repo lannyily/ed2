@@ -1,1 +1,0 @@
-Tempo médio de inserção (10000 repetições): 0.00002800000000000002 segundos

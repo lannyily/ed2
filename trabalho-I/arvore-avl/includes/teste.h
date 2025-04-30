@@ -2,5 +2,8 @@
 #define TESTE_H
 
 #include "artista.h"
-void testeTemposInsercao(Artista** raiz);
+
+void testeTemposInsercao();
+void testeBuscaMusicasDeArtista(Artista* raiz);
+
 #endif

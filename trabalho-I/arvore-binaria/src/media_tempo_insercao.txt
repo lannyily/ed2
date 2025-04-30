@@ -1,1 +1,1 @@
-Tempo médio de inserção em 30 execuções: 0.0264000000 segundos
+Tempo médio de inserção em 30 execuções: 0.7153666667 segundos

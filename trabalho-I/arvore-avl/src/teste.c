@@ -6,35 +6,78 @@
 #include "../Includes/album.h"
 #include "../Includes/musica.h"
 
+#define NUM_ARTISTAS 100000
 
-// Assuma que todas suas structs, funções como criarArtista, criarAlbum, criarMusica, 
-// insereArtista, insereAlbum, insereMusica, buscarArtista, buscarAlbum, etc. já estão declaradas corretamente.
+void testeBuscaMusicasDeArtista(Artista* raiz) {
+    srand(time(NULL));
 
-void testeTemposBusca() {
-    const int NUM_TESTES = 30;
-    const int NUM_ARTISTAS = 10000;
+    FILE* arquivo = fopen("tempo_busca.txt", "w");
+    if (arquivo == NULL) {
+        printf("Erro ao criar arquivo de tempo.\n");
+        return;
+    }
+
+    double totalTempo = 0.0;
+    int artistasTestados = 30;
+
+    
+    int numero = 49985 + (rand() % 15); 
+    char nomeArtista[100];
+    sprintf(nomeArtista, "Artista_%05d", numero);
+
+    printf("Artista escolhido para o teste: %s\n", nomeArtista);
+
+    for (int i = 0; i < artistasTestados; i++) {
+        clock_t inicio = clock();
+        mostrarMusicasDoArtista(raiz, nomeArtista);
+        clock_t fim = clock();
+
+        double tempo = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
+        totalTempo += tempo;
+
+        fprintf(arquivo, "Execução %02d - Artista: %s - Tempo: %.10f segundos\n", i + 1, nomeArtista, tempo);
+    }
+
+    double media = totalTempo / artistasTestados;
+    fprintf(arquivo, "\nTempo médio de busca de músicas: %.10f segundos\n", media);
+
+    fclose(arquivo);
+    printf("Teste de busca finalizado. Resultados salvos em tempo_busca_artistas_fundos.txt\n");
+}
+
+
+
+void testeTemposInsercao() {
+    Artista* raiz = NULL;
+
+
+    int NUM_TESTES = 30;
+
     char tipo[] = "Solo", estilo[] = "Pop", tituloAlbum[] = "AlbumTeste", ano[] = "2024";
     double acumuladorTempo = 0.0;
 
     srand(time(NULL));
 
-    FILE* arquivo = fopen("media_tempo_insercao.txt", "w");
-    if (arquivo == NULL) {
-        printf("Erro ao criar arquivo media_tempo_insercao.txt\n");
+    FILE* arquivoMedia = fopen("media_tempo_insercao.txt", "w");
+    FILE* arquivoDetalhado = fopen("tempos_individuais_insercao.txt", "w");
+
+    if (arquivoMedia == NULL || arquivoDetalhado == NULL) {
+        printf("Erro ao criar arquivos de saída.\n");
+        if (arquivoMedia) fclose(arquivoMedia);
+        if (arquivoDetalhado) fclose(arquivoDetalhado);
         return;
     }
 
     for (int t = 0; t < NUM_TESTES; t++) {
-        Artista* raiz = NULL;
+        
         Artista* artistas[NUM_ARTISTAS];
 
         for (int i = 0; i < NUM_ARTISTAS; i++) {
             char nomeArtista[100];
-            sprintf(nomeArtista, "Artista_%04d", i + 1);
+            sprintf(nomeArtista, "Artista_%05d", i + 1);
             artistas[i] = criarArtista(nomeArtista, tipo, estilo);
         }
 
-        // Inserção aleatória dos artistas
         clock_t inicio = clock();
 
         for (int i = 0; i < NUM_ARTISTAS; i++) {
@@ -61,54 +104,20 @@ void testeTemposBusca() {
         double tempoExecucao = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
         acumuladorTempo += tempoExecucao;
 
-        //fprintf(arquivo, "Execução %d: Tempo = %.10f segundos\n", t + 1, tempoExecucao);
-
-        liberarArvoreArtistas(raiz);
+        fprintf(arquivoDetalhado, "Execução %02d: Tempo = %.10f segundos\n", t + 1, tempoExecucao);
     }
 
     double media = acumuladorTempo / NUM_TESTES;
-    fprintf(arquivo, "\nTempo médio de inserção em %d execuções: %.10f segundos\n", NUM_TESTES, media);
+    fprintf(arquivoMedia, "Tempo médio de inserção em %d execuções: %.10f segundos\n", NUM_TESTES, media);
 
-    fclose(arquivo);
-    printf("Teste de tempo finalizado. Resultados salvos em media_tempo_insercao.txt\n");
+    fclose(arquivoMedia);
+    fclose(arquivoDetalhado);
+
+    printf("Teste de tempo finalizado. Resultados salvos em:\n");
+    printf("- media_tempo_insercao.txt\n");
+    printf("- tempos_individuais_insercao.txt\n");
+
+    testeBuscaMusicasDeArtista(raiz);
 }
 
-
-void testeBuscaMusicasDeArtista(Artista* raiz) {
-  srand(time(NULL));
-  int numero = (rand() % 20) + 1; // de 1 a 20
-  char nomeArtista[100];
-  sprintf(nomeArtista, "Artista_%04d", numero);
-
-  printf("Artista escolhido para o teste: %s\n", nomeArtista);
-
-  FILE* arquivo = fopen("tempo_busca_artista.txt", "w");
-  if (arquivo == NULL) {
-      printf("Erro ao criar arquivo de tempo.\n");
-      return;
-  }
-
-  clock_t inicio, fim;
-  double totalTempo = 0.0;
-
-  for (int i = 0; i < 30; i++) {
-      inicio = clock();
-      mostrarMusicasDoArtista(raiz, nomeArtista);
-      fim = clock();
-
-      double tempo = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
-      totalTempo += tempo;
-
-      fprintf(arquivo, "Execução %02d - Tempo: %.10f segundos\n", i + 1, tempo);
-  }
-
-  double media = totalTempo / 30.0;
-
-  fprintf(arquivo, "\nArtista testado: %s\n", nomeArtista);
-  fprintf(arquivo, "Tempo médio da busca de TODAS as músicas: %.10f segundos\n", media);
-
-  fclose(arquivo);
-  printf("Teste finalizado. Resultados salvos em tempo_busca_artista.txt\n");
-}
-// teste de envio
 
