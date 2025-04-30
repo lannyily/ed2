@@ -11,8 +11,7 @@
 int main() {
     Artista *raiz = NULL;
     Playlist *raizPlaylist = NULL;
-    Album *raizAlbum = NULL;
-    MusicasPlaylist *raizMusicasPlaylist = NULL;
+
 
     int opcao;
 
