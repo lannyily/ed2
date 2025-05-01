@@ -21,7 +21,6 @@ void cadastrarAlbum(struct Artista* raiz, char* nomeA, char* titulo, char* anoLa
 void buscaAlbum(Album* R,  char* nome, Album** resultado);
 void imprimirAlbuns(Album* R);
 void imprimirAlbunsPorAno(Album* R, char* ano);
-int comparaString( char* str1,  char* str2);
 void liberarAlbuns(Album* raiz);
 
 #endif 

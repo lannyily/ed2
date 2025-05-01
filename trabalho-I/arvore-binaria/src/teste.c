@@ -21,7 +21,7 @@ void testeBuscaMusicasDeArtista(Artista* raiz) {
     int artistasTestados = 30;
 
     
-    int numero = 49985 + (rand() % 15); 
+    int numero = 49985;
     char nomeArtista[100];
     sprintf(nomeArtista, "Artista_%05d", numero);
 

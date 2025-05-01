@@ -219,10 +219,7 @@ int removerPlaylist(Playlist** raiz, char* nome){
             }
         }
 
-        if(*raiz != NULL){
-            (*raiz)->altura = maiorP(alturaNoP((*raiz)->esquerda), alturaNoP((*raiz)->direita)) + 1;
-            balanceamentoP(raiz);
-        }
+        
 
     } else {
         printf("Playlist \"%s\" nao encontrada!\n", nome);
