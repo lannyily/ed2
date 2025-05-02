@@ -1,0 +1,271 @@
+4. void buscaAlbum(Album* R, char* nome, Album** resultado)
+Descrição: Busca um álbum pelo título na árvore de álbuns.
+Parâmetros: 
+- R: Ponteiro para a raiz da árvore de álbuns.
+- nome: Título do álbum a ser buscado.
+- resultado: Ponteiro para armazenar o nó encontrado.
+Como funciona: Percorre a árvore comparando o título do álbum (titulo) com o valor de nome. Se encontrar, armazena o nó no ponteiro resultado.
+
+5. void cadastrarAlbum(Album** raiz, char* nomeA, char* titulo, char* anoLancamento)
+Descrição: Cadastra um álbum para um artista específico.
+Parâmetros: 
+- raiz: Ponteiro para a raiz da árvore de álbuns.
+- nomeA: Nome do artista.
+- titulo: Título do álbum.
+- anoLancamento: Ano de lançamento do álbum.
+Como funciona: Busca o artista na árvore de artistas usando nomeA e, ao encontrá-lo, insere o álbum na subárvore de álbuns associada a esse artista.
+
+6. void imprimirAlbuns(Album* R)
+Descrição: Imprime todos os álbuns em ordem alfabética.
+Parâmetros: 
+- R: Ponteiro para a raiz da árvore de álbuns.
+Como funciona: Realiza um percurso in-order (esquerda, raiz, direita) na árvore, imprimindo os títulos dos álbuns.
+
+7. void imprimirAlbunsPorAno(Album* R, char* ano)
+Descrição: Imprime todos os álbuns lançados em um ano específico.
+Parâmetros: 
+- R: Ponteiro para a raiz da árvore de álbuns.
+- ano: Ano de lançamento a ser filtrado.
+Como funciona: Percorre a árvore e imprime os álbuns cujo campo anoDeLancamento corresponde ao valor de ano.
+
+8. int comparaString(char* str1, char* str2)
+Descrição: Compara duas strings.
+Parâmetros: 
+- str1: Primeira string.
+- str2: Segunda string.
+Retorno: 0 se as strings forem iguais, um valor negativo se str1 for menor que str2, ou um valor positivo se str1 for maior que str2.
+Como funciona: Utiliza uma lógica de comparação de caracteres para determinar a ordem lexicográfica.
+
+9. void liberarAlbuns(Album* raiz)
+Descrição: Libera a memória alocada para a árvore de álbuns.
+Parâmetros: 
+- raiz: Ponteiro para a raiz da árvore de álbuns.
+Como funciona: Percorre a árvore em pós-ordem (esquerda, direita, raiz) e libera a memória de cada nó.
+
+10. Artista* criarArtista(char* nome, char* tipo, char* estiloM)
+Descrição: Cria um novo artista com os dados fornecidos.
+Parâmetros:
+- nome: Nome do artista.
+- tipo: Tipo do artista (ex: solo, banda).
+- estiloM: Estilo musical do artista.
+Retorno: Ponteiro para o artista criado.
+Como funciona: Aloca memória para um novo artista, inicializa os campos com os valores fornecidos e retorna o ponteiro para o novo artista.
+
+11. int insereArtista(Artista** R, Artista* No)
+Descrição: Insere um novo artista na árvore de artistas.
+Parâmetros:
+- R: Ponteiro para a raiz da árvore de artistas.
+- No: Ponteiro para o artista a ser inserido.
+Retorno: 1 se a inserção for bem-sucedida, 0 caso contrário.
+Como funciona: Insere o artista na árvore de forma ordenada com base no nome.
+
+12. void imprimirArtistas(Artista* R)
+Descrição: Imprime todos os artistas em ordem alfabética.
+Parâmetros:
+- R: Ponteiro para a raiz da árvore de artistas.
+Como funciona: Realiza um percurso in-order (esquerda, raiz, direita) na árvore, imprimindo os nomes dos artistas.
+
+13. void buscaArtista(Artista* R, char* nome, Artista** resultado)
+Descrição: Busca um artista pelo nome na árvore de artistas.
+Parâmetros:
+- R: Ponteiro para a raiz da árvore de artistas.
+- nome: Nome do artista a ser buscado.
+- resultado: Ponteiro para armazenar o nó encontrado.
+Como funciona: Percorre a árvore comparando o nome do artista com o valor fornecido. Se encontrar, armazena o nó no ponteiro resultado.
+
+14. void cadastrarArtista(Artista** raiz, char* nome, char* tipo, char* estilo)
+Descrição: Cadastra um novo artista na árvore de artistas.
+Parâmetros:
+- raiz: Ponteiro para a raiz da árvore de artistas.
+- nome: Nome do artista.
+- tipo: Tipo do artista (ex: solo, banda).
+- estilo: Estilo musical do artista.
+Como funciona: Cria um novo artista com os dados fornecidos e o insere na árvore de artistas.
+
+15. void mostrarMusicasDeAlbum(Artista* raiz, char* nomeArtista, char* tituloAlbum)
+Descrição: Mostra todas as músicas de um álbum específico de um artista.
+Parâmetros:
+- raiz: Ponteiro para a raiz da árvore de artistas.
+- nomeArtista: Nome do artista.
+- tituloAlbum: Título do álbum.
+Como funciona: Busca o artista pelo nome, localiza o álbum pelo título e exibe as músicas associadas a ele.
+
+16. Musica* criarMusica(char* titulo, int quantMinutos)
+Descrição: Cria uma nova música com os dados fornecidos.
+Parâmetros:
+- titulo: Título da música.
+- quantMinutos: Duração da música em minutos.
+Retorno: Ponteiro para a música criada.
+Como funciona: Aloca memória para uma nova música, inicializa os campos com os valores fornecidos e retorna o ponteiro para a nova música.
+
+17. int insereMusica(Musica **R, Musica *No)
+Descrição: Insere uma nova música na árvore de músicas.
+Parâmetros:
+- R: Ponteiro para a raiz da árvore de músicas.
+- No: Ponteiro para a música a ser inserida.
+Retorno: 1 se a inserção for bem-sucedida, 0 caso contrário.
+Como funciona: Insere a música na árvore de forma ordenada com base no título.
+
+18. void imprimirMusicas(Musica* R)
+Descrição: Imprime todas as músicas em ordem alfabética.
+Parâmetros:
+- R: Ponteiro para a raiz da árvore de músicas.
+Como funciona: Realiza um percurso in-order (esquerda, raiz, direita) na árvore, imprimindo os títulos das músicas.
+
+19. void buscarMusica(Musica* R, char* titulo, Musica** resultado)
+Descrição: Busca uma música pelo título na árvore de músicas.
+Parâmetros:
+- R: Ponteiro para a raiz da árvore de músicas.
+- titulo: Título da música a ser buscada.
+- resultado: Ponteiro para armazenar o nó encontrado.
+Como funciona: Percorre a árvore comparando o título da música com o valor fornecido. Se encontrar, armazena o nó no ponteiro resultado.
+
+20. void cadastrarMusica(struct Artista* raiz, char* nomeArtista, char* tituloAlbum, char* tituloMusica, int duracao)
+Descrição: Cadastra uma nova música em um álbum de um artista específico.
+Parâmetros:
+- raiz: Ponteiro para a raiz da árvore de artistas.
+- nomeArtista: Nome do artista.
+- tituloAlbum: Título do álbum.
+- tituloMusica: Título da música.
+- duracao: Duração da música em minutos.
+Como funciona: Busca o artista pelo nome, localiza o álbum pelo título e insere a música na subárvore de músicas associada a esse álbum.
+
+21. MusicasPlaylist* criar(char* nomeA, char* tituloA, char* tituloM)
+Descrição: Cria uma nova música para ser adicionada à playlist.
+Parâmetros:
+- nomeA: Nome do artista.
+- tituloA: Título do álbum.
+- tituloM: Título da música.
+Retorno: Ponteiro para a música criada.
+Como funciona: Aloca memória para uma nova música, inicializa os campos com os valores fornecidos e retorna o ponteiro para a nova música.
+
+22. void buscarMusicaPlaylist(MusicasPlaylist* raiz, char* tituloM, MusicasPlaylist** resultado)
+Descrição: Busca uma música pelo título na árvore de músicas da playlist.
+Parâmetros:
+- raiz: Ponteiro para a raiz da árvore de músicas da playlist.
+- tituloM: Título da música a ser buscada.
+- resultado: Ponteiro para armazenar o nó encontrado.
+Como funciona: Percorre a árvore comparando o título da música com o valor fornecido. Se encontrar, armazena o nó no ponteiro resultado.
+
+23. int addMusica(MusicasPlaylist** R, MusicasPlaylist* musica)
+Descrição: Adiciona uma nova música à árvore de músicas da playlist.
+Parâmetros:
+- R: Ponteiro para a raiz da árvore de músicas da playlist.
+- musica: Ponteiro para a música a ser adicionada.
+Retorno: 1 se a inserção for bem-sucedida, 0 caso contrário.
+Como funciona: Insere a música na árvore de forma ordenada com base no título.
+
+24. void cadastrarMusicasPlaylist(struct Playlist* raiz, char* nomePlaylist, char* nomeA, char* tituloA, char* tituloM)
+Descrição: Cadastra uma nova música em uma playlist específica.
+Parâmetros:
+- raiz: Ponteiro para a raiz da árvore de playlists.
+- nomePlaylist: Nome da playlist.
+- nomeA: Nome do artista.
+- tituloA: Título do álbum.
+- tituloM: Título da música.
+Como funciona: Busca a playlist pelo nome, localiza o álbum e o artista, e insere a música na árvore de músicas associada à playlist.
+
+25. Playlist* criarPlaylist(char *nome)
+Descrição: Cria uma nova playlist com o nome fornecido.
+Parâmetros:
+- nome: Nome da playlist.
+Retorno: Ponteiro para a playlist criada.
+Como funciona: Aloca memória para uma nova playlist, inicializa o campo nome com o valor fornecido e retorna o ponteiro para a nova playlist.
+
+26. int inserirPlaylist(Playlist **raiz, Playlist *novaPlaylist)
+Descrição: Insere uma nova playlist na árvore de playlists.
+Parâmetros:
+- raiz: Ponteiro para a raiz da árvore de playlists.
+- novaPlaylist: Ponteiro para a playlist a ser inserida.
+Retorno: 1 se a inserção for bem-sucedida, 0 caso contrário.
+Como funciona: Insere a playlist na árvore de forma ordenada com base no nome.
+
+27. void cadastrarPlaylist(Playlist** raiz, char* nome)
+Descrição: Cadastra uma nova playlist na árvore de playlists.
+Parâmetros:
+- raiz: Ponteiro para a raiz da árvore de playlists.
+- nome: Nome da playlist.
+Como funciona: Cria uma nova playlist com o nome fornecido e a insere na árvore de playlists.
+
+28. void buscarPlaylist(Playlist* raiz, char* nome, Playlist** resultado)
+Descrição: Busca uma playlist pelo nome na árvore de playlists.
+Parâmetros:
+- raiz: Ponteiro para a raiz da árvore de playlists.
+- nome: Nome da playlist a ser buscada.
+- resultado: Ponteiro para armazenar o nó encontrado.
+Como funciona: Percorre a árvore comparando o nome da playlist com o valor fornecido. Se encontrar, armazena o nó no ponteiro resultado.
+
+29. int ehFilhoM(Musica* m)
+Descrição: Verifica se uma música é um nó filho na árvore de músicas.
+Parâmetros:
+- m: Ponteiro para a música a ser verificada.
+Retorno: 1 se a música for um nó filho, 0 caso contrário.
+Como funciona: Avalia se a música possui filhos (esquerdo ou direito) na árvore.
+
+30. Musica* souFilhoM(Musica* m)
+Descrição: Retorna o filho de uma música, caso ela tenha apenas um.
+Parâmetros:
+- m: Ponteiro para a música a ser verificada.
+Retorno: Ponteiro para o filho da música, ou NULL se não houver filhos ou se houver dois filhos.
+Como funciona: Verifica se a música possui exatamente um filho e retorna o ponteiro correspondente.
+
+31. Musica* enderecoMenorEsqM(Musica* m)
+Descrição: Encontra o menor nó na subárvore direita de uma música.
+Parâmetros:
+- m: Ponteiro para a música cuja subárvore será analisada.
+Retorno: Ponteiro para o menor nó encontrado.
+Como funciona: Percorre a subárvore esquerda até encontrar o nó mais à esquerda.
+
+32. int removerMusica(Musica** raiz, char* titulo)
+Descrição: Remove uma música da árvore de músicas com base no título.
+Parâmetros:
+- raiz: Ponteiro para a raiz da árvore de músicas.
+- titulo: Título da música a ser removida.
+Retorno: 1 se a remoção for bem-sucedida, 0 caso contrário.
+Como funciona: 
+1. Busca a música na árvore comparando o título com os nós.
+2. Se a música não for encontrada, retorna 0.
+3. Se a música não tiver filhos, libera o nó diretamente.
+4. Se a música tiver apenas um filho, substitui o nó pelo filho usando a função `souFilhoM`.
+5. Se a música tiver dois filhos, encontra o sucessor in-order (menor nó da subárvore direita) usando `enderecoMenorEsqM`, copia os dados do sucessor para o nó atual e remove o sucessor recursivamente.
+6. Atualiza os ponteiros da árvore para manter a estrutura correta.
+
+33. void rotacaoEsqM(Musica** raiz)
+Descrição: Realiza uma rotação à esquerda na árvore de músicas para balanceamento.
+Parâmetros:
+- raiz: Ponteiro para a raiz da árvore de músicas.
+Como funciona: Ajusta os ponteiros da árvore para realizar a rotação à esquerda, mantendo a propriedade AVL.
+
+34. void rotacaoDirM(Musica** raiz)
+Descrição: Realiza uma rotação à direita na árvore de músicas para balanceamento.
+Parâmetros:
+- raiz: Ponteiro para a raiz da árvore de músicas.
+Como funciona: Ajusta os ponteiros da árvore para realizar a rotação à direita, mantendo a propriedade AVL.
+
+35. int maiorM(int alt1, int alt2)
+Descrição: Retorna o maior valor entre duas alturas.
+Parâmetros:
+- alt1: Primeira altura.
+- alt2: Segunda altura.
+Retorno: O maior valor entre alt1 e alt2.
+Como funciona: Compara os dois valores e retorna o maior.
+
+36. int alturaNoM(Musica* no)
+Descrição: Calcula a altura de um nó na árvore de músicas.
+Parâmetros:
+- no: Ponteiro para o nó cuja altura será calculada.
+Retorno: Altura do nó ou -1 se o nó for NULL.
+Como funciona: Retorna o valor do campo altura do nó ou -1 se o nó não existir.
+
+37. int fatorBalanceamentoM(Musica* raiz)
+Descrição: Calcula o fator de balanceamento de um nó na árvore de músicas.
+Parâmetros:
+- raiz: Ponteiro para o nó cuja balanceamento será calculado.
+Retorno: Diferença entre as alturas dos filhos esquerdo e direito.
+Como funciona: Subtrai a altura do filho direito da altura do filho esquerdo.
+
+38. void balanceamentoM(Musica** raiz)
+Descrição: Realiza o balanceamento da árvore de músicas.
+Parâmetros:
+- raiz: Ponteiro para a raiz da árvore de músicas.
+Como funciona: Verifica o fator de balanceamento e aplica rotações (esquerda, direita ou dupla) conforme necessário para manter a propriedade AVL.

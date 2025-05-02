@@ -1,0 +1,131 @@
+1. int maiorMP(int alt1, int alt2)
+Descrição: Retorna o maior valor entre dois inteiros.
+Parâmetros:
+- alt1: Primeiro valor inteiro.
+- alt2: Segundo valor inteiro.
+Retorno: O maior valor entre alt1 e alt2.
+Como funciona: Compara os dois valores e retorna o maior.
+
+2. int alturaNoMP(MusicasPlaylist* no)
+Descrição: Calcula a altura de um nó na árvore AVL de músicas da playlist.
+Parâmetros:
+- no: Ponteiro para o nó cuja altura será calculada.
+Retorno: Altura do nó ou -1 se o nó for NULL.
+Como funciona: Retorna o valor do campo altura do nó ou -1 se o nó não existir.
+
+3. void rotacaoEsqMP(MusicasPlaylist** raiz)
+Descrição: Realiza uma rotação à esquerda na árvore AVL para balanceamento.
+Parâmetros:
+- raiz: Ponteiro para a raiz da árvore AVL.
+Como funciona: Ajusta os ponteiros da árvore para realizar a rotação à esquerda, mantendo a propriedade AVL.
+
+4. void rotacaoDirMP(MusicasPlaylist** raiz)
+Descrição: Realiza uma rotação à direita na árvore AVL para balanceamento.
+Parâmetros:
+- raiz: Ponteiro para a raiz da árvore AVL.
+Como funciona: Ajusta os ponteiros da árvore para realizar a rotação à direita, mantendo a propriedade AVL.
+
+5. int fatorBalanceamentoMP(MusicasPlaylist* raiz)
+Descrição: Calcula o fator de balanceamento de um nó na árvore AVL.
+Parâmetros:
+- raiz: Ponteiro para o nó cuja balanceamento será calculado.
+Retorno: Diferença entre as alturas dos filhos esquerdo e direito.
+Como funciona: Subtrai a altura do filho direito da altura do filho esquerdo.
+
+6. void balanceamentoMP(MusicasPlaylist** raiz)
+Descrição: Realiza o balanceamento da árvore AVL de músicas da playlist.
+Parâmetros:
+- raiz: Ponteiro para a raiz da árvore AVL.
+Como funciona: Verifica o fator de balanceamento e aplica rotações (esquerda, direita ou dupla) conforme necessário para manter a propriedade AVL.
+
+7. MusicasPlaylist* criar(char* nomeA, char* tituloA, char* tituloM)
+Descrição: Cria uma nova música para ser adicionada à playlist.
+Parâmetros:
+- nomeA: Nome do artista.
+- tituloA: Título do álbum.
+- tituloM: Título da música.
+Retorno: Ponteiro para a música criada.
+Como funciona: Aloca memória para uma nova música, inicializa os campos com os valores fornecidos e retorna o ponteiro para a nova música.
+
+8. void buscarMusicaPlaylist(MusicasPlaylist* raiz, char* tituloM, MusicasPlaylist** resultado)
+Descrição: Busca uma música pelo título na árvore AVL de músicas da playlist.
+Parâmetros:
+- raiz: Ponteiro para a raiz da árvore AVL de músicas da playlist.
+- tituloM: Título da música a ser buscada.
+- resultado: Ponteiro para armazenar o nó encontrado.
+Como funciona: Percorre a árvore comparando o título da música com o valor fornecido. Se encontrar, armazena o nó no ponteiro resultado.
+
+9. int addMusica(MusicasPlaylist** R, MusicasPlaylist* musica)
+Descrição: Adiciona uma nova música à árvore AVL de músicas da playlist.
+Parâmetros:
+- R: Ponteiro para a raiz da árvore AVL de músicas da playlist.
+- musica: Ponteiro para a música a ser adicionada.
+Retorno: 1 se a inserção for bem-sucedida, 0 caso contrário.
+Como funciona: Insere a música na árvore de forma ordenada com base no título, mantendo o balanceamento AVL.
+
+10. void cadastrarMusicasPlaylist(struct Playlist* raiz, char* nomePlaylist, char* nomeA, char* tituloA, char* tituloM)
+Descrição: Cadastra uma nova música em uma playlist específica.
+Parâmetros:
+- raiz: Ponteiro para a raiz da árvore de playlists.
+- nomePlaylist: Nome da playlist.
+- nomeA: Nome do artista.
+- tituloA: Título do álbum.
+- tituloM: Título da música.
+Como funciona: Busca a playlist pelo nome, localiza o álbum e o artista, e insere a música na árvore AVL de músicas associada à playlist.
+
+11. int ehFilhoMP(MusicasPlaylist* mp)
+Descrição: Verifica se um nó é filho de outro na árvore AVL.
+Parâmetros:
+- mp: Ponteiro para o nó a ser verificado.
+Retorno: 1 se o nó for filho, 0 caso contrário.
+Como funciona: Avalia se o nó possui filhos (esquerdo ou direito) na árvore AVL.
+
+12. MusicasPlaylist* souFilhoMP(MusicasPlaylist* mp)
+Descrição: Retorna o nó pai de um nó na árvore AVL.
+Parâmetros:
+- mp: Ponteiro para o nó cuja paternidade será verificada.
+Retorno: Ponteiro para o nó pai, ou NULL se não houver pai.
+Como funciona: Verifica a relação de paternidade na árvore AVL e retorna o nó correspondente.
+
+13. MusicasPlaylist* enderecoMenorEsqMP(MusicasPlaylist* mp)
+Descrição: Encontra o menor nó na subárvore direita de um nó na árvore AVL.
+Parâmetros:
+- mp: Ponteiro para o nó cuja subárvore será analisada.
+Retorno: Ponteiro para o menor nó encontrado.
+Como funciona: Percorre a subárvore esquerda até encontrar o nó mais à esquerda.
+
+14. int removerMusicaPlaylist(MusicasPlaylist** raiz, char* tituloM)
+Descrição: Remove uma música da árvore AVL de músicas da playlist com base no título.
+Parâmetros:
+- raiz: Ponteiro para a raiz da árvore AVL de músicas da playlist.
+- tituloM: Título da música a ser removida.
+Retorno: 1 se a remoção for bem-sucedida, 0 caso contrário.
+Como funciona: 
+1. Busca a música na árvore comparando o título com os nós.
+2. Se a música não for encontrada, retorna 0.
+3. Se a música não tiver filhos, libera o nó diretamente.
+4. Se a música tiver apenas um filho, substitui o nó pelo filho.
+5. Se a música tiver dois filhos, encontra o sucessor in-order (menor nó da subárvore direita), copia os dados do sucessor para o nó atual e remove o sucessor recursivamente.
+6. Após a remoção, chama a função de balanceamento (`balanceamentoMP`) para ajustar a árvore e manter a propriedade AVL.
+7. Atualiza os ponteiros da árvore para manter a estrutura correta.
+
+15. void testeTemposInsercao()
+Descrição: Testa e mede os tempos de inserção de músicas na árvore AVL.
+Parâmetros: Nenhum.
+Retorno: Um arquivo TXT contendo os resultados dos tempos de inserção.
+Como funciona: Realiza inserções de músicas na árvore AVL, mede os tempos de execução e salva os resultados em um arquivo TXT para análise posterior.
+
+16. void testeBuscaMusicasDeArtista(Artista* raiz)
+Descrição: Testa a busca de músicas de um artista específico na árvore AVL.
+Parâmetros:
+- raiz: Ponteiro para a raiz da árvore de artistas.
+Retorno: Um arquivo TXT contendo os resultados das buscas realizadas.
+Como funciona: Realiza buscas de músicas associadas a um artista específico, mede os tempos de execução e salva os resultados em um arquivo TXT para análise posterior.
+
+Nesta seção será mostrado o funcionamento das funções de teste de tempos de inserção e busca de músicas em árvores AVL.
+
+A função `testeTemposInsercao` tem como objetivo medir o tempo médio de inserção de artistas, álbuns e músicas em uma árvore AVL. Para isso, são criadas 30 execuções, onde cada execução insere 100.000 artistas com álbuns e músicas associadas. Os tempos de execução de cada inserção são registrados em um arquivo TXT chamado `tempos_individuais_insercao.txt`, enquanto a média dos tempos de todas as execuções é salva no arquivo `media_tempo_insercao.txt`. O objetivo é analisar o desempenho da inserção em árvores AVL.
+
+Após a inserção, a função `testeBuscaMusicasDeArtista` é chamada para medir o tempo médio de busca de músicas de um artista específico. Nesta função, são realizadas 30 buscas de músicas de um artista escolhido aleatoriamente. Os tempos de cada busca são registrados no arquivo `tempo_busca.txt`, e a média dos tempos é calculada e salva no mesmo arquivo. O objetivo é avaliar a eficiência da busca em árvores AVL.
+
+Essas funções permitem analisar o desempenho de operações fundamentais em árvores AVL, como inserção e busca, fornecendo dados detalhados para avaliação e comparação.
