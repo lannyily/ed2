@@ -237,10 +237,7 @@ int removerMusica(Musica** raiz, char* titulo){
             }
         }
 
-        if(*raiz != NULL){
-            (*raiz)->altura = maiorM(alturaNoM((*raiz)->Esq), alturaNoM((*raiz)->Dir)) + 1;
-            balanceamentoM(raiz);   
-        }
+        
 
     } else {
         printf("Musica \"%s\" nao encontrada!\n", titulo);

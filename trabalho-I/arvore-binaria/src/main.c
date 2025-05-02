@@ -11,8 +11,7 @@
 int main() {
     Artista *raiz = NULL;
     Playlist *raizPlaylist = NULL;
-    Album *raizAlbum = NULL;
-    MusicasPlaylist *raizMusicasPlaylist = NULL;
+    
 
     int opcao;
 
@@ -46,7 +45,7 @@ int main() {
         switch (opcao) {
             case 1: {
                 printf("\n=== Cadastrar Artista ===\n");
-                /*
+                
                 char nome[100], tipo[50], estilo[50];
                 printf("Digite o nome do artista: ");
                 scanf(" %[^\n]", nome);
@@ -55,7 +54,7 @@ int main() {
                 printf("Digite o estilo musical: ");
                 scanf(" %[^\n]", estilo);
                 cadastrarArtista(&raiz, nome, tipo, estilo);
-                */
+                /*
                 cadastrarArtista(&raiz, "Legiao Urbana", "Banda", "Rock");
                 cadastrarArtista(&raiz, "Anitta", "Solo", "Pop");
                 cadastrarArtista(&raiz, "Chico Buarque", "Solo", "MPB");
@@ -66,12 +65,12 @@ int main() {
                 cadastrarArtista(&raiz, "Tribalistas", "Banda", "MPB");
                 cadastrarArtista(&raiz, "Marilia Mendonca", "Solo", "Sertanejo");
                 cadastrarArtista(&raiz, "Mamonas Assassinas", "Banda", "Rock Comico");
-
+                */
                 break;
             }
             case 2: {
                 printf("\n=== Cadastrar Album ===\n");
-                /*
+                
                 char nomeArtista[100], tituloAlbum[100], ano[10];
                 printf("Digite o nome do artista: ");
                 scanf(" %[^\n]", nomeArtista);
@@ -80,7 +79,7 @@ int main() {
                 printf("Digite o ano de lancamento: ");
                 scanf(" %[^\n]", ano);
                 cadastrarAlbum(raiz, nomeArtista, tituloAlbum, ano);
-                */
+                /*
                 cadastrarAlbum(raiz, "Legiao Urbana", "Dois", "1986");
                 cadastrarAlbum(raiz, "Anitta", "Kisses", "2019");
                 cadastrarAlbum(raiz, "Chico Buarque", "Construcao", "1971");
@@ -91,12 +90,12 @@ int main() {
                 cadastrarAlbum(raiz, "Tribalistas", "Tribalistas", "2002");
                 cadastrarAlbum(raiz, "Marilia Mendonca", "Todos os Cantos", "2019");
                 cadastrarAlbum(raiz, "Mamonas Assassinas", "Mamonas Assassinas", "1995");
-
+                */
                 break;
             }
             case 3: {
                 printf("\n=== Cadastrar Música ===\n");
-                /*
+                
                 char nomeArtista[100], tituloAlbum[100], tituloMusica[100];
                 int duracao;
                 printf("Digite o nome do artista: ");
@@ -108,7 +107,7 @@ int main() {
                 printf("Digite a duração da música (em minutos): ");
                 scanf("%d", &duracao);
                 cadastrarMusica(raiz, nomeArtista, tituloAlbum, tituloMusica, duracao);
-                */
+                /*
                 cadastrarMusica(raiz, "Legiao Urbana", "Dois", "Tempo Perdido", 5);
                 cadastrarMusica(raiz, "Anitta", "Kisses", "Poquito", 3);
                 cadastrarMusica(raiz, "Anitta", "Kisses", "teste", 3);
@@ -120,7 +119,7 @@ int main() {
                 cadastrarMusica(raiz, "Tribalistas", "Tribalistas", "Velha Infancia", 5);
                 cadastrarMusica(raiz, "Marilia Mendonca", "Todos os Cantos", "Supera", 4);
                 cadastrarMusica(raiz, "Mamonas Assassinas", "Mamonas Assassinas", "Pelados em Santos", 3);
-
+                */
                 break;
             }
             case 4: {
@@ -211,24 +210,24 @@ int main() {
                 break;
             }
             case 13: {
-                /*
+                
                 printf("\n=== Criar Playlist ===\n");
                 char playlistNome[100];
                 printf("Digite o nome da playlist: ");
                 scanf(" %[^\n]", playlistNome);
                 cadastrarPlaylist(&raizPlaylist, playlistNome);
-                */
-
+                
+                /*
                 cadastrarPlaylist(&raizPlaylist, "rock");
                 cadastrarPlaylist(&raizPlaylist, "pop");
                 cadastrarPlaylist(&raizPlaylist, "mpb");
                 cadastrarPlaylist(&raizPlaylist, "sertanejo");
                 cadastrarPlaylist(&raizPlaylist, "engracadas");
-
+                */
                 break;
             }
             case 14: {
-                /*
+                
                 printf("\n=== Inserir musica em uma Playlist ===\n");
                 char playlist[100];
                 printf("Digite o nome da playlist: ");
@@ -259,8 +258,8 @@ int main() {
                 } else {
                     printf("Artista \"%s\" com o album \"%s\" com a musica \"%s\" nao encontrada\n", nomeArtista, tituloAlbum, tituloMusica);
                 }
-                */
                 
+                /*
                 cadastrarMusicasPlaylist(raizPlaylist, "rock", "Legiao Urbana", "Dois", "Tempo Perdido");
                 cadastrarMusicasPlaylist(raizPlaylist, "rock", "Skank", "Calango", "Te Ver");
                 cadastrarMusicasPlaylist(raizPlaylist, "rock", "Mamonas Assassinas", "Mamonas Assassinas", "Pelados em Santos");
@@ -271,7 +270,7 @@ int main() {
                 cadastrarMusicasPlaylist(raizPlaylist, "sertanejo", "Marilia Mendonca", "Todos os Cantos", "Supera");
                 cadastrarMusicasPlaylist(raizPlaylist, "sertanejo", "Os Baroes da Pisadinha", "Conquistas", "Basta Voce Me Ligar");
                 cadastrarMusicasPlaylist(raizPlaylist, "engracadas", "Mamonas Assassinas", "Mamonas Assassinas", "Pelados em Santos");
-
+                */
                 break;
             }
             case 15: {
