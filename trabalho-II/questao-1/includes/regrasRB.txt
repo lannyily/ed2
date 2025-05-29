@@ -1,0 +1,5 @@
+1. Todo nó da árvore é vermelho ou preto.
+2. O nó raiz é preto.
+3. Toda folha (null) é preta.
+4. Se um nó é vermelho, então seus filhos são pretos.
+5. Para cada nó, todos os caminhos de um nó até seus descendentes possuem o mesmo número de nós pretos.
