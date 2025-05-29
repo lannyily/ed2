@@ -5,6 +5,7 @@
 typedef struct Cep{
   int cep;
   Cor cor;
+  struct Cep *Pai;
   struct Cep *Esq, *Dir;
 }Cep;
 

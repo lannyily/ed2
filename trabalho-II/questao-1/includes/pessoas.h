@@ -6,15 +6,15 @@
 
 
 typedef struct Pessoa {
-    long cpf;
+    int cpf;
     char nome[150];
     int cep_natal; //cidade natal
     int cep_mora; //cidade onde mora
     Data data_nascimento;
     Cor cor;
     struct Pessoa *pai;
-    struct Pessoa *esquerda;
-    struct Pessoa *direita;
+    struct Pessoa *esq, *dir;
 }Pessoa;
 
+int inserePessoa(Pessoa **raiz, Pessoa *pai, int cpf, char *nome, int cep_natal, int cep_mora, Data data_nascimento);
 #endif // NO_PESSOA_H
