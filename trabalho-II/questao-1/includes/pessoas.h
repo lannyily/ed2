@@ -12,8 +12,8 @@ typedef struct Pessoa {
     int cep_mora; //cidade onde mora
     Data data_nascimento;
     Cor cor;
-    struct Pessoa *pai;
-    struct Pessoa *esq, *dir;
+    struct Pessoa *Pai;
+    struct Pessoa *Esq, *Dir;
 }Pessoa;
 
 int inserePessoa(Pessoa **raiz, Pessoa *pai, int cpf, char *nome, int cep_natal, int cep_mora, Data data_nascimento);

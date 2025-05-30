@@ -14,29 +14,54 @@ Pessoa* criarNo(int cpf, char *nome, int cep_natal, int cep_mora, Data data_nasc
     nova->cep_mora = cep_mora;
     nova->data_nascimento = data_nascimento;
     nova->cor = RED; // Inicialmente a cor é vermelha
-    nova->pai = NULL;
-    nova->esq = NULL;
-    nova->dir = NULL;
+    nova->Pai = NULL;
+    nova->Esq = NULL;
+    nova->Dir = NULL;
 
     return nova;
 }
 
-int inserirPessoa(Pessoa** Raiz, Pessoa* pai, long cpf, char* nome, int cep_natal, int cep_mora, Data data_nasc) {
-    Pessoa* atual = *Raiz;
+int cor(Pessoa *no){
+ if (no == NULL) {
+        return BLACK; // Nós nulos são considerados pretos
+    }
+    return no->cor;
+}
+void trocarCor(Pessoa *no) {
+    if (no != NULL) {
+        no->cor = (no->cor == RED) ? BLACK : RED;
+    }
+}
+
+
+int inserirPessoa(Pessoa** Raiz, Pessoa* Pai, int cpf, char* nome, int cep_natal, int cep_mora, Data data_nasc) {
     int inseriu = 0;
 
-    if (atual == NULL) {
-        Pessoa* nova = criar_no_pessoa(cpf, nome, cep_natal, cep_mora, data_nasc);
+    if (*Raiz == NULL) {
+        Cidade* nova = criarNo(cpf, nome, cep_natal, cep_mora, data_nasc);
+        nova->Pai = Pai;
         *Raiz = nova;
-        if (pai == NULL) {
-            nova->cor = BLACK; 
-        inseriu = 1;
-    }
 
-    if (cpf < atual->cpf) {
-        inserirPessoa(&(atual->esq), atual, cpf, nome, cep_natal, cep_mora, data_nasc);
-    } else if (cpf > atual->cpf) {
-        inserirPessoa(&(atual->dir), atual, cpf, nome, cep_natal, cep_mora, data_nasc);
+        // A raiz deve ser sempre preta
+        if (Pai == NULL) {
+            nova->cor = BLACK;
+        }
+        return 1;
+    }
+    if (cpf < (*Raiz)->cpf) {
+        inserirPessoa(&(*Raiz)->Esq, *Raiz, cpf, nome, cep_natal, cep_mora, data_nasc);
+                
+        if (cor((*Raiz)->Esq) == RED && cor((*Raiz)->Esq->Esq) == RED) {
+            rotacaoDireita(Raiz);
+            trocarCor(*Raiz);
+            trocarCor((*Raiz)->Dir);
+        }
+    } else if (cpf > (*Raiz)->cpf) {
+        inserirPessoa(&(*Raiz)->Dir, *Raiz, cpf, nome, cep_natal, cep_mora, data_nasc);
+
+        if (cor((*Raiz)->Dir) == RED) {
+            rotacaoEsquerda(Raiz);
+        }
     } else {
         // CPF ja existe
         printf("Aviso: CPF %d ja existe. Insercao cancelada.\n", cpf);
