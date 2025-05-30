@@ -29,6 +29,14 @@ void trocarCor(Cidade *no) {
     }
 }
 
+void corrigirCoresCidade(Cidade *no) {
+    if (cor(no->Esq) == RED && cor(no->Dir) == RED) {
+        trocarCor(no->Esq);
+        trocarCor(no->Dir);
+        trocarCor(no);
+    }
+}
+
 int balancear();
 
 int insereCidade(Cidade** Raiz, Cidade *Pai, char* nomeCity, int tamPopu) {
@@ -64,16 +72,15 @@ int insereCidade(Cidade** Raiz, Cidade *Pai, char* nomeCity, int tamPopu) {
         // Garantir que não haja nós vermelhos na subárvore direita
         if (cor((*Raiz)->Dir) == RED) {
             rotacaoEsquerda(Raiz);
+            trocarCor(*Raiz);
         }
     } else {
         // Cidade já existe
         printf("Cidade ja existe!\n");
     }
 
-    // Garantir que a raiz seja preta
-    if (Pai == NULL) {
-        (*Raiz)->cor = BLACK;
-    }
+    corrigirCoresCidade(*Raiz);
+    // TODO: Implementar função balancear e verificar cor da raiz.
 
     return inseriu;
 }

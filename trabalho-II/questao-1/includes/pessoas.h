@@ -15,6 +15,7 @@ typedef struct Pessoa {
     struct Pessoa *Pai;
     struct Pessoa *Esq, *Dir;
 }Pessoa;
-
+int corPessoa(Pessoa *no);
+void trocarCorPessoa(Pessoa *no);
 int inserePessoa(Pessoa **raiz, Pessoa *pai, int cpf, char *nome, int cep_natal, int cep_mora, Data data_nascimento);
 #endif // NO_PESSOA_H

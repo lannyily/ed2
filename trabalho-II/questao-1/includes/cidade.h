@@ -13,7 +13,7 @@ typedef struct Cidade{
 
 Cidade* criarNo(char* nomeCity, int tamPopu);
 int cor(Cidade *no); // INFO: não entendi para que serve essa função 
-int trocarCor(Cidade *no);  // TODO: Implementar a função trocor
+void trocarCor(Cidade *no);  
 int balancear(Cidade *no); // TODO: Implementar a função balancear
 int insereCidade(Cidade** Raiz, Cidade *Pai, char* nomeCity, int tamPopu);
 #endif 

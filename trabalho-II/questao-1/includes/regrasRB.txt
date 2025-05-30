@@ -3,3 +3,6 @@
 3. Toda folha (null) é preta.
 4. Se um nó é vermelho, então seus filhos são pretos.
 5. Para cada nó, todos os caminhos de um nó até seus descendentes possuem o mesmo número de nós pretos.
+
+Rubro negra pedente para Esquerda:
+1. Apenas as ligações para filhos ESQUERDOS podem ser VERMELHOS.

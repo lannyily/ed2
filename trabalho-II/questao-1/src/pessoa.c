@@ -21,15 +21,22 @@ Pessoa* criarNo(int cpf, char *nome, int cep_natal, int cep_mora, Data data_nasc
     return nova;
 }
 
-int cor(Pessoa *no){
+int corPessoa(Pessoa *no){
  if (no == NULL) {
         return BLACK; // Nós nulos são considerados pretos
     }
     return no->cor;
 }
-void trocarCor(Pessoa *no) {
+void trocarCorPessoa(Pessoa *no) {
     if (no != NULL) {
         no->cor = (no->cor == RED) ? BLACK : RED;
+    }
+}
+void corrigirCoresPessoa(Pessoa *no) {
+    if (cor(no->Esq) == RED && cor(no->Dir) == RED) {
+        trocarCor(no->Esq);
+        trocarCor(no->Dir);
+        trocarCor(no);
     }
 }
 
@@ -61,10 +68,14 @@ int inserirPessoa(Pessoa** Raiz, Pessoa* Pai, int cpf, char* nome, int cep_natal
 
         if (cor((*Raiz)->Dir) == RED) {
             rotacaoEsquerda(Raiz);
+            trocarCor(*Raiz);
         }
     } else {
         // CPF ja existe
         printf("Aviso: CPF %d ja existe. Insercao cancelada.\n", cpf);
     }
+    corrigirCoresPessoa(*Raiz);
+    // TODO: Implementar função balancear e verificar cor da raiz.
+
     return inseriu;
 }
