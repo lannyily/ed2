@@ -8,8 +8,8 @@
 
 int main() {
     Estado* listaEstados = NULL;
-    Cep* arvoreCep = NULL;
     Pessoa* arvorePessoa = NULL;
+
 
     // Cadastro rápido de estados
     Estado* estado1 = criarNoEstado("Estado1", "Capital1", 5, 100000);
@@ -25,15 +25,17 @@ int main() {
 
     // Cadastro rápido de CEPs
     cadastrarCep(&listaEstados, "Estado1", "Cidade1", 12345);
-    cadastrarCep(&listaEstados, "Estado1", "Cidade2", 67890);
+    cadastrarCep(&listaEstados, "Estado1", "Cidade1", 67890);
     cadastrarCep(&listaEstados, "Estado2", "Cidade3", 54321);
+
 
     // Cadastro rápido de pessoas
     Data data1 = {1, 1, 2000};
-    cadastrarPessoa(&arvoreCep, &arvorePessoa, 111111111, "Pessoa1", 12345, 67890, data1);
+    cadastrarPessoa(listaEstados, &arvorePessoa, 111111111, "Pessoa1", 12345, 67890, data1);
 
     Data data2 = {2, 2, 1995};
-    cadastrarPessoa(&arvoreCep, &arvorePessoa, 222222222, "Pessoa2", 54321, 12345, data2);
+    cadastrarPessoa(listaEstados, &arvorePessoa, 222222222, "Pessoa2", 54321, 12345, data2);
 
+    removerPessoa(&arvorePessoa, 111111111); // Remover Pessoa1
     return 0;
 }

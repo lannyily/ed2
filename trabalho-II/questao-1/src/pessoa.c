@@ -5,6 +5,7 @@
 #include "../includes/cores.h"
 #include "../includes/pessoas.h"
 #include "../includes/cep.h"
+#include "../includes/estado.h"
 
 Pessoa* criarNoPessoa(int cpf, char *nome, int cep_natal, int cep_mora, Data data_nascimento) {
     Pessoa* nova = (Pessoa*)malloc(sizeof(Pessoa));
@@ -191,30 +192,53 @@ int inserirPessoa(Pessoa** Raiz, Pessoa* Pai, int cpf, char* nome, int cep_natal
     return inseriu;
 }
 
-void cadastrarPessoa(Cep** arvoreCep, Pessoa** arvorePessoa, int cpf, char* nome, int cep_natal, int cep_mora, Data data_nasc) {
-    int sucesso = 1;
+// Função auxiliar recursiva para buscar CEP em uma cidade
+Cep* buscarCepEmCidade(Cidade* cidade, int valorCep) {
+    if (cidade == NULL) return NULL;
     
-    // Verifica se o CEP de natalidade existe
-    Cep* cepNatal = buscarCep(*arvoreCep, cep_natal);
+    // Busca na cidade atual
+    Cep* resultado = buscarCep(cidade->arv_cep, valorCep);
+    if (resultado != NULL) return resultado;
+    
+    // Busca nas subárvores
+    resultado = buscarCepEmCidade(cidade->Esq, valorCep);
+    if (resultado != NULL) return resultado;
+    
+    return buscarCepEmCidade(cidade->Dir, valorCep);
+}
+
+// Função auxiliar recursiva para buscar CEP em um estado
+Cep* buscarCepEmEstado(Estado* estado, int valorCep) {
+    if (estado == NULL) return NULL;
+    
+    // Busca nas cidades do estado atual
+    Cep* resultado = buscarCepEmCidade(estado->arv_city, valorCep);
+    if (resultado != NULL) return resultado;
+    
+    // Busca no próximo estado
+    return buscarCepEmEstado(estado->Prox, valorCep);
+}
+
+void cadastrarPessoa(Estado* listaEstados, Pessoa** arvorePessoa, int cpf, char* nome, int cep_natal, int cep_mora, Data data_nasc) {
+    // Verifica se o CEP de natalidade existe em qualquer estado
+    Cep* cepNatal = buscarCepEmEstado(listaEstados, cep_natal);
     if (cepNatal == NULL) {
         printf("Erro: CEP de natalidade \"%d\" nao encontrado!\n", cep_natal);
-        sucesso = 0;
+        return;
     }
 
-    // Verifica se o CEP de moradia existe
-    Cep* cepMora = buscarCep(*arvoreCep, cep_mora);
+    // Verifica se o CEP de moradia existe em qualquer estado
+    Cep* cepMora = buscarCepEmEstado(listaEstados, cep_mora);
     if (cepMora == NULL) {
         printf("Erro: CEP de moradia \"%d\" nao encontrado!\n", cep_mora);
-        sucesso = 0;
+        return;
     }
 
-    // Insere a pessoa na árvore de pessoas
-    if (sucesso) {
-        if (inserirPessoa(arvorePessoa, NULL, cpf, nome, cep_natal, cep_mora, data_nasc)) {
-            printf("Pessoa \"%s\" cadastrada com sucesso!\n", nome);
-        } else {
-            printf("Erro: CPF \"%d\" ja existe!\n", cpf);
-        }
+    // Se ambos os CEPs foram encontrados, insere a pessoa
+    if (inserirPessoa(arvorePessoa, NULL, cpf, nome, cep_natal, cep_mora, data_nasc)) {
+        printf("Pessoa \"%s\" cadastrada com sucesso!\n", nome);
+    } else {
+        printf("Erro: CPF \"%d\" ja existe!\n", cpf);
     }
 }
 

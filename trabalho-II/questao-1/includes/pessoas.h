@@ -3,9 +3,13 @@
 
 #include "cores.h"
 #include "data.h"
+#include "cidade.h"
+#include "estado.h"
 
 // Declarações antecipadas
 typedef struct Cep Cep;
+typedef struct Cidade Cidade;
+typedef struct Estado Estado;
 
 typedef struct Pessoa {
     int cpf;
@@ -25,7 +29,7 @@ void rotacaoEsquerdaPessoa(Pessoa **Raiz);
 void rotacaoDireitaPessoa(Pessoa **Raiz);
 void balancearPessoa(Pessoa** raiz, Pessoa* no);
 int inserirPessoa(Pessoa **raiz, Pessoa *pai, int cpf, char *nome, int cep_natal, int cep_mora, Data data_nascimento);
-void cadastrarPessoa(Cep** arvoreCep, Pessoa** arvorePessoa, int cpf, char* nome, int cep_natal, int cep_mora, Data data_nasc);
+void cadastrarPessoa(Estado* estado, Pessoa** arvorePessoa, int cpf, char* nome, int cep_natal, int cep_mora, Data data_nasc);
 int PessoaAssociada(Pessoa* arvorePessoa, int valorCep);
 int removerPessoa(Pessoa** arvorePessoa, int cpf);
 #endif // NO_PESSOA_H
