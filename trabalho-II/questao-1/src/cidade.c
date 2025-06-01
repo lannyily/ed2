@@ -11,17 +11,13 @@ Cidade* buscaCidade(Cidade* raiz, char* nomeCity) {
         return NULL;
     }
     
-    printf("Busca: Comparando %s com %s\n", nomeCity, raiz->nomeCity);
     int cmp = strcmp(nomeCity, raiz->nomeCity);
     
     if (cmp == 0) {
-        printf("Busca: Cidade %s encontrada!\n", nomeCity);
         return raiz;
     } else if (cmp < 0) {
-        printf("Busca: Procurando %s na subarvore esquerda de %s\n", nomeCity, raiz->nomeCity);
         return buscaCidade(raiz->Esq, nomeCity);
     } else {
-        printf("Busca: Procurando %s na subarvore direita de %s\n", nomeCity, raiz->nomeCity);
         return buscaCidade(raiz->Dir, nomeCity);
     }
 }
@@ -156,11 +152,9 @@ int insereCidade(Cidade** Raiz, Cidade* Pai, char* nomeCity, int tamPopu) {
         if (Pai == NULL) {
             nova->cor = BLACK;
         }
-        printf("Inserindo cidade: %s\n", nomeCity);
         inseriu = 1;
     } else {
         int cmp = strcmp(nomeCity, (*Raiz)->nomeCity);
-        printf("Comparando insercao: %s com %s, resultado: %d\n", nomeCity, (*Raiz)->nomeCity, cmp);
         
         if (cmp < 0) {
             inseriu = insereCidade(&((*Raiz)->Esq), *Raiz, nomeCity, tamPopu);
@@ -172,6 +166,11 @@ int insereCidade(Cidade** Raiz, Cidade* Pai, char* nomeCity, int tamPopu) {
         if (inseriu) {
             printf("Balanceando apos inserir %s\n", nomeCity);
             balancearCidade(Raiz);
+            
+            // Garante que a raiz seja sempre preta
+            if ((*Raiz)->Pai == NULL) {
+                (*Raiz)->cor = BLACK;
+            }
         }
     }
     return inseriu;
@@ -214,6 +213,22 @@ void imprimirCidades(Cidade* raiz) {
         printf("Cidade: %s, População: %d\n", raiz->nomeCity, raiz->tamPopu);
         imprimirCidades(raiz->Dir);
     }
+}
+
+void imprimirArvoreCidade(Cidade* raiz, int nivel) {
+    if (raiz == NULL) {
+        return;
+    }
+
+    imprimirArvoreCidade(raiz->Dir, nivel + 1);
+
+    for (int i = 0; i < nivel; i++) {
+        printf("    ");
+    }
+
+    printf("%s (%s)\n", raiz->nomeCity, (raiz->cor == RED) ? "RED" : "BLACK");
+
+    imprimirArvoreCidade(raiz->Esq, nivel + 1);
 }
 
 

@@ -38,38 +38,50 @@ void trocarCorPessoa(Pessoa *no) {
 
 void rotacaoEsquerdaPessoa(Pessoa **Raiz) {
     Pessoa *temp = (*Raiz)->Dir;
-    (*Raiz)->Dir = temp->Esq;
+    Pessoa *raiz_atual = *Raiz;
+    
+    // Atualiza os ponteiros
+    raiz_atual->Dir = temp->Esq;
     if (temp->Esq != NULL) {
-        temp->Esq->Pai = *Raiz;
+        temp->Esq->Pai = raiz_atual;
     }
-    temp->Pai = (*Raiz)->Pai;
-    if ((*Raiz)->Pai == NULL) {
+    
+    temp->Pai = raiz_atual->Pai;
+    
+    if (raiz_atual->Pai == NULL) {
         *Raiz = temp;
-    } else if ((*Raiz) == (*Raiz)->Pai->Esq) {
-        (*Raiz)->Pai->Esq = temp;
+    } else if (raiz_atual == raiz_atual->Pai->Esq) {
+        raiz_atual->Pai->Esq = temp;
     } else {
-        (*Raiz)->Pai->Dir = temp;
+        raiz_atual->Pai->Dir = temp;
     }
-    temp->Esq = *Raiz;
-    (*Raiz)->Pai = temp;
+    
+    temp->Esq = raiz_atual;
+    raiz_atual->Pai = temp;
 }
 
 void rotacaoDireitaPessoa(Pessoa **Raiz) {
     Pessoa *temp = (*Raiz)->Esq;
-    (*Raiz)->Esq = temp->Dir;
+    Pessoa *raiz_atual = *Raiz;
+    
+    // Atualiza os ponteiros
+    raiz_atual->Esq = temp->Dir;
     if (temp->Dir != NULL) {
-        temp->Dir->Pai = *Raiz;
+        temp->Dir->Pai = raiz_atual;
     }
-    temp->Pai = (*Raiz)->Pai;
-    if ((*Raiz)->Pai == NULL) {
+    
+    temp->Pai = raiz_atual->Pai;
+    
+    if (raiz_atual->Pai == NULL) {
         *Raiz = temp;
-    } else if ((*Raiz) == (*Raiz)->Pai->Esq) {
-        (*Raiz)->Pai->Esq = temp;
+    } else if (raiz_atual == raiz_atual->Pai->Esq) {
+        raiz_atual->Pai->Esq = temp;
     } else {
-        (*Raiz)->Pai->Dir = temp;
+        raiz_atual->Pai->Dir = temp;
     }
-    temp->Dir = *Raiz;
-    (*Raiz)->Pai = temp;
+    
+    temp->Dir = raiz_atual;
+    raiz_atual->Pai = temp;
 }
 
 
@@ -93,7 +105,7 @@ int inserirPessoa(Pessoa** Raiz, Pessoa* Pai, int cpf, char* nome, int cep_natal
     if (inseriu) {
         balancearPessoa(Raiz);
     }
-    
+
     return inseriu;
 }
 
@@ -261,6 +273,22 @@ Pessoa* removerMenorLLRB(Pessoa *raiz) {
     // Balanceia no retorno
     balancearPessoa(&raiz);
     return raiz; // Retorna o nó H após balanceamento
+}
+
+void imprimirArvorePessoa(Pessoa* raiz, int nivel) {
+    if (raiz == NULL) {
+        return;
+    }
+
+    imprimirArvorePessoa(raiz->Dir, nivel + 1);
+
+    for (int i = 0; i < nivel; i++) {
+        printf("    ");
+    }
+
+    printf("%d (%s)\n", raiz->cpf, (raiz->cor == RED) ? "RED" : "BLACK");
+
+    imprimirArvorePessoa(raiz->Esq, nivel + 1);
 }
 
 

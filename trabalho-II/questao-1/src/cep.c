@@ -67,73 +67,51 @@ void trocarCorCep(Cep *no) {
 }
 
 void rotacaoEsquerdaCep(Cep **Raiz) {
-    // Armazena o nó à direita da raiz atual em uma variável temporária
-    Cep *temp = (*Raiz)->Dir; 
-
-    // Move o filho esquerdo do nó à direita (temp) para o filho direito da raiz atual
-    (*Raiz)->Dir = temp->Esq;
-
-    // Se o filho esquerdo de temp não for NULL, atualiza o pai desse nó para ser a raiz atual
+    Cep *temp = (*Raiz)->Dir;
+    Cep *raiz_atual = *Raiz;
+    
+    // Atualiza os ponteiros
+    raiz_atual->Dir = temp->Esq;
     if (temp->Esq != NULL) {
-        temp->Esq->Pai = *Raiz;
+        temp->Esq->Pai = raiz_atual;
     }
-
-    // Atualiza o pai de temp para ser o pai da raiz atual
-    temp->Pai = (*Raiz)->Pai;
-
-    // Se a raiz atual não tiver pai (ou seja, é a raiz da árvore), temp se torna a nova raiz
-    if ((*Raiz)->Pai == NULL) {
+    
+    temp->Pai = raiz_atual->Pai;
+    
+    if (raiz_atual->Pai == NULL) {
         *Raiz = temp;
-    } 
-    // Caso contrário, verifica se a raiz atual é o filho esquerdo ou direito de seu pai
-    else if ((*Raiz) == (*Raiz)->Pai->Esq) {
-        // Se for o filho esquerdo, atualiza o ponteiro esquerdo do pai para apontar para temp
-        (*Raiz)->Pai->Esq = temp;
+    } else if (raiz_atual == raiz_atual->Pai->Esq) {
+        raiz_atual->Pai->Esq = temp;
     } else {
-        // Se for o filho direito, atualiza o ponteiro direito do pai para apontar para temp
-        (*Raiz)->Pai->Dir = temp;
+        raiz_atual->Pai->Dir = temp;
     }
-
-    // Faz com que a raiz atual se torne o filho esquerdo de temp
-    temp->Esq = *Raiz;
-
-    // Atualiza o pai da raiz atual para ser temp
-    (*Raiz)->Pai = temp;
+    
+    temp->Esq = raiz_atual;
+    raiz_atual->Pai = temp;
 }
 
 void rotacaoDireitaCep(Cep **Raiz) {
-    // Armazena o nó à esquerda da raiz atual em uma variável temporária
     Cep *temp = (*Raiz)->Esq;
-
-    // Move o filho direito do nó à esquerda (temp) para o filho esquerdo da raiz atual
-    (*Raiz)->Esq = temp->Dir;
-
-    // Se o filho direito de temp não for NULL, atualiza o pai desse nó para ser a raiz atual
+    Cep *raiz_atual = *Raiz;
+    
+    // Atualiza os ponteiros
+    raiz_atual->Esq = temp->Dir;
     if (temp->Dir != NULL) {
-        temp->Dir->Pai = *Raiz;
+        temp->Dir->Pai = raiz_atual;
     }
-
-    // Atualiza o pai de temp para ser o pai da raiz atual
-    temp->Pai = (*Raiz)->Pai;
-
-    // Se a raiz atual não tiver pai (ou seja, é a raiz da árvore), temp se torna a nova raiz
-    if ((*Raiz)->Pai == NULL) {
+    
+    temp->Pai = raiz_atual->Pai;
+    
+    if (raiz_atual->Pai == NULL) {
         *Raiz = temp;
-    } 
-    // Caso contrário, verifica se a raiz atual é o filho esquerdo ou direito de seu pai
-    else if ((*Raiz) == (*Raiz)->Pai->Esq) {
-        // Se for o filho esquerdo, atualiza o ponteiro esquerdo do pai para apontar para temp
-        (*Raiz)->Pai->Esq = temp;
+    } else if (raiz_atual == raiz_atual->Pai->Esq) {
+        raiz_atual->Pai->Esq = temp;
     } else {
-        // Se for o filho direito, atualiza o ponteiro direito do pai para apontar para temp
-        (*Raiz)->Pai->Dir = temp;
+        raiz_atual->Pai->Dir = temp;
     }
-
-    // Faz com que a raiz atual se torne o filho direito de temp
-    temp->Dir = *Raiz;
-
-    // Atualiza o pai da raiz atual para ser temp
-    (*Raiz)->Pai = temp;
+    
+    temp->Dir = raiz_atual;
+    raiz_atual->Pai = temp;
 }    
 
 void balancearCep(Cep **raiz) {
@@ -146,6 +124,11 @@ void balancearCep(Cep **raiz) {
     if (corCep((*raiz)->Esq) == RED && corCep((*raiz)->Dir) == RED) {
         trocarCorCep(*raiz);
     }
+    
+    // Garante que a raiz seja sempre preta
+    if ((*raiz)->Pai == NULL) {
+        (*raiz)->cor = BLACK;
+    }
 }
 
 int inserirCep(Cep** Raiz, Cep* Pai, int valor, Cidade* cidade) {
@@ -156,36 +139,57 @@ int inserirCep(Cep** Raiz, Cep* Pai, int valor, Cidade* cidade) {
         novo->Pai = Pai;
         *Raiz = novo;
         if (Pai == NULL) {
-            novo->cor = BLACK;
+            novo->cor = BLACK;  // Raiz sempre é preta
         }
+        printf("Inserindo CEP: %d\n", valor);
         inseriu = 1;
-    } else if (valor < (*Raiz)->cep) {
-        inseriu = inserirCep(&((*Raiz)->Esq), *Raiz, valor, cidade);
-        if (inseriu) {
-            if (corCep((*Raiz)->Esq) == RED && corCep((*Raiz)->Esq->Esq) == RED) {
-                rotacaoDireitaCep(Raiz);
-                trocarCorCep(*Raiz);
+    } else {
+        printf("Comparando inserção: %d com %d\n", valor, (*Raiz)->cep);
+        if (valor < (*Raiz)->cep) {
+            printf("Inserindo %d na subárvore esquerda de %d\n", valor, (*Raiz)->cep);
+            inseriu = inserirCep(&((*Raiz)->Esq), *Raiz, valor, cidade);
+            if (inseriu) {
+                printf("Balanceando após inserir %d na esquerda\n", valor);
+                if (corCep((*Raiz)->Esq) == RED && corCep((*Raiz)->Esq->Esq) == RED) {
+                    printf("Rotação à direita em %d\n", (*Raiz)->cep);
+                    rotacaoDireitaCep(Raiz);
+                    trocarCorCep(*Raiz);
+                }
+                if (corCep((*Raiz)->Esq) == RED && corCep((*Raiz)->Dir) == RED) {
+                    printf("Flip de cores em %d\n", (*Raiz)->cep);
+                    trocarCorCep(*Raiz);
+                }
             }
-            if (corCep((*Raiz)->Esq) == RED && corCep((*Raiz)->Dir) == RED) {
-                trocarCorCep(*Raiz);
+        } else if (valor > (*Raiz)->cep) {
+            printf("Inserindo %d na subárvore direita de %d\n", valor, (*Raiz)->cep);
+            inseriu = inserirCep(&((*Raiz)->Dir), *Raiz, valor, cidade);
+            if (inseriu) {
+                printf("Balanceando após inserir %d na direita\n", valor);
+                if (corCep((*Raiz)->Dir) == RED && corCep((*Raiz)->Dir->Dir) == RED) {
+                    printf("Rotação à esquerda em %d\n", (*Raiz)->cep);
+                    rotacaoEsquerdaCep(Raiz);
+                    trocarCorCep(*Raiz);
+                }
+                if (corCep((*Raiz)->Esq) == RED && corCep((*Raiz)->Dir) == RED) {
+                    printf("Flip de cores em %d\n", (*Raiz)->cep);
+                    trocarCorCep(*Raiz);
+                }
             }
+        } else {
+            printf("CEP %d já existe!\n", valor);
         }
-    } else if (valor > (*Raiz)->cep) {
-        inseriu = inserirCep(&((*Raiz)->Dir), *Raiz, valor, cidade);
-        if (inseriu) {
-            if (corCep((*Raiz)->Dir) == RED && corCep((*Raiz)->Dir->Dir) == RED) {
-                rotacaoEsquerdaCep(Raiz);
-                trocarCorCep(*Raiz);
-            }
-            if (corCep((*Raiz)->Esq) == RED && corCep((*Raiz)->Dir) == RED) {
-                trocarCorCep(*Raiz);
-            }
+        
+        // Garante que a raiz seja sempre preta
+        if ((*Raiz)->Pai == NULL) {
+            (*Raiz)->cor = BLACK;
         }
     }
     return inseriu;
 }
 
 void cadastrarCep(Estado** listaEstados, char* nomeEstado, char* nomeCity, int valorCep) { 
+    printf("Tentando cadastrar CEP %d na cidade %s do estado %s\n", valorCep, nomeCity, nomeEstado);
+    
     // Busca o estado na lista de estados
     Estado* estadoAtual = buscaEstado(*listaEstados, nomeEstado);
 
@@ -201,7 +205,8 @@ void cadastrarCep(Estado** listaEstados, char* nomeEstado, char* nomeCity, int v
     // Verifica se a cidade existe
     if (cidadeAtual == NULL) {
         printf("Erro: Cidade \"%s\" nao encontrada no estado \"%s\"!\n", nomeCity, nomeEstado);
-    }else { // Insere o CEP na árvore de CEPs da cidade
+    } else { // Insere o CEP na árvore de CEPs da cidade
+        printf("Cidade encontrada, tentando inserir CEP %d\n", valorCep);
         if (inserirCep(&cidadeAtual->arv_cep, NULL, valorCep, cidadeAtual)) {
             printf("CEP \"%d\" cadastrado com sucesso na cidade \"%s\"!\n", valorCep, nomeCity);
         } else {
@@ -322,6 +327,24 @@ void move2DirRED_Cep(Cep **H) {
         rotacaoDireitaCep(H);
         trocarCorCep(*H);
     }
+}
+
+void imprimirArvoreCep(Cep* raiz, int nivel) {
+    if (raiz == NULL) {
+        return;
+    }
+
+    printf("Imprimindo nó %d no nível %d\n", raiz->cep, nivel);
+    
+    imprimirArvoreCep(raiz->Dir, nivel + 1);
+
+    for (int i = 0; i < nivel; i++) {
+        printf("    ");
+    }
+
+    printf("%d (%s)\n", raiz->cep, (raiz->cor == RED) ? "RED" : "BLACK");
+
+    imprimirArvoreCep(raiz->Esq, nivel + 1);
 }
 
 
