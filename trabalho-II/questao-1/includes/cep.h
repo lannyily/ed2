@@ -32,5 +32,6 @@ Cep* removerNoCep(Cep *raiz, int valor);
 Cep* removerMenorLLRB_Cep(Cep *raiz);
 void move2EsqRED_Cep(Cep **H);
 void move2DirRED_Cep(Cep **H);
+int removerCep(Cep** arvoreCep, Pessoa* arvorePessoa, int valorCep);
 int removerCepDoEstado(Estado* listaEstados, Pessoa* arvorePessoa, int valorCep, char* nomeEstado, char* nomeCity);
 #endif

@@ -283,7 +283,7 @@ Cep* removerMenorLLRB_Cep(Cep *raiz) {
     return raiz; // Retorna o nó H após balanceamento
 }
 
-/* int removerCepDoEstado(Estado* listaEstados, Pessoa* arvorePessoa, int valorCep, char* nomeEstado, char* nomeCity) {
+int removerCepDoEstado(Estado* listaEstados, Pessoa* arvorePessoa, int valorCep, char* nomeEstado, char* nomeCity) {
     // Busca o estado na lista de estados
     Estado* estadoAtual = buscaEstado(listaEstados, nomeEstado);
 
@@ -300,17 +300,17 @@ Cep* removerMenorLLRB_Cep(Cep *raiz) {
         return 0;
     }
 
-    // Busca o CEP na árvore de CEPs da cidade usando buscarCepEmCidade
-    Cep* cepAtual = buscarCepEmCidade(cidadeAtual, valorCep);
+    // Busca o CEP na árvore de CEPs da cidade
+    Cep* cepAtual = buscarCep(cidadeAtual->arv_cep, valorCep);
 
     if (cepAtual == NULL) {
         printf("Erro: CEP %d não encontrado na cidade %s!\n", valorCep, nomeCity);
         return 0;
     }
 
-    // Remove o CEP usando buscarCepEmEstado
-    return removerCep(&cidadeAtual->arv_cep, arvorePessoa, valorCep, nomeCity);
-} */
+    // Remove o CEP
+    return removerCep(&cidadeAtual->arv_cep, arvorePessoa, valorCep);
+}
 
 void move2EsqRED_Cep(Cep **H) {
     trocarCorCep(*H);
@@ -346,5 +346,25 @@ void imprimirArvoreCep(Cep* raiz, int nivel) {
 
     imprimirArvoreCep(raiz->Esq, nivel + 1);
 }
+
+int removerCep(Cep** arvoreCep, Pessoa* arvorePessoa, int valorCep) {
+    int resultado = 0;
+    
+    if (PessoaAssociada(arvorePessoa, valorCep)) {
+        *arvoreCep = removerNoCep(*arvoreCep, valorCep);
+        
+        if (*arvoreCep != NULL) {
+            (*arvoreCep)->cor = BLACK;
+        }
+        
+        printf("CEP %d removido com sucesso!\n", valorCep);
+        resultado = 1;
+    } else {
+        printf("Erro: Existem pessoas associadas ao CEP %d!\n", valorCep);
+    }
+    
+    return resultado;
+}
+
 
 

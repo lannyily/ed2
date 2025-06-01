@@ -43,10 +43,13 @@ int main() {
     cadastrarPessoa(listaEstados, &arvorePessoa, 222222222, "Pessoa2", 54321, 12345, data2);
 
     Data data3 = {3, 3, 1990};
-    cadastrarPessoa(listaEstados, &arvorePessoa, 333333333, "Pessoa3", 12346, 67890, data3);
+    cadastrarPessoa(listaEstados, &arvorePessoa, 333333333, "Pessoa3", 12345, 67890, data3);
 
 
     removerPessoa(&arvorePessoa, 111111111); 
-
+    imprimirArvoreCep(estado1->arv_city->arv_cep, 0);
+    removerCepDoEstado(listaEstados, arvorePessoa, 12346, "Estado1", "Cidade5");
+    printf("removido?");
+    imprimirArvoreCep(estado1->arv_city->arv_cep, 0);
     return 0;
 }
