@@ -23,10 +23,14 @@ int corCep(Cep *no);
 void trocarCorCep(Cep *no);
 void rotacaoEsquerdaCep(Cep **Raiz);
 void rotacaoDireitaCep(Cep **Raiz);
-void balancearCep(Cep** raiz, Cep* no);
+void balancearCep(Cep **raiz);
 int inserirCep(Cep** Raiz, Cep* Pai, int valor, Cidade* cidade);
 void cadastrarCep(Estado** listaEstados, char* nomeEstado, char* nomeCity, int valorCep);
-int removerCep(Cep** arvoreCep, Pessoa* arvorePessoa, int valorCep, char* nomeCity);
 Cep* buscarCepEmEstado(Estado* listaEstados, int valorCep);
 Cep* buscarCepEmCidade(Cidade* cidade, int valorCep);
+Cep* removerNoCep(Cep *raiz, int valor);
+Cep* removerMenorLLRB_Cep(Cep *raiz);
+void move2EsqRED_Cep(Cep **H);
+void move2DirRED_Cep(Cep **H);
+int removerCepDoEstado(Estado* listaEstados, Pessoa* arvorePessoa, int valorCep, char* nomeEstado, char* nomeCity);
 #endif

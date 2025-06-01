@@ -136,86 +136,15 @@ void rotacaoDireitaCep(Cep **Raiz) {
     (*Raiz)->Pai = temp;
 }    
 
-void balancearCep(Cep** raiz, Cep* no) {
-    if (no->Pai == NULL) {
-        no->cor = BLACK; // Garante que a raiz seja preta
+void balancearCep(Cep **raiz) {
+    if (corCep((*raiz)->Dir) == RED) {
+        rotacaoEsquerdaCep(raiz);
     }
-
-    if (no == no->Pai->Esq) {
-        Cep* irmao = no->Pai->Dir;
-
-        // Caso 1: O irmão é vermelho
-        if (irmao != NULL && irmao->cor == RED) {
-            irmao->cor = BLACK;
-            no->Pai->cor = RED;
-            rotacaoEsquerdaCep(&(no->Pai)); // Rotação para priorizar o lado esquerdo
-            balancearCep(raiz, no);
-        } else if (corCep(irmao->Esq) == BLACK && corCep(irmao->Dir) == BLACK) {
-            // Caso 2: Os filhos do irmão são pretos
-            if (irmao != NULL) {
-                irmao->cor = RED;
-            }
-            balancearCep(raiz, no->Pai);
-        } else if (corCep(irmao->Dir) == BLACK) {
-            // Caso 3: O filho direito do irmão é preto
-            if (irmao->Esq != NULL) {
-                irmao->Esq->cor = BLACK;
-            }
-            if (irmao != NULL) {
-                irmao->cor = RED;
-            }
-            rotacaoDireitaCep(&irmao); // Rotação para priorizar o lado esquerdo
-            balancearCep(raiz, no);
-        } else {
-            // Caso 4: O filho direito do irmão é vermelho
-            if (irmao != NULL) {
-                irmao->cor = no->Pai->cor;
-            }
-            no->Pai->cor = BLACK;
-            if (irmao->Dir != NULL) {
-                irmao->Dir->cor = BLACK;
-            }
-            rotacaoEsquerdaCep(&(no->Pai)); // Rotação para priorizar o lado esquerdo
-            balancearCep(raiz, *raiz);
-        }
-    } else {
-        // Simétrico para o caso em que `no` é filho direito
-        Cep* irmao = no->Pai->Esq;
-
-        // Caso 1: O irmão é vermelho
-        if (irmao != NULL && irmao->cor == RED) {
-            irmao->cor = BLACK;
-            no->Pai->cor = RED;
-            rotacaoDireitaCep(&(no->Pai)); // Rotação para priorizar o lado esquerdo
-            balancearCep(raiz, no);
-        } else if (corCep(irmao->Dir) == BLACK && corCep(irmao->Esq) == BLACK) {
-            // Caso 2: Os filhos do irmão são pretos
-            if (irmao != NULL) {
-                irmao->cor = RED;
-            }
-            balancearCep(raiz, no->Pai);
-        } else if (corCep(irmao->Esq) == BLACK) {
-            // Caso 3: O filho esquerdo do irmão é preto
-            if (irmao->Dir != NULL) {
-                irmao->Dir->cor = BLACK;
-            }
-            if (irmao != NULL) {
-                irmao->cor = RED;
-            }
-            rotacaoEsquerdaCep(&irmao); // Rotação para priorizar o lado esquerdo
-            balancearCep(raiz, no);
-        } else {
-            // Caso 4: O filho esquerdo do irmão é vermelho
-            if (irmao != NULL) {
-                irmao->cor = no->Pai->cor;
-            }
-            no->Pai->cor = BLACK;
-            if (irmao->Esq != NULL) {
-                irmao->Esq->cor = BLACK;
-            }
-            rotacaoDireitaCep(&(no->Pai)); // Rotação para priorizar o lado esquerdo
-            balancearCep(raiz, *raiz);
-        }
+    if (corCep((*raiz)->Esq) == RED && corCep((*raiz)->Esq->Esq) == RED) {
+        rotacaoDireitaCep(raiz);
+    }
+    if (corCep((*raiz)->Esq) == RED && corCep((*raiz)->Dir) == RED) {
+        trocarCorCep(*raiz);
     }
 }
 
@@ -256,7 +185,7 @@ int inserirCep(Cep** Raiz, Cep* Pai, int valor, Cidade* cidade) {
     return inseriu;
 }
 
-void cadastrarCep(Estado** listaEstados, char* nomeEstado, char* nomeCity, int valorCep) { // TODO: impletementar else.
+void cadastrarCep(Estado** listaEstados, char* nomeEstado, char* nomeCity, int valorCep) { 
     // Busca o estado na lista de estados
     Estado* estadoAtual = buscaEstado(*listaEstados, nomeEstado);
 
@@ -282,58 +211,75 @@ void cadastrarCep(Estado** listaEstados, char* nomeEstado, char* nomeCity, int v
     }
 }
 
-int removerCep(Cep** arvoreCep, Pessoa* arvorePessoa, int valorCep, char* nomeCity) {
-    if (*arvoreCep == NULL) {
-        printf("Erro: CEP %d não encontrado na cidade %s!\n", valorCep, nomeCity);
-        return 0;
+Cep* removerNoCep(Cep *raiz, int valor) {
+    if (raiz == NULL) {
+        return NULL;
     }
 
-    Cep* noAtual = *arvoreCep;
-
-    if (valorCep < noAtual->cep) {
-        return removerCep(&(noAtual->Esq), arvorePessoa, valorCep, nomeCity);
-    } else if (valorCep > noAtual->cep) {
-        return removerCep(&(noAtual->Dir), arvorePessoa, valorCep, nomeCity);
+    // Descendo na árvore
+    if (valor < raiz->cep) {
+        if (raiz->Esq != NULL && corCep(raiz->Esq) == BLACK && 
+            raiz->Esq->Esq != NULL && corCep(raiz->Esq->Esq) == BLACK) {
+            move2EsqRED_Cep(&raiz);
+        }
+        raiz->Esq = removerNoCep(raiz->Esq, valor);
     } else {
-        // Verifica se há pessoas associadas ao CEP
-        if (!PessoaAssociada(arvorePessoa, valorCep)) {
-            printf("Erro: Não é possível remover o CEP %d porque há pessoas associadas a ele!\n", valorCep);
-            return 0;
+        if (raiz->Esq != NULL && corCep(raiz->Esq) == RED) {
+            rotacaoDireitaCep(&raiz);
+        }
+        if (valor == raiz->cep && raiz->Dir == NULL) {
+            free(raiz);
+            return NULL;
         }
 
-        // Caso 1: Nó sem filhos
-        if (noAtual->Esq == NULL && noAtual->Dir == NULL) {
-            free(noAtual);
-            *arvoreCep = NULL;
-        } 
-        // Caso 2: Nó com um filho
-        else if (noAtual->Esq == NULL || noAtual->Dir == NULL) {
-            Cep* filho = (noAtual->Esq != NULL) ? noAtual->Esq : noAtual->Dir;
-            filho->Pai = noAtual->Pai;
-            free(noAtual);
-            *arvoreCep = filho;
-        } 
-        // Caso 3: Nó com dois filhos
-        else {
-            Cep* sucessor = noAtual->Dir;
-            while (sucessor->Esq != NULL) {
+        if (raiz->Dir != NULL && corCep(raiz->Dir) == BLACK && 
+            raiz->Dir->Esq != NULL && corCep(raiz->Dir->Esq) == BLACK) {
+            move2DirRED_Cep(&raiz);
+        }
+
+        if (valor == raiz->cep) {
+            // Nó a ser removido tem dois filhos ou um filho direito
+            Cep* sucessor = raiz->Dir; // Encontrar o menor na subárvore direita
+            while(sucessor->Esq != NULL) {
                 sucessor = sucessor->Esq;
             }
+            
+            raiz->cep = sucessor->cep; // Copia o CEP do sucessor
+            raiz->cidade = sucessor->cidade; // Copia a referência para a cidade
 
-            noAtual->cep = sucessor->cep;
-            noAtual->cidade = sucessor->cidade;
-            removerCep(&(noAtual->Dir), arvorePessoa, sucessor->cep, nomeCity);
+            raiz->Dir = removerMenorLLRB_Cep(raiz->Dir); // Remove o sucessor da subárvore direita
+        } else {
+            // Continua a busca na subárvore direita
+            raiz->Dir = removerNoCep(raiz->Dir, valor);
         }
-
-        // Balanceia a árvore após a remoção
-        balancearCep(arvoreCep, noAtual->Pai);
-
-        printf("CEP %d removido com sucesso da cidade %s!\n", valorCep, nomeCity);
-        return 1;
     }
+
+    // Subindo na árvore, balanceando
+    balancearCep(&raiz);
+    return raiz;
 }
 
-int removerCepDoEstado(Estado* listaEstados, Pessoa* arvorePessoa, int valorCep, char* nomeEstado, char* nomeCity) {
+Cep* removerMenorLLRB_Cep(Cep *raiz) {
+    if (raiz->Esq == NULL) {
+        // Encontrou o menor nó
+        // Antes de liberar H, precisamos retornar o nó direito (se existir) para o pai
+        Cep* dir = raiz->Dir;
+        free(raiz);
+        return dir; // Retorna o filho direito, que será o novo filho esquerdo do pai
+    }
+
+    if (corCep(raiz->Esq) == BLACK && corCep(raiz->Esq->Esq) == BLACK) {
+        move2EsqRED_Cep(&raiz);
+    }
+
+    raiz->Esq = removerMenorLLRB_Cep(raiz->Esq);
+
+    // Balanceia no retorno
+    balancearCep(&raiz);
+    return raiz; // Retorna o nó H após balanceamento
+}
+
+/* int removerCepDoEstado(Estado* listaEstados, Pessoa* arvorePessoa, int valorCep, char* nomeEstado, char* nomeCity) {
     // Busca o estado na lista de estados
     Estado* estadoAtual = buscaEstado(listaEstados, nomeEstado);
 
@@ -360,6 +306,23 @@ int removerCepDoEstado(Estado* listaEstados, Pessoa* arvorePessoa, int valorCep,
 
     // Remove o CEP usando buscarCepEmEstado
     return removerCep(&cidadeAtual->arv_cep, arvorePessoa, valorCep, nomeCity);
+} */
+
+void move2EsqRED_Cep(Cep **H) {
+    trocarCorCep(*H);
+    if (corCep((*H)->Dir->Esq) == RED) {
+        rotacaoDireitaCep(&((*H)->Dir));
+        rotacaoEsquerdaCep(H);
+        trocarCorCep(*H);
+    }
+}
+
+void move2DirRED_Cep(Cep **H) {
+    trocarCorCep(*H);
+    if (corCep((*H)->Esq->Esq) == RED) {
+        rotacaoDireitaCep(H);
+        trocarCorCep(*H);
+    }
 }
 
 
