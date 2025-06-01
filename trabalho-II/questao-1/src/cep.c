@@ -14,6 +14,33 @@ Cep* buscarCep(Cep* raiz, int valor) {
     return resultado;
 }
 
+// Função auxiliar recursiva para buscar CEP em uma cidade
+Cep* buscarCepEmCidade(Cidade* cidade, int valorCep) {
+    if (cidade == NULL) return NULL;
+    
+    // Busca na cidade atual
+    Cep* resultado = buscarCep(cidade->arv_cep, valorCep);
+    if (resultado != NULL) return resultado;
+    
+    // Busca nas subárvores
+    resultado = buscarCepEmCidade(cidade->Esq, valorCep);
+    if (resultado != NULL) return resultado;
+    
+    return buscarCepEmCidade(cidade->Dir, valorCep);
+}
+
+// Função auxiliar recursiva para buscar CEP em um estado
+Cep* buscarCepEmEstado(Estado* estado, int valorCep) {
+    if (estado == NULL) return NULL;
+    
+    // Busca nas cidades do estado atual
+    Cep* resultado = buscarCepEmCidade(estado->arv_city, valorCep);
+    if (resultado != NULL) return resultado;
+    
+    // Busca no próximo estado
+    return buscarCepEmEstado(estado->Prox, valorCep);
+}
+
 Cep* criarNoCep(int cep, Cidade* cidade) {
     Cep* novo = (Cep*)malloc(sizeof(Cep));
 
@@ -256,72 +283,83 @@ void cadastrarCep(Estado** listaEstados, char* nomeEstado, char* nomeCity, int v
 }
 
 int removerCep(Cep** arvoreCep, Pessoa* arvorePessoa, int valorCep, char* nomeCity) {
-    int inseriu = 0;
-    
-    // Verifica se o CEP existe na árvore de CEPs
-    Cep* cepAtual = buscarCep(*arvoreCep, valorCep);
-    if (cepAtual == NULL) {
-        printf("Erro: CEP \"%d\" não encontrado na cidade \"%s\"!\n", valorCep, nomeCity);
+    if (*arvoreCep == NULL) {
+        printf("Erro: CEP %d não encontrado na cidade %s!\n", valorCep, nomeCity);
+        return 0;
     }
-    else{  
-        if (!PessoaAssociada(arvorePessoa, valorCep)){ // Verifica se o CEP pode ser removido com base na associação de pessoas
-            printf("Erro: Não é possível remover o CEP \"%d\" porque existem pessoas associadas a ele na cidade \"%s\"!\n", valorCep, nomeCity);
-        }else{
-            // Realiza a remoção do nó diretamente
-            Cep* temp = cepAtual;
 
-            // Caso 1: Nó sem filhos
-            if (cepAtual->Esq == NULL && cepAtual->Dir == NULL) {
-                if (cepAtual->Pai == NULL) {
-                    *arvoreCep = NULL; // Nó é a raiz
-                } else if (cepAtual->Pai->Esq == cepAtual) {
-                    cepAtual->Pai->Esq = NULL; // Nó é filho esquerdo
-                } else {
-                    cepAtual->Pai->Dir = NULL; // Nó é filho direito
-                }
-            }
-            // Caso 2: Nó com apenas um filho
-            else if (cepAtual->Esq == NULL || cepAtual->Dir == NULL) {
-                Cep* filho = (cepAtual->Esq != NULL) ? cepAtual->Esq : cepAtual->Dir;
-                if (cepAtual->Pai == NULL) {
-                    *arvoreCep = filho; // Nó é a raiz
-                } else if (cepAtual->Pai->Esq == cepAtual) {
-                    cepAtual->Pai->Esq = filho; // Nó é filho esquerdo
-                } else {
-                    cepAtual->Pai->Dir = filho; // Nó é filho direito
-                }
-                filho->Pai = cepAtual->Pai;
-            }
-            // Caso 3: Nó com dois filhos
-            else {
-                Cep* sucessor = cepAtual->Dir;
-                while (sucessor->Esq != NULL) {
-                    sucessor = sucessor->Esq;
-                }
+    Cep* noAtual = *arvoreCep;
 
-                // Substitui o valor do nó atual pelo sucessor
-                cepAtual->cep = sucessor->cep;
-
-                // Remove o sucessor
-                if (sucessor->Pai->Esq == sucessor) {
-                    sucessor->Pai->Esq = sucessor->Dir;
-                } else {
-                    sucessor->Pai->Dir = sucessor->Dir;
-                }
-                if (sucessor->Dir != NULL) {
-                    sucessor->Dir->Pai = sucessor->Pai;
-                }
-                temp = sucessor;
-            }
-
-            free(temp); 
-            printf("CEP \"%d\" removido com sucesso da cidade \"%s\"!\n", valorCep, nomeCity);
-            inseriu = 1;
+    if (valorCep < noAtual->cep) {
+        return removerCep(&(noAtual->Esq), arvorePessoa, valorCep, nomeCity);
+    } else if (valorCep > noAtual->cep) {
+        return removerCep(&(noAtual->Dir), arvorePessoa, valorCep, nomeCity);
+    } else {
+        // Verifica se há pessoas associadas ao CEP
+        if (!PessoaAssociada(arvorePessoa, valorCep)) {
+            printf("Erro: Não é possível remover o CEP %d porque há pessoas associadas a ele!\n", valorCep);
+            return 0;
         }
-    }
-   balancearCep(arvoreCep, cepAtual);
 
-    return inseriu; // Remoção bem-sucedida
+        // Caso 1: Nó sem filhos
+        if (noAtual->Esq == NULL && noAtual->Dir == NULL) {
+            free(noAtual);
+            *arvoreCep = NULL;
+        } 
+        // Caso 2: Nó com um filho
+        else if (noAtual->Esq == NULL || noAtual->Dir == NULL) {
+            Cep* filho = (noAtual->Esq != NULL) ? noAtual->Esq : noAtual->Dir;
+            filho->Pai = noAtual->Pai;
+            free(noAtual);
+            *arvoreCep = filho;
+        } 
+        // Caso 3: Nó com dois filhos
+        else {
+            Cep* sucessor = noAtual->Dir;
+            while (sucessor->Esq != NULL) {
+                sucessor = sucessor->Esq;
+            }
+
+            noAtual->cep = sucessor->cep;
+            noAtual->cidade = sucessor->cidade;
+            removerCep(&(noAtual->Dir), arvorePessoa, sucessor->cep, nomeCity);
+        }
+
+        // Balanceia a árvore após a remoção
+        balancearCep(arvoreCep, noAtual->Pai);
+
+        printf("CEP %d removido com sucesso da cidade %s!\n", valorCep, nomeCity);
+        return 1;
+    }
+}
+
+int removerCepDoEstado(Estado* listaEstados, Pessoa* arvorePessoa, int valorCep, char* nomeEstado, char* nomeCity) {
+    // Busca o estado na lista de estados
+    Estado* estadoAtual = buscaEstado(listaEstados, nomeEstado);
+
+    if (estadoAtual == NULL) {
+        printf("Erro: Estado %s não encontrado!\n", nomeEstado);
+        return 0;
+    }
+
+    // Busca a cidade na árvore de cidades do estado
+    Cidade* cidadeAtual = buscaCidade(estadoAtual->arv_city, nomeCity);
+
+    if (cidadeAtual == NULL) {
+        printf("Erro: Cidade %s não encontrada no estado %s!\n", nomeCity, nomeEstado);
+        return 0;
+    }
+
+    // Busca o CEP na árvore de CEPs da cidade usando buscarCepEmCidade
+    Cep* cepAtual = buscarCepEmCidade(cidadeAtual, valorCep);
+
+    if (cepAtual == NULL) {
+        printf("Erro: CEP %d não encontrado na cidade %s!\n", valorCep, nomeCity);
+        return 0;
+    }
+
+    // Remove o CEP usando buscarCepEmEstado
+    return removerCep(&cidadeAtual->arv_cep, arvorePessoa, valorCep, nomeCity);
 }
 
 

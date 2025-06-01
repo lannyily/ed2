@@ -72,151 +72,29 @@ void rotacaoDireitaPessoa(Pessoa **Raiz) {
     (*Raiz)->Pai = temp;
 }
 
-void balancearPessoa(Pessoa** raiz, Pessoa* no) {
-    if (no->Pai == NULL) {
-        no->cor = BLACK; // Garante que a raiz seja preta
-    }
-
-    if (no == no->Pai->Esq) {
-        Pessoa* irmao = no->Pai->Dir;
-
-        // Caso 1: O irmão é vermelho
-        if (irmao != NULL && irmao->cor == RED) {
-            irmao->cor = BLACK;
-            no->Pai->cor = RED;
-            rotacaoEsquerdaPessoa(&(no->Pai));
-            balancearPessoa(raiz, no);
-        } else if (corPessoa(irmao->Esq) == BLACK && corPessoa(irmao->Dir) == BLACK) {
-            // Caso 2: Os filhos do irmão são pretos
-            if (irmao != NULL) {
-                irmao->cor = RED;
-            }
-            balancearPessoa(raiz, no->Pai);
-        } else if (corPessoa(irmao->Dir) == BLACK) {
-            // Caso 3: O filho direito do irmão é preto
-            if (irmao->Esq != NULL) {
-                irmao->Esq->cor = BLACK;
-            }
-            if (irmao != NULL) {
-                irmao->cor = RED;
-            }
-            rotacaoDireitaPessoa(&irmao);
-            balancearPessoa(raiz, no);
-        } else {
-            // Caso 4: O filho direito do irmão é vermelho
-            if (irmao != NULL) {
-                irmao->cor = no->Pai->cor;
-            }
-            no->Pai->cor = BLACK;
-            if (irmao->Dir != NULL) {
-                irmao->Dir->cor = BLACK;
-            }
-            rotacaoEsquerdaPessoa(&(no->Pai));
-            balancearPessoa(raiz, *raiz);
-        }
-    } else {
-        // Simétrico para o caso em que `no` é filho direito
-        Pessoa* irmao = no->Pai->Esq;
-
-        // Caso 1: O irmão é vermelho
-        if (irmao != NULL && irmao->cor == RED) {
-            irmao->cor = BLACK;
-            no->Pai->cor = RED;
-            rotacaoDireitaPessoa(&(no->Pai));
-            balancearPessoa(raiz, no);
-        } else if (corPessoa(irmao->Dir) == BLACK && corPessoa(irmao->Esq) == BLACK) {
-            // Caso 2: Os filhos do irmão são pretos
-            if (irmao != NULL) {
-                irmao->cor = RED;
-            }
-            balancearPessoa(raiz, no->Pai);
-        } else if (corPessoa(irmao->Esq) == BLACK) {
-            // Caso 3: O filho esquerdo do irmão é preto
-            if (irmao->Dir != NULL) {
-                irmao->Dir->cor = BLACK;
-            }
-            if (irmao != NULL) {
-                irmao->cor = RED;
-            }
-            rotacaoEsquerdaPessoa(&irmao);
-            balancearPessoa(raiz, no);
-        } else {
-            // Caso 4: O filho esquerdo do irmão é vermelho
-            if (irmao != NULL) {
-                irmao->cor = no->Pai->cor;
-            }
-            no->Pai->cor = BLACK;
-            if (irmao->Esq != NULL) {
-                irmao->Esq->cor = BLACK;
-            }
-            rotacaoDireitaPessoa(&(no->Pai));
-            balancearPessoa(raiz, *raiz);
-        }
-    }
-}
 
 int inserirPessoa(Pessoa** Raiz, Pessoa* Pai, int cpf, char* nome, int cep_natal, int cep_mora, Data data_nasc) {
     int inseriu = 0;
-    Pessoa* novo = NULL;
+    
     if (*Raiz == NULL) {
-        novo = criarNoPessoa(cpf, nome, cep_natal, cep_mora, data_nasc);
-        novo->Pai = Pai;
-        *Raiz = novo;
-        if (Pai == NULL) {
-            novo->cor = BLACK;
-        }
+        // Cria novo nó
+        *Raiz = criarNoPessoa(cpf, nome, cep_natal, cep_mora, data_nasc);
+        (*Raiz)->Pai = Pai;
         inseriu = 1;
     } else if (cpf < (*Raiz)->cpf) {
+        // Insere na subárvore esquerda
         inseriu = inserirPessoa(&((*Raiz)->Esq), *Raiz, cpf, nome, cep_natal, cep_mora, data_nasc);
-        if (inseriu) {
-            if (corPessoa((*Raiz)->Esq) == RED && corPessoa((*Raiz)->Esq->Esq) == RED) {
-                rotacaoDireitaPessoa(Raiz);
-                trocarCorPessoa(*Raiz);
-            }
-            if (corPessoa((*Raiz)->Esq) == RED && corPessoa((*Raiz)->Dir) == RED) {
-                trocarCorPessoa(*Raiz);
-            }
-        }
     } else if (cpf > (*Raiz)->cpf) {
+        // Insere na subárvore direita
         inseriu = inserirPessoa(&((*Raiz)->Dir), *Raiz, cpf, nome, cep_natal, cep_mora, data_nasc);
-        if (inseriu) {
-            if (corPessoa((*Raiz)->Dir) == RED && corPessoa((*Raiz)->Dir->Dir) == RED) {
-                rotacaoEsquerdaPessoa(Raiz);
-                trocarCorPessoa(*Raiz);
-            }
-            if (corPessoa((*Raiz)->Esq) == RED && corPessoa((*Raiz)->Dir) == RED) {
-                trocarCorPessoa(*Raiz);
-            }
-        }
     }
+    
+    // Balanceia a árvore após a inserção
+    if (inseriu) {
+        balancearPessoa(Raiz);
+    }
+    
     return inseriu;
-}
-
-// Função auxiliar recursiva para buscar CEP em uma cidade
-Cep* buscarCepEmCidade(Cidade* cidade, int valorCep) {
-    if (cidade == NULL) return NULL;
-    
-    // Busca na cidade atual
-    Cep* resultado = buscarCep(cidade->arv_cep, valorCep);
-    if (resultado != NULL) return resultado;
-    
-    // Busca nas subárvores
-    resultado = buscarCepEmCidade(cidade->Esq, valorCep);
-    if (resultado != NULL) return resultado;
-    
-    return buscarCepEmCidade(cidade->Dir, valorCep);
-}
-
-// Função auxiliar recursiva para buscar CEP em um estado
-Cep* buscarCepEmEstado(Estado* estado, int valorCep) {
-    if (estado == NULL) return NULL;
-    
-    // Busca nas cidades do estado atual
-    Cep* resultado = buscarCepEmCidade(estado->arv_city, valorCep);
-    if (resultado != NULL) return resultado;
-    
-    // Busca no próximo estado
-    return buscarCepEmEstado(estado->Prox, valorCep);
 }
 
 void cadastrarPessoa(Estado* listaEstados, Pessoa** arvorePessoa, int cpf, char* nome, int cep_natal, int cep_mora, Data data_nasc) {
@@ -262,77 +140,127 @@ int PessoaAssociada(Pessoa* arvorePessoa, int valorCep) {
     return (count <= 1) ? 1 : 0;
 }
 
+void move2EsqRED(Pessoa **raiz) {
+    trocarCorPessoa(*raiz);
+    trocarCorPessoa((*raiz)->Esq);
+    if (corPessoa((*raiz)->Dir->Esq) == RED) {
+        rotacaoDireitaPessoa(&((*raiz)->Dir));
+        rotacaoEsquerdaPessoa(raiz);
+        trocarCorPessoa(*raiz);
+    }
+}
+
+void move2DirRED(Pessoa **raiz) {
+    trocarCorPessoa(*raiz);
+    trocarCorPessoa((*raiz)->Dir);
+    if (corPessoa((*raiz)->Esq->Esq) == RED) {
+        rotacaoDireitaPessoa(raiz);
+        trocarCorPessoa(*raiz);
+    }
+}
+
 int removerPessoa(Pessoa** arvorePessoa, int cpf) {
-    int inseriu = 0;
+    int removeu = 0;
     
     if (*arvorePessoa == NULL) {
-        printf("Erro: Pessoa com CPF \"%d\" não encontrada!\n", cpf);
-    } else{
+        printf("Erro: Pessoa com CPF \"%d\" nao encontrada!\n", cpf);
+    } else {
+        *arvorePessoa = removerNoPessoa(*arvorePessoa, cpf);
 
-        Pessoa* noAtual = *arvorePessoa;
-    
-        // Busca o nó com o CPF correspondente
-        if (cpf < noAtual->cpf) {
-            return removerPessoa(&(noAtual->Esq), cpf);
-        } else if (cpf > noAtual->cpf) {
-            return removerPessoa(&(noAtual->Dir), cpf);
-        } else {
-            // Pessoa encontrada
-            Pessoa* temp;
-    
-            // Caso 1: Nó sem filhos
-            if (noAtual->Esq == NULL && noAtual->Dir == NULL) {
-                temp = noAtual;
-                if (noAtual->Pai == NULL) {
-                    *arvorePessoa = NULL; // Nó é a raiz
-                } else if (noAtual->Pai->Esq == noAtual) {
-                    noAtual->Pai->Esq = NULL; // Nó é filho esquerdo
-                } else {
-                    noAtual->Pai->Dir = NULL; // Nó é filho direito
-                }
-            }
-            // Caso 2: Nó com apenas um filho
-            else if (noAtual->Esq == NULL || noAtual->Dir == NULL) {
-                Pessoa* filho = (noAtual->Esq != NULL) ? noAtual->Esq : noAtual->Dir;
-                temp = noAtual;
-    
-                if (noAtual->Pai == NULL) {
-                    *arvorePessoa = filho; // Nó é a raiz
-                } else if (noAtual->Pai->Esq == noAtual) {
-                    noAtual->Pai->Esq = filho; // Nó é filho esquerdo
-                } else {
-                    noAtual->Pai->Dir = filho; // Nó é filho direito
-                }
-                filho->Pai = noAtual->Pai;
-            }
-            // Caso 3: Nó com dois filhos
-            else {
-                Pessoa* sucessor = noAtual->Dir;
-                while (sucessor->Esq != NULL) {
-                    sucessor = sucessor->Esq;
-                }
-    
-                // Substitui os dados do nó atual pelo sucessor
-                noAtual->cpf = sucessor->cpf;
-                strcpy(noAtual->nome, sucessor->nome);
-                noAtual->cep_natal = sucessor->cep_natal;
-                noAtual->cep_mora = sucessor->cep_mora;
-                noAtual->data_nascimento = sucessor->data_nascimento;
-    
-                // Remove o sucessor
-                return removerPessoa(&(noAtual->Dir), sucessor->cpf);
-            }
-    
-            free(temp); // Libera a memória do nó removido
+        // Garante que a raiz final seja preta, se a árvore não estiver vazia
+        if (*arvorePessoa != NULL) {
+            (*arvorePessoa)->cor = BLACK;
+            removeu = 1;
             printf("Pessoa com CPF \"%d\" removida com sucesso!\n", cpf);
-    
-            // Balanceia a árvore após a remoção
-            balancearPessoa(arvorePessoa, noAtual->Pai);
-    
-            inseriu = 1; // Remoção bem-sucedida
         }
     }
-    return inseriu; 
+    return removeu;
+}
+
+// Função de balanceamento para árvore LLRB
+void balancearPessoa(Pessoa **raiz) {
+    if (corPessoa((*raiz)->Dir) == RED) {
+        rotacaoEsquerdaPessoa(raiz);
+    }
+    if (corPessoa((*raiz)->Esq) == RED && corPessoa((*raiz)->Esq->Esq) == RED) {
+        rotacaoDireitaPessoa(raiz);
+    }
+    if (corPessoa((*raiz)->Esq) == RED && corPessoa((*raiz)->Dir) == RED) {
+        trocarCorPessoa(*raiz);
+    }
+}
+
+// Função auxiliar recursiva para remover um nó na árvore LLRB
+Pessoa* removerNoPessoa(Pessoa *raiz, int valor) {
+    if (raiz == NULL) {
+        return NULL;
+    }
+
+    // Descendo na árvore
+    if (valor < raiz->cpf) {
+        if (raiz->Esq != NULL && corPessoa(raiz->Esq) == BLACK && 
+            raiz->Esq->Esq != NULL && corPessoa(raiz->Esq->Esq) == BLACK) {
+            move2EsqRED(&raiz);
+        }
+        raiz->Esq = removerNoPessoa(raiz->Esq, valor);
+    } else {
+        if (raiz->Esq != NULL && corPessoa(raiz->Esq) == RED) {
+            rotacaoDireitaPessoa(&raiz);
+        }
+        if (valor == raiz->cpf && raiz->Dir == NULL) {
+            free(raiz);
+            return NULL;
+        }
+
+        if (raiz->Dir != NULL && corPessoa(raiz->Dir) == BLACK && 
+            raiz->Dir->Esq != NULL && corPessoa(raiz->Dir->Esq) == BLACK) {
+            move2DirRED(&raiz);
+        }
+
+        if (valor == raiz->cpf) {
+            // Nó a ser removido tem dois filhos ou um filho direito
+            Pessoa* sucessor = raiz->Dir; // Encontrar o menor na subárvore direita
+            while(sucessor->Esq != NULL) {
+                sucessor = sucessor->Esq;
+            }
+            
+            raiz->cpf = sucessor->cpf; // Copia os dados do sucessor
+            strcpy(raiz->nome, sucessor->nome); // Copia outros dados conforme necessário
+            raiz->cep_natal = sucessor->cep_natal;
+            raiz->cep_mora = sucessor->cep_mora;
+            raiz->data_nascimento = sucessor->data_nascimento; // Copia dados de data
+
+            raiz->Dir = removerMenorLLRB(raiz->Dir); // Remove o sucessor da subárvore direita
+        } else {
+            // Continua a busca na subárvore direita
+            raiz->Dir = removerNoPessoa(raiz->Dir, valor);
+        }
+    }
+
+    // Subindo na árvore, balanceando
+    balancearPessoa(&raiz);
+    return raiz;
+}
+
+// Função auxiliar para remover o menor nó ( leftmost ) de uma subárvore
+Pessoa* removerMenorLLRB(Pessoa *raiz) {
+    if (raiz->Esq == NULL) {
+        // Encontrou o menor nó
+        // Antes de liberar H, precisamos retornar o nó direito (se existir) para o pai
+        Pessoa* dir = raiz->Dir;
+        free(raiz);
+        return dir; // Retorna o filho direito, que será o novo filho esquerdo do pai
+    }
+
+    if (corPessoa(raiz->Esq) == BLACK && corPessoa(raiz->Esq->Esq) == BLACK) {
+        move2EsqRED(&raiz);
+    }
+
+    raiz->Esq = removerMenorLLRB(raiz->Esq);
+
+    // Balanceia no retorno
+    balancearPessoa(&raiz);
+    return raiz; // Retorna o nó H após balanceamento
 }
 
 

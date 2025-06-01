@@ -11,6 +11,7 @@ int main() {
     Pessoa* arvorePessoa = NULL;
 
 
+
     // Cadastro rápido de estados
     Estado* estado1 = criarNoEstado("Estado1", "Capital1", 5, 100000);
     inserirEstado(&listaEstados, estado1);
@@ -36,6 +37,7 @@ int main() {
     Data data2 = {2, 2, 1995};
     cadastrarPessoa(listaEstados, &arvorePessoa, 222222222, "Pessoa2", 54321, 12345, data2);
 
-    removerPessoa(&arvorePessoa, 111111111); // Remover Pessoa1
+    removerPessoa(&arvorePessoa, 111111111); 
+    printf("Cidades do Estado1:\n");
     return 0;
 }

@@ -27,4 +27,6 @@ void balancearCep(Cep** raiz, Cep* no);
 int inserirCep(Cep** Raiz, Cep* Pai, int valor, Cidade* cidade);
 void cadastrarCep(Estado** listaEstados, char* nomeEstado, char* nomeCity, int valorCep);
 int removerCep(Cep** arvoreCep, Pessoa* arvorePessoa, int valorCep, char* nomeCity);
+Cep* buscarCepEmEstado(Estado* listaEstados, int valorCep);
+Cep* buscarCepEmCidade(Cidade* cidade, int valorCep);
 #endif
