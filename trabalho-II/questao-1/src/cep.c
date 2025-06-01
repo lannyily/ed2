@@ -191,7 +191,7 @@ void cadastrarCep(Estado** listaEstados, char* nomeEstado, char* nomeCity, int v
 
     // Verifica se o estado existe
     if (estadoAtual == NULL) {
-        printf("Erro: Estado \"%s\" não encontrado!\n", nomeEstado);
+        printf("Erro: Estado \"%s\" nao encontrado!\n", nomeEstado);
         return;
     }
 
@@ -200,8 +200,7 @@ void cadastrarCep(Estado** listaEstados, char* nomeEstado, char* nomeCity, int v
 
     // Verifica se a cidade existe
     if (cidadeAtual == NULL) {
-        printf("Erro: Cidade \"%s\" não encontrada no estado \"%s\"!\n", nomeCity, nomeEstado);
-        return;
+        printf("Erro: Cidade \"%s\" nao encontrada no estado \"%s\"!\n", nomeCity, nomeEstado);
     }else { // Insere o CEP na árvore de CEPs da cidade
         if (inserirCep(&cidadeAtual->arv_cep, NULL, valorCep, cidadeAtual)) {
             printf("CEP \"%d\" cadastrado com sucesso na cidade \"%s\"!\n", valorCep, nomeCity);

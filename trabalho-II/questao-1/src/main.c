@@ -21,12 +21,16 @@ int main() {
 
     // Cadastro rápido de cidades
     cadastrarCidade(&listaEstados, "Estado1", "Cidade1", 20000);
-    cadastrarCidade(&listaEstados, "Estado1", "Cidade2", 15000);
+    cadastrarCidade(&listaEstados, "Estado1", "Cidade4", 30000);
+    cadastrarCidade(&listaEstados, "Estado1", "Cidade5", 30000);
+    cadastrarCidade(&listaEstados, "Estado2", "Cidade2", 15000);
     cadastrarCidade(&listaEstados, "Estado2", "Cidade3", 30000);
 
     // Cadastro rápido de CEPs
     cadastrarCep(&listaEstados, "Estado1", "Cidade1", 12345);
-    cadastrarCep(&listaEstados, "Estado1", "Cidade1", 67890);
+    cadastrarCep(&listaEstados, "Estado1", "Cidade4", 67890);
+    cadastrarCep(&listaEstados, "Estado1", "Cidade5", 12345);
+    cadastrarCep(&listaEstados, "Estado2", "Cidade2", 54321);
     cadastrarCep(&listaEstados, "Estado2", "Cidade3", 54321);
 
 

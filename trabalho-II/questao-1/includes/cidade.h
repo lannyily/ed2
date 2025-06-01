@@ -20,7 +20,7 @@ typedef struct Cidade {
 Cidade* criarNoCidade(char* nomeCity, int tamPopu);
 int corCidade(Cidade *no); 
 void trocarCorCidade(Cidade *no);  
-void balancearCidade(Cidade** raiz, Cidade* no); 
+void balancearCidade(Cidade** raiz); 
 int insereCidade(Cidade** Raiz, Cidade *Pai, char* nomeCity, int tamPopu);
 void rotacaoEsquerdaCidade(Cidade **Raiz);
 void rotacaoDireitaCidade(Cidade **Raiz);

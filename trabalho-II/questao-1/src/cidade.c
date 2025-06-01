@@ -7,20 +7,23 @@
 #include "../includes/estado.h"
 
 Cidade* buscaCidade(Cidade* raiz, char* nomeCity) {
-    Cidade* resultado = NULL;
-    
-    if (raiz != NULL) {
-        int cmp = strcmp(nomeCity, raiz->nomeCity);
-        if (cmp == 0) {
-            resultado = raiz;
-        } else if (cmp < 0) {
-            resultado = buscaCidade(raiz->Esq, nomeCity);
-        } else {
-            resultado = buscaCidade(raiz->Dir, nomeCity);
-        }
+    if (raiz == NULL) {
+        return NULL;
     }
     
-    return resultado;
+    printf("Busca: Comparando %s com %s\n", nomeCity, raiz->nomeCity);
+    int cmp = strcmp(nomeCity, raiz->nomeCity);
+    
+    if (cmp == 0) {
+        printf("Busca: Cidade %s encontrada!\n", nomeCity);
+        return raiz;
+    } else if (cmp < 0) {
+        printf("Busca: Procurando %s na subarvore esquerda de %s\n", nomeCity, raiz->nomeCity);
+        return buscaCidade(raiz->Esq, nomeCity);
+    } else {
+        printf("Busca: Procurando %s na subarvore direita de %s\n", nomeCity, raiz->nomeCity);
+        return buscaCidade(raiz->Dir, nomeCity);
+    }
 }
 
 Cidade* criarNoCidade(char* nomeCity, int tamPopu){
@@ -48,38 +51,27 @@ void trocarCorCidade(Cidade *no) {
     }
 }
 void rotacaoEsquerdaCidade(Cidade **Raiz) {
-    // Armazena o nó à direita da raiz atual em uma variável temporária
-    Cidade *temp = (*Raiz)->Dir; 
-
-    // Move o filho esquerdo do nó à direita (temp) para o filho direito da raiz atual
-    (*Raiz)->Dir = temp->Esq;
-
-    // Se o filho esquerdo de temp não for NULL, atualiza o pai desse nó para ser a raiz atual
+    Cidade *temp = (*Raiz)->Dir;
+    Cidade *raiz_atual = *Raiz;
+    
+    // Atualiza os ponteiros
+    raiz_atual->Dir = temp->Esq;
     if (temp->Esq != NULL) {
-        temp->Esq->Pai = *Raiz;
+        temp->Esq->Pai = raiz_atual;
     }
-
-    // Atualiza o pai de temp para ser o pai da raiz atual
-    temp->Pai = (*Raiz)->Pai;
-
-    // Se a raiz atual não tiver pai (ou seja, é a raiz da árvore), temp se torna a nova raiz
-    if ((*Raiz)->Pai == NULL) {
+    
+    temp->Pai = raiz_atual->Pai;
+    
+    if (raiz_atual->Pai == NULL) {
         *Raiz = temp;
-    } 
-    // Caso contrário, verifica se a raiz atual é o filho esquerdo ou direito de seu pai
-    else if ((*Raiz) == (*Raiz)->Pai->Esq) {
-        // Se for o filho esquerdo, atualiza o ponteiro esquerdo do pai para apontar para temp
-        (*Raiz)->Pai->Esq = temp;
+    } else if (raiz_atual == raiz_atual->Pai->Esq) {
+        raiz_atual->Pai->Esq = temp;
     } else {
-        // Se for o filho direito, atualiza o ponteiro direito do pai para apontar para temp
-        (*Raiz)->Pai->Dir = temp;
+        raiz_atual->Pai->Dir = temp;
     }
-
-    // Faz com que a raiz atual se torne o filho esquerdo de temp
-    temp->Esq = *Raiz;
-
-    // Atualiza o pai da raiz atual para ser temp
-    (*Raiz)->Pai = temp;
+    
+    temp->Esq = raiz_atual;
+    raiz_atual->Pai = temp;
 }
 
 void rotacaoDireitaCidade(Cidade **Raiz) {
@@ -117,92 +109,46 @@ void rotacaoDireitaCidade(Cidade **Raiz) {
     (*Raiz)->Pai = temp;
 }
 
-void balancearCidade(Cidade** raiz, Cidade* no) {
-    if (no->Pai == NULL) {
-        no->cor = BLACK; // Garante que a raiz seja preta
+void move2EsqRED_Cidade(Cidade **H) {
+    trocarCorCidade(*H);
+    if (corCidade((*H)->Dir->Esq) == RED) {
+        rotacaoDireitaCidade(&((*H)->Dir));
+        rotacaoEsquerdaCidade(H);
+        trocarCorCidade(*H);
+    }
+}
+
+void move2DirRED_Cidade(Cidade **H) {
+    trocarCorCidade(*H);
+    if (corCidade((*H)->Esq->Esq) == RED) {
+        rotacaoDireitaCidade(H);
+        trocarCorCidade(*H);
+    }
+}
+
+void balancearCidade(Cidade** raiz) {
+    if (*raiz == NULL) return;
+
+    // Se o filho direito é vermelho, faz rotação à esquerda
+    if (corCidade((*raiz)->Dir) == RED) {
+        rotacaoEsquerdaCidade(raiz);
     }
 
-    if (no == no->Pai->Esq) {
-        Cidade* irmao = no->Pai->Dir;
+    // Se temos dois nós vermelhos consecutivos à esquerda, faz rotação à direita
+    if (corCidade((*raiz)->Esq) == RED && corCidade((*raiz)->Esq->Esq) == RED) {
+        rotacaoDireitaCidade(raiz);
+    }
 
-        // Caso 1: O irmão é vermelho
-        if (irmao != NULL && irmao->cor == RED) {
-            irmao->cor = BLACK;
-            no->Pai->cor = RED;
-            rotacaoEsquerdaCidade(&(no->Pai)); // Rotação para priorizar o lado esquerdo
-            balancearCidade(raiz, no);
-        } else if (corCidade(irmao->Esq) == BLACK && corCidade(irmao->Dir) == BLACK) {
-            // Caso 2: Os filhos do irmão são pretos
-            if (irmao != NULL) {
-                irmao->cor = RED;
-            }
-            balancearCidade(raiz, no->Pai);
-        } else if (corCidade(irmao->Dir) == BLACK) {
-            // Caso 3: O filho direito do irmão é preto
-            if (irmao->Esq != NULL) {
-                irmao->Esq->cor = BLACK;
-            }
-            if (irmao != NULL) {
-                irmao->cor = RED;
-            }
-            rotacaoDireitaCidade(&irmao); // Rotação para priorizar o lado esquerdo
-            balancearCidade(raiz, no);
-        } else {
-            // Caso 4: O filho direito do irmão é vermelho
-            if (irmao != NULL) {
-                irmao->cor = no->Pai->cor;
-            }
-            no->Pai->cor = BLACK;
-            if (irmao->Dir != NULL) {
-                irmao->Dir->cor = BLACK;
-            }
-            rotacaoEsquerdaCidade(&(no->Pai)); // Rotação para priorizar o lado esquerdo
-            balancearCidade(raiz, *raiz);
-        }
-    } else {
-        // Simétrico para o caso em que `no` é filho direito
-        Cidade* irmao = no->Pai->Esq;
-
-        // Caso 1: O irmão é vermelho
-        if (irmao != NULL && irmao->cor == RED) {
-            irmao->cor = BLACK;
-            no->Pai->cor = RED;
-            rotacaoDireitaCidade(&(no->Pai)); // Rotação para priorizar o lado esquerdo
-            balancearCidade(raiz, no);
-        } else if (corCidade(irmao->Dir) == BLACK && corCidade(irmao->Esq) == BLACK) {
-            // Caso 2: Os filhos do irmão são pretos
-            if (irmao != NULL) {
-                irmao->cor = RED;
-            }
-            balancearCidade(raiz, no->Pai);
-        } else if (corCidade(irmao->Esq) == BLACK) {
-            // Caso 3: O filho esquerdo do irmão é preto
-            if (irmao->Dir != NULL) {
-                irmao->Dir->cor = BLACK;
-            }
-            if (irmao != NULL) {
-                irmao->cor = RED;
-            }
-            rotacaoEsquerdaCidade(&irmao); // Rotação para priorizar o lado esquerdo
-            balancearCidade(raiz, no);
-        } else {
-            // Caso 4: O filho esquerdo do irmão é vermelho
-            if (irmao != NULL) {
-                irmao->cor = no->Pai->cor;
-            }
-            no->Pai->cor = BLACK;
-            if (irmao->Esq != NULL) {
-                irmao->Esq->cor = BLACK;
-            }
-            rotacaoDireitaCidade(&(no->Pai)); // Rotação para priorizar o lado esquerdo
-            balancearCidade(raiz, *raiz);
-        }
+    // Se ambos os filhos são vermelhos, faz flip de cores
+    if (corCidade((*raiz)->Esq) == RED && corCidade((*raiz)->Dir) == RED) {
+        trocarCorCidade(*raiz);
     }
 }
 
 int insereCidade(Cidade** Raiz, Cidade* Pai, char* nomeCity, int tamPopu) {
     int inseriu = 0;
     Cidade* nova = NULL;
+    
     if (*Raiz == NULL) {
         nova = criarNoCidade(nomeCity, tamPopu);
         nova->Pai = Pai;
@@ -210,49 +156,57 @@ int insereCidade(Cidade** Raiz, Cidade* Pai, char* nomeCity, int tamPopu) {
         if (Pai == NULL) {
             nova->cor = BLACK;
         }
+        printf("Inserindo cidade: %s\n", nomeCity);
         inseriu = 1;
-    } else if (strcmp(nomeCity, (*Raiz)->nomeCity) < 0) {
-        inseriu = insereCidade(&((*Raiz)->Esq), *Raiz, nomeCity, tamPopu);
-        if (inseriu) {
-            if (corCidade((*Raiz)->Esq) == RED && corCidade((*Raiz)->Esq->Esq) == RED) {
-                rotacaoDireitaCidade(Raiz);
-                trocarCorCidade(*Raiz);
-            }
-            if (corCidade((*Raiz)->Esq) == RED && corCidade((*Raiz)->Dir) == RED) {
-                trocarCorCidade(*Raiz);
-            }
+    } else {
+        int cmp = strcmp(nomeCity, (*Raiz)->nomeCity);
+        printf("Comparando insercao: %s com %s, resultado: %d\n", nomeCity, (*Raiz)->nomeCity, cmp);
+        
+        if (cmp < 0) {
+            inseriu = insereCidade(&((*Raiz)->Esq), *Raiz, nomeCity, tamPopu);
+        } else if (cmp > 0) {
+            inseriu = insereCidade(&((*Raiz)->Dir), *Raiz, nomeCity, tamPopu);
         }
-    } else if (strcmp(nomeCity, (*Raiz)->nomeCity) > 0) {
-        inseriu = insereCidade(&((*Raiz)->Dir), *Raiz, nomeCity, tamPopu);
+        
+        // Balanceamento após a inserção
         if (inseriu) {
-            if (corCidade((*Raiz)->Dir) == RED && corCidade((*Raiz)->Dir->Dir) == RED) {
-                rotacaoEsquerdaCidade(Raiz);
-                trocarCorCidade(*Raiz);
-            }
-            if (corCidade((*Raiz)->Esq) == RED && corCidade((*Raiz)->Dir) == RED) {
-                trocarCorCidade(*Raiz);
-            }
+            printf("Balanceando apos inserir %s\n", nomeCity);
+            balancearCidade(Raiz);
         }
     }
     return inseriu;
 }
 
 void cadastrarCidade(Estado** listaEstados, char* nomeEstado, char* nomeCity, int tamPopu) {
-    // Busca o estado na lista de estados
-    Estado* estadoAtual = buscaEstado(*listaEstados, nomeEstado);
+    int cadastrou = 0;
+    
+    if (listaEstados != NULL && *listaEstados != NULL) {
+        // Busca o estado na lista de estados
+        Estado* estadoAtual = buscaEstado(*listaEstados, nomeEstado);
 
-    // Se o estado não for encontrado, exibe uma mensagem de erro
-    if (estadoAtual == NULL) {
-        printf("Erro: Estado \"%s\" nao encontrado!\n", nomeEstado);
-    }else{
-        if (insereCidade(&(estadoAtual->arv_city), NULL, nomeCity, tamPopu)) {
-            printf("Cidade \"%s\" cadastrada com sucesso no estado \"%s\"!\n", nomeCity, nomeEstado);
+        // Se o estado for encontrado
+        if (estadoAtual != NULL) {
+            // Verifica se a cidade já existe
+            Cidade* cidadeExistente = buscaCidade(estadoAtual->arv_city, nomeCity);
+            
+            // Se a cidade não existir, tenta inserir
+            if (cidadeExistente == NULL) {
+                if (insereCidade(&(estadoAtual->arv_city), NULL, nomeCity, tamPopu)) {
+                    printf("Cidade \"%s\" cadastrada com sucesso no estado \"%s\"!\n", nomeCity, nomeEstado);
+                    cadastrou = 1;
+                } else {
+                    printf("Erro ao cadastrar cidade \"%s\" no estado \"%s\"!\n", nomeCity, nomeEstado);
+                }
+            } else {
+                printf("Erro: Cidade \"%s\" ja existe no estado \"%s\"!\n", nomeCity, nomeEstado);
+            }
         } else {
-            printf("Erro: Cidade \"%s\" ja existe no estado \"%s\"!\n", nomeCity, nomeEstado);
+            printf("Erro: Estado \"%s\" nao encontrado!\n", nomeEstado);
         }
+    } else {
+        printf("Erro: Lista de estados vazia!\n");
     }
-        
-} 
+}
 
 void imprimirCidades(Cidade* raiz) {
     if (raiz != NULL) {
