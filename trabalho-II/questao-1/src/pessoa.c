@@ -291,5 +291,21 @@ void imprimirArvorePessoa(Pessoa* raiz, int nivel) {
     imprimirArvorePessoa(raiz->Esq, nivel + 1);
 }
 
+void imprimirPessoas(Pessoa* raiz) {
+    if (raiz != NULL) {
+        imprimirPessoas(raiz->Esq);
+        printf("CPF: %d\n", raiz->cpf);
+        printf("Nome: %s\n", raiz->nome);
+        printf("CEP Natal: %d\n", raiz->cep_natal);
+        printf("CEP Mora: %d\n", raiz->cep_mora);
+        printf("Data de Nascimento: %d/%d/%d\n", 
+               raiz->data_nascimento.dia,
+               raiz->data_nascimento.mes,
+               raiz->data_nascimento.ano);
+        printf("-------------------\n");
+        imprimirPessoas(raiz->Dir);
+    }
+}
+
 
 

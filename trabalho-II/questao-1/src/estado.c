@@ -88,3 +88,15 @@ void cadastrarEstado(Estado** lista, char* nomeEstado, char* nomeCapital, int qu
         printf("Erro: Estado com o nome \"%s\" ja existe na lista.\n", nomeEstado);
     }
 }
+
+void imprimirEstados(Estado* lista) {
+    Estado* atual = lista;
+    while (atual != NULL) {
+        printf("Estado: %s\n", atual->nomeEst);
+        printf("Capital: %s\n", atual->nomeCap);
+        printf("Número de Cidades: %d\n", atual->quantCity);
+        printf("População: %d\n", atual->tamPopu);
+        printf("-------------------\n");
+        atual = atual->Prox;
+    }
+}

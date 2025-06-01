@@ -16,5 +16,6 @@ typedef struct Estado {
 Estado* criarNoEstado(char* nomeEstado, char* nomeCapital, int quantCity, int tamPopu);
 int inserirEstado(Estado** lista, Estado* novo);
 Estado* buscaEstado(Estado* lista, char* nomeEstado);
+void imprimirEstados(Estado* lista);
 
 #endif 

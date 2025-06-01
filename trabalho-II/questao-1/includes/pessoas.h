@@ -36,4 +36,5 @@ int inserirPessoa(Pessoa **raiz, Pessoa *pai, int cpf, char *nome, int cep_natal
 void cadastrarPessoa(Estado* estado, Pessoa** arvorePessoa, int cpf, char* nome, int cep_natal, int cep_mora, Data data_nasc);
 int PessoaAssociada(Pessoa* arvorePessoa, int valorCep);
 int removerPessoa(Pessoa** arvorePessoa, int cpf);
+void imprimirPessoas(Pessoa* raiz);
 #endif // NO_PESSOA_H
