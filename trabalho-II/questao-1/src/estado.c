@@ -3,14 +3,14 @@
 #include <string.h>
 #include "../includes/estado.h"
 
-Estado* criarNo(char* nomeEstado, char* nomeCapital, int quantCity, int tamPopu){
+Estado* criarNoEstado(char* nomeEstado, char* nomeCapital, int quantCity, int tamPopu){
     Estado* novo = (Estado*)malloc(sizeof(Estado));
 
     strcpy(novo->nomeEst, nomeEstado);
     strcpy(novo->nomeCap, nomeCapital);
     novo->quantCity = quantCity;
     novo->tamPopu = tamPopu;
-
+    novo->arv_city = NULL;
     novo->Ant = NULL;
     novo->Prox = NULL;
 
@@ -79,7 +79,7 @@ Estado* buscaEstado(Estado* lista, char* nomeEstado) {
 
 void cadastrarEstado(Estado** lista, char* nomeEstado, char* nomeCapital, int quantCity, int tamPopu) {
     // Cria o novo estado
-    Estado* novo = criarNo(nomeEstado, nomeCapital, quantCity, tamPopu);
+    Estado* novo = criarNoEstado(nomeEstado, nomeCapital, quantCity, tamPopu);
 
     // Tenta inserir o estado na lista
     if (inserirEstado(lista, novo)) {

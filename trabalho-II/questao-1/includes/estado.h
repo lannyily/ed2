@@ -1,7 +1,9 @@
 #ifndef ESTADO_H
 #define ESTADO_H
+
 #include "cidade.h"
-typedef struct Estado{
+
+typedef struct Estado {
     char nomeEst[50];
     char nomeCap[50];
     int quantCity;
@@ -9,9 +11,10 @@ typedef struct Estado{
     Cidade *arv_city;
     struct Estado *Ant;
     struct Estado *Prox;
-}Estado;
+} Estado;
 
-Estado* criarNo(char* nomeEstado, char* nomeCapital, int quantCity, int tamPopu);
-void inserirEstadosOrdenado(Estado** lista, char* nomeEstado, char* nomeCapital, int quantCity, int tamPopu);
+Estado* criarNoEstado(char* nomeEstado, char* nomeCapital, int quantCity, int tamPopu);
+int inserirEstado(Estado** lista, Estado* novo);
+Estado* buscaEstado(Estado* lista, char* nomeEstado);
 
 #endif 
