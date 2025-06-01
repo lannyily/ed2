@@ -49,7 +49,6 @@ int main() {
     removerPessoa(&arvorePessoa, 111111111); 
     imprimirArvoreCep(estado1->arv_city->arv_cep, 0);
     removerCepDoEstado(listaEstados, arvorePessoa, 12346, "Estado1", "Cidade5");
-    printf("removido?");
-    imprimirArvoreCep(estado1->arv_city->arv_cep, 0);
+    imprimirArvoreCep(estado1->arv_city->arv_cep, 1);
     return 0;
 }

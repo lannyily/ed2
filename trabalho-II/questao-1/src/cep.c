@@ -141,42 +141,30 @@ int inserirCep(Cep** Raiz, Cep* Pai, int valor, Cidade* cidade) {
         if (Pai == NULL) {
             novo->cor = BLACK;  // Raiz sempre é preta
         }
-        printf("Inserindo CEP: %d\n", valor);
         inseriu = 1;
     } else {
-        printf("Comparando inserção: %d com %d\n", valor, (*Raiz)->cep);
         if (valor < (*Raiz)->cep) {
-            printf("Inserindo %d na subárvore esquerda de %d\n", valor, (*Raiz)->cep);
             inseriu = inserirCep(&((*Raiz)->Esq), *Raiz, valor, cidade);
             if (inseriu) {
-                printf("Balanceando após inserir %d na esquerda\n", valor);
                 if (corCep((*Raiz)->Esq) == RED && corCep((*Raiz)->Esq->Esq) == RED) {
-                    printf("Rotação à direita em %d\n", (*Raiz)->cep);
                     rotacaoDireitaCep(Raiz);
                     trocarCorCep(*Raiz);
                 }
                 if (corCep((*Raiz)->Esq) == RED && corCep((*Raiz)->Dir) == RED) {
-                    printf("Flip de cores em %d\n", (*Raiz)->cep);
                     trocarCorCep(*Raiz);
                 }
             }
         } else if (valor > (*Raiz)->cep) {
-            printf("Inserindo %d na subárvore direita de %d\n", valor, (*Raiz)->cep);
             inseriu = inserirCep(&((*Raiz)->Dir), *Raiz, valor, cidade);
             if (inseriu) {
-                printf("Balanceando após inserir %d na direita\n", valor);
                 if (corCep((*Raiz)->Dir) == RED && corCep((*Raiz)->Dir->Dir) == RED) {
-                    printf("Rotação à esquerda em %d\n", (*Raiz)->cep);
                     rotacaoEsquerdaCep(Raiz);
                     trocarCorCep(*Raiz);
                 }
                 if (corCep((*Raiz)->Esq) == RED && corCep((*Raiz)->Dir) == RED) {
-                    printf("Flip de cores em %d\n", (*Raiz)->cep);
                     trocarCorCep(*Raiz);
                 }
             }
-        } else {
-            printf("CEP %d já existe!\n", valor);
         }
         
         // Garante que a raiz seja sempre preta
@@ -188,8 +176,6 @@ int inserirCep(Cep** Raiz, Cep* Pai, int valor, Cidade* cidade) {
 }
 
 void cadastrarCep(Estado** listaEstados, char* nomeEstado, char* nomeCity, int valorCep) { 
-    printf("Tentando cadastrar CEP %d na cidade %s do estado %s\n", valorCep, nomeCity, nomeEstado);
-    
     // Busca o estado na lista de estados
     Estado* estadoAtual = buscaEstado(*listaEstados, nomeEstado);
 
@@ -206,7 +192,6 @@ void cadastrarCep(Estado** listaEstados, char* nomeEstado, char* nomeCity, int v
     if (cidadeAtual == NULL) {
         printf("Erro: Cidade \"%s\" nao encontrada no estado \"%s\"!\n", nomeCity, nomeEstado);
     } else { // Insere o CEP na árvore de CEPs da cidade
-        printf("Cidade encontrada, tentando inserir CEP %d\n", valorCep);
         if (inserirCep(&cidadeAtual->arv_cep, NULL, valorCep, cidadeAtual)) {
             printf("CEP \"%d\" cadastrado com sucesso na cidade \"%s\"!\n", valorCep, nomeCity);
         } else {
@@ -333,9 +318,6 @@ void imprimirArvoreCep(Cep* raiz, int nivel) {
     if (raiz == NULL) {
         return;
     }
-
-    printf("Imprimindo nó %d no nível %d\n", raiz->cep, nivel);
-    
     imprimirArvoreCep(raiz->Dir, nivel + 1);
 
     for (int i = 0; i < nivel; i++) {

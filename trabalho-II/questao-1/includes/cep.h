@@ -34,4 +34,5 @@ void move2EsqRED_Cep(Cep **H);
 void move2DirRED_Cep(Cep **H);
 int removerCep(Cep** arvoreCep, Pessoa* arvorePessoa, int valorCep);
 int removerCepDoEstado(Estado* listaEstados, Pessoa* arvorePessoa, int valorCep, char* nomeEstado, char* nomeCity);
+void imprimirArvoreCep(Cep* raiz, int nivel); // FIX: CONSERTAR ESSA PORRA.
 #endif
