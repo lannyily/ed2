@@ -68,11 +68,14 @@ Cidade* criarNoCidade(char* nomeCity, int tamPopu){
 }
 
 int insereCidade(Cidade** Raiz, Cidade* No) {
+    
     int inseriu = 1;
 
     if (*Raiz == NULL) {
+        
         *Raiz = No;
     } else {
+        
         if (strcmp((*Raiz)->nomeCity, No->nomeCity) > 0) {
             inseriu = insereCidade(&((*Raiz)->Esq), No);
         } else if (strcmp((*Raiz)->nomeCity, No->nomeCity) < 0) {
@@ -101,13 +104,17 @@ int insereCidade(Cidade** Raiz, Cidade* No) {
 }
 
 void cadastrarCidade(Estado* lista, char* nomeEst, char* nomeCity, int tamPopu){
+    
     Estado* estado = NULL;
     buscaEstado(lista, nomeEst, &estado);
     
     if (estado != NULL){
         Cidade* nova = criarNoCidade(nomeCity,tamPopu);
+        
         if (insereCidade(&(estado->cidades), nova)){
             printf("Cidade \"%s\" cadastrado com sucesso!\n", nomeCity);
+            estado->quantCity++;
+
             if (strcmp(nomeCity, estado->nomeCap) == 0) {
                 estado->capital = nova;
             }

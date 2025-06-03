@@ -3,26 +3,15 @@
 #include <string.h>
 #include "../includes/estado.h"
 
-void buscaEstado(Estado* listaEstados, char* nomeEstado, Estado** resultado){
-    *resultado = NULL;
-    Estado* atual = listaEstados;
 
-    while(atual != NULL){
-        if(strcmp(listaEstados->nomeEst, nomeEstado) == 0){
-            *resultado = atual;
-        }
-        atual = atual->Prox;
-    }
-}
-
-
-Estado* criarNoEstado(char* nomeEstado, char* nomeCapital, int quantCity, int tamPopu){
+Estado* criarNoEstado(char* nomeEstado, char* nomeCapital, int tamPopu){
     Estado* novo = (Estado*)malloc(sizeof(Estado));
 
     strcpy(novo->nomeEst, nomeEstado);
     strcpy(novo->nomeCap, nomeCapital);
-    novo->quantCity = quantCity;
+    novo->quantCity = 0;
     novo->tamPopu = tamPopu;
+    novo->cidades = NULL;
 
     novo->Ant = NULL;
     novo->Prox = NULL;
@@ -64,8 +53,8 @@ void insertionSort(Estado** listaEstados){
     *listaEstados = ordenar;
 }
 
-void inserirEstadosOrdenado(Estado** listaEstados, char* nomeEstado, char* nomeCapital, int quantCity, int tamPopu){
-    Estado* novoEstado = criarNoEstado(nomeEstado, nomeCapital, quantCity, tamPopu);
+void inserirEstadosOrdenado(Estado** listaEstados, char* nomeEstado, char* nomeCapital, int tamPopu){
+    Estado* novoEstado = criarNoEstado(nomeEstado, nomeCapital, tamPopu);
 
     if (*listaEstados == NULL) {
         *listaEstados = novoEstado;
@@ -80,6 +69,18 @@ void inserirEstadosOrdenado(Estado** listaEstados, char* nomeEstado, char* nomeC
         novoEstado->Ant = temp;
     }
     insertionSort(listaEstados);
+}
+
+void buscaEstado(Estado* listaEstados, char* nomeEstado, Estado** resultado){
+    *resultado = NULL;
+    Estado* atual = listaEstados;
+
+    while(atual != NULL){
+        if(strcmp(atual->nomeEst, nomeEstado) == 0){
+            *resultado = atual;
+        }
+        atual = atual->Prox;
+    }
 }
 
 
