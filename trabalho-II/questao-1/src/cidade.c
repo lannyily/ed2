@@ -136,7 +136,7 @@ void cadastrarCidade(Estado* lista, char* nomeEst, char* nomeCity, int tamPopu){
 void imprimirCidades(Cidade* raiz) {
     if (raiz != NULL){
         imprimirCidades(raiz->Esq);
-        printf("  - %s (Populacao: %d, Cor: %s)\n", raiz->nomeCity, raiz->tamPopu, raiz->cor == 0 ? "PRETO" : "VERMELHO");
+        printf("  - %s (Populacao: %d, Cor: %s)\n", raiz->nomeCity, raiz->tamPopu, raiz->cor == 0 ? "BLACK" : "RED");
         imprimirCidades(raiz->Dir);
     }
 }

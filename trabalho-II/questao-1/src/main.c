@@ -49,8 +49,8 @@ int main() {
     cadastrarCep(listaEstados, "SP", "Sao Paulo", "01000-000");
 
     // Impressão geral
-    //printf("\n=== ESTADOS E CIDADES ===\n");
-    //imprimirEstadosCidades(listaEstados);
+    printf("\n=== ESTADOS E CIDADES ===\n");
+    imprimirEstadosCidadesCeps(listaEstados);
 
     return 0;
 }

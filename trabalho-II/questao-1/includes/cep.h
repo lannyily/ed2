@@ -23,6 +23,7 @@ void buscaCep(Cep* Raiz, char* cep, Cep** resultado);
 Cep* criarNoCep(char* cep);
 int insereCep(Cep** Raiz, Cep* No);
 void cadastrarCep(Estado* lista,  char* nomeEst, char* nomeCity, char* cep);
+void imprimirCidadesCeps(Cidade* raiz);
 void imprimirCeps(Cep* raiz);
 
 #endif 

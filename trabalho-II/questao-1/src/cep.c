@@ -123,10 +123,22 @@ void cadastrarCep(Estado* lista,  char* nomeEst, char* nomeCity, char* cep){
     }
 }
 
+void imprimirCidadesCeps(Cidade* raiz) {
+    if (raiz != NULL) {
+        imprimirCidadesCeps(raiz->Esq);
+        printf("  - %s (Populacao: %d, Cor: %s)\n", raiz->nomeCity, raiz->tamPopu, raiz->cor == 0 ? "BLACK" : "RED");
+        if (raiz->ceps != NULL) {
+            printf("    Ceps:\n");
+            imprimirCeps(raiz->ceps);
+        }
+        imprimirCidadesCeps(raiz->Dir);
+    }
+}
+
 void imprimirCeps(Cep* raiz){
     if(raiz != NULL){
         imprimirCeps(raiz->Esq);
-        printf("        - %s (Cor: %s)\n", raiz->Cep, raiz->cor);
+        printf("        - %s (Cor: %s)\n", raiz->Cep, raiz->cor == 0 ? "BLACK" : "RED");
         imprimirCeps(raiz->Dir);
     }
 }
