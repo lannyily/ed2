@@ -12,6 +12,7 @@ Estado* criarNoEstado(char* nomeEstado, char* nomeCapital, int tamPopu){
     novo->quantCity = 0;
     novo->tamPopu = tamPopu;
     novo->cidades = NULL;
+    novo->capital = NULL;
 
     novo->Ant = NULL;
     novo->Prox = NULL;

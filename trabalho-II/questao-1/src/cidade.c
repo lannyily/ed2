@@ -118,6 +118,10 @@ void cadastrarCidade(Estado* lista, char* nomeEst, char* nomeCity, int tamPopu){
             if (strcmp(nomeCity, estado->nomeCap) == 0) {
                 estado->capital = nova;
             }
+
+            if (strcmp(nomeCity, estado->nomeCap) == 0) {
+                estado->capital = nova;
+            }
         } else {
             printf("A Cidade ja existe!\n");
         }
