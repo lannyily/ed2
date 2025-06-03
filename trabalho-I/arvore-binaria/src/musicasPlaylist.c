@@ -45,6 +45,8 @@ int addMusica(MusicasPlaylist** R, MusicasPlaylist* musica){
         inseriu = addMusica(&((*R)->Esq), musica);
     } else if (strcmp(musica->tituloM, (*R)->tituloM) > 0){
         inseriu = addMusica(&((*R)->Dir), musica);
+    } else {
+        inseriu = 0;
     }
     return inseriu;
 }

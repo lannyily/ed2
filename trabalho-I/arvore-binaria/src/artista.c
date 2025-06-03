@@ -31,6 +31,8 @@ int insereArtista(Artista** raiz, Artista* novo) {
             inseriu = insereArtista(&(*raiz)->Esq, novo); 
         } else if (comparacao > 0) {
             inseriu = insereArtista(&(*raiz)->Dir, novo); 
+        } else {
+            inseriu = 0;
         }
     }
     

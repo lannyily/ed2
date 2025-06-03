@@ -133,6 +133,8 @@ int addMusica(MusicasPlaylist** R, MusicasPlaylist* musica){
             (*R)->altura = maiorMP(alturaNoMP((*R)->Esq), alturaNoMP((*R)->Dir)) + 1;
             balanceamentoMP(R);
         }
+    } else {
+         inseriu = 0;
     }
     return inseriu;
 }

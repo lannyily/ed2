@@ -48,6 +48,8 @@ int insereAlbum(Album** R, Album* No) {
             inseriu = insereAlbum(&((*R)->Esq), No); 
         } else if (comparacao > 0) {
             inseriu = insereAlbum(&((*R)->Dir), No); 
+        } else {
+            inseriu = 0;
         }
     }
 

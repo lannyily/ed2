@@ -104,6 +104,8 @@ int inserirPlaylist(Playlist **raiz, Playlist *novaPlaylist) {
                 (*raiz)->altura = maiorP(alturaNoP((*raiz)->esquerda), alturaNoP((*raiz)->direita)) + 1;
                 balanceamentoP(raiz);
             }
+        } else {
+            inseriu = 0;
         }
         
     }
@@ -218,7 +220,6 @@ int removerPlaylist(Playlist** raiz, char* nome){
                 removeu = removerPlaylist(&((*raiz)->direita), nome);
             }
         }
-
         
 
     } else {

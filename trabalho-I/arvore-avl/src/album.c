@@ -143,6 +143,8 @@ int insereAlbum(Album** R, Album* No) {
                 balanceamentoAl(R);
             }
              
+        } else {
+            inseriu = 0;
         }
     }
 

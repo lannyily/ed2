@@ -48,8 +48,9 @@ int inserirPlaylist(Playlist **raiz, Playlist *novaPlaylist) {
             inseriu = inserirPlaylist(&((*raiz)->esquerda), novaPlaylist);
         } else if (comparacao > 0) {
             inseriu = inserirPlaylist(&((*raiz)->direita), novaPlaylist);
-        }
-        
+        } else {
+            inseriu = 0;
+        } 
     }
 
     return inseriu;

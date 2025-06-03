@@ -3,6 +3,7 @@
         "artista.h": "c",
         "album.h": "c",
         "musica.h": "c",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "cidade.h": "c"
     }
 }

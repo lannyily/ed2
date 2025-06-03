@@ -55,6 +55,8 @@ int insereMusica(Musica** R, Musica* No) {
             inseriu = insereMusica(&((*R)->Esq), No); 
         } else if (comparacao > 0) {
             inseriu = insereMusica(&((*R)->Dir), No); 
+        } else {
+            inseriu = 0;
         }
     }
 

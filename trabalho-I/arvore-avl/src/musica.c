@@ -142,6 +142,8 @@ int insereMusica(Musica** R, Musica* No) {
                 (*R)->altura = maiorM(alturaNoM((*R)->Esq), alturaNoM((*R)->Dir)) + 1;
                 balanceamentoM(R);
             }
+        } else {
+            inseriu = 0;
         }
     }
 

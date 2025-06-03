@@ -3,7 +3,20 @@
 #include <string.h>
 #include "../includes/estado.h"
 
-Estado* criarNo(char* nomeEstado, char* nomeCapital, int quantCity, int tamPopu){
+void buscaEstado(Estado* listaEstados, char* nomeEstado, Estado** resultado){
+    *resultado = NULL;
+    Estado* atual = listaEstados;
+
+    while(atual != NULL){
+        if(strcmp(listaEstados->nomeEst, nomeEstado) == 0){
+            *resultado = atual;
+        }
+        atual = atual->Prox;
+    }
+}
+
+
+Estado* criarNoEstado(char* nomeEstado, char* nomeCapital, int quantCity, int tamPopu){
     Estado* novo = (Estado*)malloc(sizeof(Estado));
 
     strcpy(novo->nomeEst, nomeEstado);
@@ -17,31 +30,67 @@ Estado* criarNo(char* nomeEstado, char* nomeCapital, int quantCity, int tamPopu)
     return novo;
 }
 
-void inserirEstadosOrdenado(Estado** lista, char* nomeEstado, char* nomeCapital, int quantCity, int tamPopu){
-    Estado* novo = criarNo(nomeEstado, nomeCapital, quantCity, tamPopu);
-    
-    if (*lista == NULL) {
-        *lista = novo;
+void insertionSort(Estado** listaEstados){
+    Estado* atual = *listaEstados;
+    Estado* ordenar = NULL;
+
+    while(atual != NULL){
+        Estado* proximo = atual->Prox;
+        atual->Ant = atual->Prox = NULL;
+
+        if(ordenar == NULL || strcmp(ordenar->nomeEst, atual->nomeEst) >= 0){
+            atual->Prox = ordenar;
+            if(ordenar != NULL){
+                ordenar->Ant = atual;
+            }
+            ordenar = atual;
+        } else {
+            Estado* temp = ordenar;
+
+            while(temp->Prox != NULL && strcmp(temp->nomeEst, atual->nomeEst) < 0){
+                temp = temp->Prox;
+            }
+
+            atual->Prox = temp->Prox;
+            if(temp->Prox != NULL){
+                temp->Prox->Ant = atual;
+            }
+
+            temp->Prox = atual;
+            atual->Ant = temp;
+        }
+        atual = proximo;
     }
+    *listaEstados = ordenar;
+}
 
-    Estado* atual = *lista;
-    Estado* anterior = NULL;
+void inserirEstadosOrdenado(Estado** listaEstados, char* nomeEstado, char* nomeCapital, int quantCity, int tamPopu){
+    Estado* novoEstado = criarNoEstado(nomeEstado, nomeCapital, quantCity, tamPopu);
 
-    while (atual != NULL && strcmp(novo->nomeEst, atual->nomeEst) > 0){
-        anterior = atual;
+    if (*listaEstados == NULL) {
+        *listaEstados = novoEstado;
+    } else {
+        Estado* temp = *listaEstados;
+
+        while(temp->Prox != NULL){
+            temp = temp->Prox;
+        }
+
+        temp->Prox = novoEstado;
+        novoEstado->Ant = temp;
+    }
+    insertionSort(listaEstados);
+}
+
+
+
+void imprimirEstados(Estado* listaEstados) {
+    Estado* atual = listaEstados;
+
+    while (atual != NULL) {
+        printf("Estado: %s\n", atual->nomeEst);
+        printf("Capital: %s | Populacao: %d | Num Cidades: %d\n", atual->nomeCap, atual->tamPopu, atual->quantCity);
         atual = atual->Prox;
     }
-
-    if (anterior == NULL){
-        novo->Prox = *lista;
-        (*lista)->Ant = novo;
-        *lista = novo;
-    } else {
-        novo->Prox = atual;
-        novo->Ant = anterior;
-        anterior->Prox = novo;
-        if (atual != NULL){
-            atual->Ant = novo;
-        }
-    }
 }
+

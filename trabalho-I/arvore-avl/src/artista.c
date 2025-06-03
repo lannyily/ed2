@@ -108,6 +108,8 @@ int insereArtista(Artista** raiz, Artista* novo) {
                 (*raiz)->altura = maiorA(alturaNoA((*raiz)->Esq), alturaNoA((*raiz)->Dir)) + 1;
                 balanceamentoA(raiz);
             }
+        } else {
+            inseriu = 0;
         }
     }
     
