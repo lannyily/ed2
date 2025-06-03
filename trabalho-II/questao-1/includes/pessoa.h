@@ -14,10 +14,20 @@ typedef struct Pessoa{
     char cepCityNatal[20];
     char cepCityMora[20];
     char dataNascimento[10];
-    char Cep[50];
     enum Cores cor;
 
     struct Pessoa *Esq, *Dir;
 }Pessoa;
+
+int dataValida(char* dataN);
+enum Cores corPessoa(Pessoa* pessoa);
+Pessoa* rotacaoEsqPessoa(Pessoa** Raiz);
+Pessoa* rotacaoDirPessoa(Pessoa** Raiz);
+void trocarCorPessoa(Pessoa** Raiz);
+void buscaPessoa(Pessoa* Raiz, char* cpf, Pessoa** resultado);
+Pessoa* criarNoPessoa(char* nome, char* cpf, char* cepCityNatal, char* cepCityMora, char* dataN);
+int inserePessoa(Pessoa** Raiz, Pessoa* No);
+void cadastrarPessoa(Pessoa* Raiz, char* nome, char* cpf, char* cepCityNatal, char* cepCityMora, char* dataN);
+
 
 #endif 
