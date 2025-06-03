@@ -3,22 +3,24 @@
 
 
 typedef struct Estado Estado; 
+typedef struct Cep Cep;
 
-typedef enum Cores
+typedef enum CoresCity
 {
     RED = 1,
     BLACK = 0
-}Cores;
+}CoresCity;
 
 typedef struct Cidade{
     char nomeCity[50];
     int tamPopu;
-    enum Cores cor; 
+    enum CoresCity cor; 
+    Cep* ceps;
 
     struct Cidade *Esq, *Dir;
 }Cidade;
 
-enum Cores corCidade(Cidade* cidade);
+enum CoresCity corCidade(Cidade* cidade);
 Cidade* rotacaoEsqCidade(Cidade** Raiz);
 Cidade* rotacaoDirCidade(Cidade** Raiz);
 void trocarCorCidade(Cidade** Raiz);

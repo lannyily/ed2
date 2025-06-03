@@ -4,7 +4,7 @@
 #include "../includes/estado.h"
 #include "../includes/cidade.h"
 
-enum Cores corCidade(Cidade* cidade){
+enum CoresCity corCidade(Cidade* cidade){
     return cidade != NULL ? cidade->cor : BLACK;
 }
 
@@ -61,6 +61,7 @@ Cidade* criarNoCidade(char* nomeCity, int tamPopu){
     strcpy(nova->nomeCity, nomeCity);
     nova->tamPopu = tamPopu;
     nova->cor = RED;
+    nova->ceps = NULL;
 
     nova->Dir = NULL;
     nova->Esq = NULL;
