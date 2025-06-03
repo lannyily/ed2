@@ -3,6 +3,7 @@
 #include <string.h>
 #include "../includes/estado.h"
 #include "../includes/cidade.h"
+#include "../includes/cep.h"
 
 int main() {
     Estado* listaEstados = NULL;
@@ -37,9 +38,19 @@ int main() {
 
     printf("Cidades inseridos!\n");
 
+    
+    cadastrarCep(listaEstados, "SP", "Sao Paulo", "01000-000");
+    cadastrarCep(listaEstados, "SP", "Campinas", "13010-000");
+    cadastrarCep(listaEstados, "RJ", "Rio de Janeiro", "20010-000");
+    cadastrarCep(listaEstados, "RJ", "Niteroi", "24020-000");
+    cadastrarCep(listaEstados, "SP", "Bauru", "17010-000");
+    cadastrarCep(listaEstados, "BA", "Salvador", "40010-000");
+    cadastrarCep(listaEstados, "SP", "Santos", "11015350");
+    cadastrarCep(listaEstados, "SP", "Sao Paulo", "01000-000");
+
     // Impressão geral
     //printf("\n=== ESTADOS E CIDADES ===\n");
-    imprimirEstadosCidades(listaEstados);
+    //imprimirEstadosCidades(listaEstados);
 
     return 0;
 }

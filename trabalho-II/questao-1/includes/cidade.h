@@ -5,22 +5,22 @@
 typedef struct Estado Estado; 
 typedef struct Cep Cep;
 
-typedef enum CoresCity
+typedef enum Cores
 {
     RED = 1,
     BLACK = 0
-}CoresCity;
+}Cores;
 
 typedef struct Cidade{
     char nomeCity[50];
     int tamPopu;
-    enum CoresCity cor; 
+    enum Cores cor; 
     Cep* ceps;
 
     struct Cidade *Esq, *Dir;
 }Cidade;
 
-enum CoresCity corCidade(Cidade* cidade);
+enum Cores corCidade(Cidade* cidade);
 Cidade* rotacaoEsqCidade(Cidade** Raiz);
 Cidade* rotacaoDirCidade(Cidade** Raiz);
 void trocarCorCidade(Cidade** Raiz);
@@ -29,6 +29,6 @@ Cidade* criarNoCidade(char* nomeCity, int tamPopu);
 int insereCidade(Cidade** Raiz, Cidade* No);
 void cadastrarCidade(Estado* lista, char* nomeEst, char* nomeCity, int tamPopu);
 void imprimirCidades(Cidade* raiz);
-void imprimirEstadosCidades(Estado* listaEstados);
+void imprimirEstadosCidadesCeps(Estado* listaEstados);
 
 #endif 

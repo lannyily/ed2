@@ -1,19 +1,28 @@
 #ifndef CEP_H
 #define CEP_H
 
-typedef struct Cidade Cidade;
+#include "cidade.h"
 
-typedef enum CoresCep
-{
-    RED = 1,
-    BLACK = 0
-}CoresCep;
+typedef struct Cidade Cidade;
+typedef struct Estado Estado; 
+
+
 
 typedef struct Cep{
-    int Cep;
-    enum CoresCep cor;
+    char Cep[50];
+    enum Cores cor;
 
     struct Cep *Esq, *Dir;
 }Cep;
+
+enum Cores corCep(Cep* cep);
+Cep* rotacaoEsqCep(Cep** Raiz);
+Cep* rotacaoDirCep(Cep** Raiz);
+void trocarCorCep(Cep** Raiz);
+void buscaCep(Cep* Raiz, char* cep, Cep** resultado);
+Cep* criarNoCep(char* cep);
+int insereCep(Cep** Raiz, Cep* No);
+void cadastrarCep(Estado* lista,  char* nomeEst, char* nomeCity, char* cep);
+void imprimirCeps(Cep* raiz);
 
 #endif 

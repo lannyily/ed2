@@ -3,8 +3,9 @@
 #include <string.h>
 #include "../includes/estado.h"
 #include "../includes/cidade.h"
+#include "../includes/cep.h"
 
-enum CoresCity corCidade(Cidade* cidade){
+enum Cores corCidade(Cidade* cidade){
     return cidade != NULL ? cidade->cor : BLACK;
 }
 
@@ -133,19 +134,21 @@ void cadastrarCidade(Estado* lista, char* nomeEst, char* nomeCity, int tamPopu){
 
 
 void imprimirCidades(Cidade* raiz) {
-    if (raiz == NULL) return;
-    imprimirCidades(raiz->Esq);
-    printf("  - %s (Populacao: %d, Cor: %s)\n", raiz->nomeCity, raiz->tamPopu, raiz->cor == 0 ? "PRETO" : "VERMELHO");
-    imprimirCidades(raiz->Dir);
+    if (raiz != NULL){
+        imprimirCidades(raiz->Esq);
+        printf("  - %s (Populacao: %d, Cor: %s)\n", raiz->nomeCity, raiz->tamPopu, raiz->cor == 0 ? "PRETO" : "VERMELHO");
+        imprimirCidades(raiz->Dir);
+    }
 }
 
-void imprimirEstadosCidades(Estado* listaEstados) {
+void imprimirEstadosCidadesCeps(Estado* listaEstados) {
     Estado* atual = listaEstados;
 
     while (atual != NULL) {
         printf("Estado: %s\n", atual->nomeEst);
         printf("Capital: %s | Populacao: %d | Num Cidades: %d\n", atual->nomeCap, atual->tamPopu, atual->quantCity);
         imprimirCidades(atual->cidades);
+        imprimirCeps(atual->cidades->ceps);
         atual = atual->Prox;
     }
 }
