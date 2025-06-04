@@ -144,8 +144,7 @@ void imprimirEstadosCidadesCeps(Estado* listaEstados) {
     while (atual != NULL) {
         printf("Estado: %s\n", atual->nomeEst);
         printf("Capital: %s | Populacao: %d | Num Cidades: %d\n", atual->nomeCap, atual->tamPopu, atual->quantCity);
-        imprimirCidades(atual->cidades);
-        imprimirCeps(atual->cidades->ceps);
+        imprimirCidadesCeps(atual->cidades);
         atual = atual->Prox;
     }
 }

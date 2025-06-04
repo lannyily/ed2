@@ -19,11 +19,13 @@ enum Cores corCep(Cep* cep);
 Cep* rotacaoEsqCep(Cep** Raiz);
 Cep* rotacaoDirCep(Cep** Raiz);
 void trocarCorCep(Cep** Raiz);
-void buscaCep(Cep* Raiz, char* cep, Cep** resultado);
 Cep* criarNoCep(char* cep);
 int insereCep(Cep** Raiz, Cep* No);
 void cadastrarCep(Estado* lista,  char* nomeEst, char* nomeCity, char* cep);
 void imprimirCidadesCeps(Cidade* raiz);
 void imprimirCeps(Cep* raiz);
+void buscaCep(Cep* Raiz, char* cep, Cep** resultado);
+Cep* buscarCepEmCidade(Cidade* cidade, char* cep);
+Cep* buscarCepEmEstado(Estado* estado, char* cep);
 
 #endif 

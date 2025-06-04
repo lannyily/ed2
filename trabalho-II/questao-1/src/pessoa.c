@@ -143,13 +143,27 @@ int inserePessoa(Pessoa** Raiz, Pessoa* No){
 }
 
 
-
-void cadastrarPessoa(Pessoa* Raiz, char* nome, char* cpf, char* cepCityNatal, char* cepCityMora, char* dataN){
+void cadastrarPessoa(Estado* lista, Pessoa** Raiz, char* nome, char* cpf, char* cepCityNatal, char* cepCityMora, char* dataN){
     Pessoa* novaPessoa = criarNoPessoa(nome, cpf, cepCityNatal, cepCityMora, dataN);
 
-    if (inserePessoa(&(Raiz), novaPessoa)){
-        printf("Pessoa com o CPF \"%s\" cadastrada com sucesso!\n", cpf);
+    if (buscarCepEmEstado(lista, cepCityNatal) && buscarCepEmEstado(lista, cepCityMora)){
+        if (inserePessoa(Raiz, novaPessoa)){
+            printf("Pessoa com o CPF \"%s\" cadastrada com sucesso!\n", cpf);
+        } else {
+            printf("Pessoa com o CPF \"%s\" ja existe!\n", cpf);
+        }
     } else {
-        printf("Pessoa com o CPF \"%s\" ja existe!\n", cpf);
+        printf("CEP nao encontrado!\n");
+    }
+}
+
+void imprimirPessoas(Pessoa* raiz){
+    
+    if(raiz != NULL){
+        imprimirPessoas(raiz->Esq);
+        printf("%s \n     - CPF: %s\n     - CEP da cidade natal: %s\n     - CEP da cidade onde mora: %s\n     - Data de nascimento: %s\n     - Cor: %s\n", 
+               raiz->nome, raiz->cpf, raiz->cepCityNatal, raiz->cepCityMora, 
+               raiz->dataNascimento, raiz->cor == 0 ? "BLACK" : "RED");
+        imprimirPessoas(raiz->Dir);
     }
 }

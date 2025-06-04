@@ -41,20 +41,6 @@ void trocarCorCep(Cep** Raiz){
 
 }
 
-void buscaCep(Cep* Raiz, char* cep, Cep** resultado) {
-    *resultado = NULL;
-
-    if(Raiz != NULL) {
-        if(strcmp(Raiz->Cep, cep) == 0) {
-            *resultado = Raiz;
-        } else if(strcmp(cep, Raiz->Cep) < 0) {
-            buscaCep(Raiz->Esq, cep, resultado);
-        } else {
-            buscaCep(Raiz->Dir, cep, resultado);
-        }
-    }
-}
-
 Cep* criarNoCep(char* cep){
     Cep* novo = (Cep*)malloc(sizeof(Cep));
 
@@ -142,3 +128,47 @@ void imprimirCeps(Cep* raiz){
         imprimirCeps(raiz->Dir);
     }
 }
+
+void buscaCep(Cep* Raiz, char* cep, Cep** resultado){
+    *resultado = NULL;
+
+    if(Raiz != NULL) {
+        if(strcmp(Raiz->Cep, cep) == 0) {
+            *resultado = Raiz;
+        } else if(strcmp(cep, Raiz->Cep) < 0) {
+            buscaCep(Raiz->Esq, cep, resultado);
+        } else {
+            buscaCep(Raiz->Dir, cep, resultado);
+        }
+    }
+}
+
+Cep* buscarCepEmCidade(Cidade* cidade, char* cep){
+    Cep* resultado = NULL;
+
+    if (cidade != NULL) {
+        buscaCep(cidade->ceps, cep, &resultado);
+
+        if (resultado == NULL){
+            resultado = buscarCepEmCidade(cidade->Esq, cep);
+        }
+
+        if (resultado == NULL) {
+            resultado = buscarCepEmCidade(cidade->Dir, cep);
+        }
+    }
+
+    return resultado;
+}
+
+Cep* buscarCepEmEstado(Estado* estado, char* cep) {
+    Cep* resultado = NULL;
+
+    while (estado != NULL && resultado == NULL) {
+        resultado = buscarCepEmCidade(estado->cidades, cep);
+        estado = estado->Prox;
+    }
+
+    return resultado;
+}
+
