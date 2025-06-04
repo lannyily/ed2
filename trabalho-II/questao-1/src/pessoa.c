@@ -146,7 +146,10 @@ int inserePessoa(Pessoa** Raiz, Pessoa* No){
 void cadastrarPessoa(Estado* lista, Pessoa** Raiz, char* nome, char* cpf, char* cepCityNatal, char* cepCityMora, char* dataN){
     Pessoa* novaPessoa = criarNoPessoa(nome, cpf, cepCityNatal, cepCityMora, dataN);
 
-    if (buscarCepEmEstado(lista, cepCityNatal) && buscarCepEmEstado(lista, cepCityMora)){
+    Cep* cepN = buscarCepEmEstado(lista, cepCityNatal);
+    Cep* cepM = buscarCepEmEstado(lista, cepCityMora);
+
+    if (cepN && cepM){
         if (inserePessoa(Raiz, novaPessoa)){
             printf("Pessoa com o CPF \"%s\" cadastrada com sucesso!\n", cpf);
         } else {

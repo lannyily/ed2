@@ -53,7 +53,7 @@ int main() {
     // Cadastro de pessoas com validação de data
     char* data1 = "21/02/2004";
     if(dataValida(data1)) {
-        cadastrarPessoa(listaEstados, &arvPessoas, "Ana Maria", "23423435", "13010-000", "17010-000", data1);
+        cadastrarPessoa(listaEstados, &arvPessoas, "Ana Maria", "23423435", "13010-000", "13010-000", data1);
     } else {
         printf("Data de nascimento invalida para Ana Maria: %s\n", data1);
     }
@@ -67,13 +67,15 @@ int main() {
 
     char* data5 = "29/02/2020"; // Data válida (2020 é bissexto)
     if(dataValida(data5)) {
-        cadastrarPessoa(listaEstados, &arvPessoas, "Fernanda Lima", "321654987", "17010-000", "01000-000", data5);
+        cadastrarPessoa(listaEstados, &arvPessoas, "Fernanda Lima", "321654987", "24020-000", "01000-000", data5);
     } else {
         printf("Data de nascimento invalida para Fernanda Lima: %s\n", data5);
     }
 
     printf("\n=== PESSOAS CADASTRADAS ===\n");
     imprimirPessoas(arvPessoas);
+
+    
 
     return 0;
 }
