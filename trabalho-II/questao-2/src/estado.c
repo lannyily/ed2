@@ -11,7 +11,7 @@ Estado* criarNoEstado(char* nomeEstado, char* nomeCapital, int tamPopu){
     strcpy(novo->nomeCap, nomeCapital);
     novo->quantCity = 0;
     novo->tamPopu = tamPopu;
-    novo->cidades = NULL;
+    novo->arvCidades = NULL;
     novo->capital = NULL;
 
     novo->Ant = NULL;
