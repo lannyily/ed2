@@ -19,6 +19,7 @@ arv23cidade* criarNo23(Cidade* cidadeInfo, arv23cidade* Esq, arv23cidade* Cen){
 
     if(novo != NULL){
         novo->Info1 = cidadeInfo;
+        novo->Info2 = NULL;
         novo->Esq = Esq;
         novo->Dir = NULL;
         novo->Cent = Cen;
@@ -83,7 +84,7 @@ arv23cidade* insere23Cidade(arv23cidade** Raiz, Cidade* noCidade, arv23cidade* P
                 maiorNo = insere23Cidade(&((*Raiz)->Esq), noCidade, *Raiz, sobe);
             } else if ((*Raiz)->Ninfos == 1 || strcmp(noCidade->nomeCity, (*Raiz)->Info2->nomeCity) < 0){
                 maiorNo = insere23Cidade(&((*Raiz)->Cent), noCidade, *Raiz, sobe);
-            } else if (strcmp(noCidade->nomeCity, (*Raiz)->Info2->nomeCity) > 0){
+            } else {
                 maiorNo = insere23Cidade(&((*Raiz)->Dir), noCidade, *Raiz, sobe);
             }
 
@@ -105,7 +106,7 @@ arv23cidade* insere23Cidade(arv23cidade** Raiz, Cidade* noCidade, arv23cidade* P
     return maiorNo;
 }
 
-void cadastrarCidade(Estado* lista, char* nomeEst, char* nomeCity, int tamPopu, arv23cidade** Raiz, arv23cidade* Pai, Cidade** sobe) {
+void cadastrarCidade(Estado* lista, char* nomeEst, char* nomeCity, int tamPopu, Cidade** sobe) {
     Estado* estado = NULL;
     buscaEstado(lista, nomeEst, &estado);
 
@@ -117,7 +118,7 @@ void cadastrarCidade(Estado* lista, char* nomeEst, char* nomeCity, int tamPopu, 
             printf("Cidade %s registrada como capital de %s\n", nomeCity, estado->nomeEst);
         }
         
-        insere23Cidade(&(estado->arvCidades), nova, Pai, sobe);
+        insere23Cidade(&(estado->arvCidades), nova, NULL, sobe);
         
         estado->quantCity++;
 
@@ -145,39 +146,4 @@ Cidade* buscaCidade(arv23cidade* Raiz, char* nomeCity){
     }
 
     return encontrou;
-}
-
-void imprimirCidades23(arv23cidade* Raiz) {
-    if(Raiz != NULL) {
-        
-        imprimirCidades23(Raiz->Esq);
-        
-        printf("    - %s (Populacao: %d)\n", Raiz->Info1->nomeCity, Raiz->Info1->tamPopu);
-        
-        imprimirCidades23(Raiz->Cent);
-        
-        if(Raiz->Ninfos == 2) {
-            printf("    - %s (Populacao: %d)\n", Raiz->Info2->nomeCity, Raiz->Info2->tamPopu);
-            imprimirCidades23(Raiz->Dir);
-        }
-    }
-}
-
-void imprimirEstadosCidades23(Estado* listaEstados) {
-    Estado* atual = listaEstados;
-    
-    while(atual != NULL) {
-        
-        printf("Estado: %s\n", atual->nomeEst);
-        printf("Capital: %s | Populacao: %d\n", atual->nomeCap, atual->tamPopu);
-        
-        if(atual->arvCidades != NULL) {
-            
-            imprimirCidades23(atual->arvCidades);
-        } else {
-            printf("    - Nenhuma cidade cadastrada neste estado!\n");
-        }
-        
-        atual = atual->Prox;
-    }
 }

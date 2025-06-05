@@ -11,7 +11,7 @@ Estado* criarNoEstado(char* nomeEstado, char* nomeCapital, int tamPopu){
     strcpy(novo->nomeCap, nomeCapital);
     novo->quantCity = 0;
     novo->tamPopu = tamPopu;
-    novo->arvCidades = NULL;
+    novo->cidades = NULL;
     novo->capital = NULL;
 
     novo->Ant = NULL;
@@ -84,4 +84,15 @@ void buscaEstado(Estado* listaEstados, char* nomeEstado, Estado** resultado){
     }
 }
 
+
+
+void imprimirEstados(Estado* listaEstados) {
+    Estado* atual = listaEstados;
+
+    while (atual != NULL) {
+        printf("Estado: %s\n", atual->nomeEst);
+        printf("Capital: %s | Populacao: %d | Num Cidades: %d\n", atual->nomeCap, atual->tamPopu, atual->quantCity);
+        atual = atual->Prox;
+    }
+}
 
