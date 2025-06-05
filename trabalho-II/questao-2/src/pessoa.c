@@ -70,7 +70,7 @@ arv23Pessoa* criarNo23Pessoa(Pessoa* Info, arv23Pessoa* Esq, arv23Pessoa* Cen){
     return nova;
 }
 
-addInfoPessoa(arv23Pessoa* no, Pessoa* Info, arv23Pessoa* subArv){
+void addInfoPessoa(arv23Pessoa* no, Pessoa* Info, arv23Pessoa* subArv){
     if(strcmp(Info->cpf, no->Info1->cpf) > 0){
         no->Info2 = Info;
         no->Dir = subArv;
@@ -110,13 +110,16 @@ arv23Pessoa* quebraNoPessoa(arv23Pessoa** no, Pessoa* pessoaInfo, Pessoa** sobe,
 
 arv23Pessoa* insere23Pessoa(arv23Pessoa** Raiz, Pessoa* noPessoa, arv23Pessoa* Pai, Pessoa** sobe){
     arv23Pessoa* maiorNo;
-
+    
     if(*Raiz == NULL){
+        
         *Raiz = criarNo23Pessoa(noPessoa, NULL, NULL);
     } else {
+        
         if((*Raiz)->Esq == NULL){
+            
             if((*Raiz)->Ninfos == 1){
-                addInfoPessoa(Raiz, noPessoa, NULL);
+                addInfoPessoa(*Raiz, noPessoa, NULL);
             } else {
                 maiorNo = quebraNoPessoa(Raiz, noPessoa, sobe, NULL);
 
@@ -126,6 +129,7 @@ arv23Pessoa* insere23Pessoa(arv23Pessoa** Raiz, Pessoa* noPessoa, arv23Pessoa* P
                 }
             }
         } else {
+            
             if(strcmp(noPessoa->cpf, (*Raiz)->Info1->cpf) < 0){
                 maiorNo = insere23Pessoa(&((*Raiz)->Esq), noPessoa, *Raiz, sobe);
             } else if ((*Raiz)->Ninfos == 1 || strcmp(noPessoa->cpf, (*Raiz)->Info2->cpf) < 0){
@@ -136,7 +140,7 @@ arv23Pessoa* insere23Pessoa(arv23Pessoa** Raiz, Pessoa* noPessoa, arv23Pessoa* P
 
             if(maiorNo != NULL){
                 if((*Raiz)->Ninfos == 1){
-                    addInfoPessoa(Raiz, *sobe, maiorNo);
+                    addInfoPessoa(*Raiz, *sobe, maiorNo);
                     maiorNo = NULL;
                 } else {
                     maiorNo = quebraNoPessoa(Raiz, *sobe, sobe, maiorNo);
@@ -152,10 +156,25 @@ arv23Pessoa* insere23Pessoa(arv23Pessoa** Raiz, Pessoa* noPessoa, arv23Pessoa* P
     return maiorNo;
 }
 
-void cadastrarPessoa(arv23Pessoa* Raiz, char* nome, char* cpf, char* cepCityNatal, char* cepCityMora, char* dataN, Cidade** sobe) {
-    
-    Pessoa* nova = criarNoPessoa(nome, cpf, cepCityNatal, cepCityMora, dataN);
+void imprimirPessoas23(arv23Pessoa *Raiz){
 
-    insere23Pessoa(&Raiz, nova, NULL, sobe);
-        
+    if (Raiz != NULL) {
+        imprimirPessoas23(Raiz->Esq);
+
+        printf("\n%s\n   CPF: %s\n   Data Nascimento: %s\n   CEP Cidade Natal: %s\n   CEP Cidade Atual: %s\n",
+            Raiz->Info1->nome, Raiz->Info1->cpf, Raiz->Info1->dataNascimento,
+            Raiz->Info1->cepCityNatal, Raiz->Info1->cepCityMora);
+
+        if (Raiz->Ninfos == 2) {
+            imprimirPessoas23(Raiz->Cent);
+
+            printf("\n%s\n   CPF: %s\n   Data Nascimento: %s\n   CEP Cidade Natal: %s\n   CEP Cidade Atual: %s\n",
+            Raiz->Info2->nome, Raiz->Info2->cpf, Raiz->Info2->dataNascimento,
+            Raiz->Info2->cepCityNatal, Raiz->Info2->cepCityMora);
+
+            imprimirPessoas23(Raiz->Dir);
+        } else {
+            imprimirPessoas23(Raiz->Cent);
+        }
+    }
 }

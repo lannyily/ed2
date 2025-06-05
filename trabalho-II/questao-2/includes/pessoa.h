@@ -25,6 +25,12 @@ typedef struct arv23Pessoa{
     struct arv23Pessoa *Esq, *Dir, *Cent;
 }arv23Pessoa;
 
-
+int dataValida(char* dataN);
+Pessoa* criarNoPessoa(char* nome, char* cpf, char* cepCityNatal, char* cepCityMora, char* dataN);
+arv23Pessoa* criarNo23Pessoa(Pessoa* Info, arv23Pessoa* Esq, arv23Pessoa* Cen);
+void addInfoPessoa(arv23Pessoa* no, Pessoa* Info, arv23Pessoa* subArv);
+arv23Pessoa* quebraNoPessoa(arv23Pessoa** no, Pessoa* pessoaInfo, Pessoa** sobe, arv23Pessoa* Dir);
+arv23Pessoa* insere23Pessoa(arv23Pessoa** Raiz, Pessoa* noPessoa, arv23Pessoa* Pai, Pessoa** sobe);
+void imprimirPessoas23(arv23Pessoa *Raiz);
 
 #endif 
