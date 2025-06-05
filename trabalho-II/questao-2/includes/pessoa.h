@@ -18,5 +18,13 @@ typedef struct Pessoa{
     struct Pessoa *Esq, *Dir;
 }Pessoa;
 
+typedef struct arv23Pessoa{
+    Pessoa *Info1, *Info2;
+    int Ninfos;
+
+    struct arv23Pessoa *Esq, *Dir, *Cent;
+}arv23Pessoa;
+
+
 
 #endif 
