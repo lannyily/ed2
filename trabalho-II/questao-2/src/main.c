@@ -37,9 +37,9 @@ int main(){
 
     printf("Cidades cadastradas com sucesso!\n");
 
-    Cep* sobeCep = NULL;
+    //Cep* sobeCep = NULL;
 
-    cadastrarCep23(listaEstados, "SP", RaizCep, "Osasco", "23453-234", &sobeCep);
+    //cadastrarCep23(listaEstados, RaizCep, "SP", "Osasco", "23453-234", &sobeCep);
 
     Pessoa* sobePessoa;
 
@@ -47,9 +47,15 @@ int main(){
     
     printf("Iniciar cadastro de Pessoas!\n");
 
-    Cep* cepBusca;
-    cepBusca = buscaCep(RaizCep, "23453-234");
+    //Cep* cepBusca;
+    //cepBusca = buscaCep(RaizCep, "23453-234");
     insere23Pessoa(&RaizPessoa, nova, NULL, &sobePessoa);
+
+    imprimirPessoas23(RaizPessoa);
+
+    printf("Iniciar remocao de Pessoas!\n");
+
+    removerPessoa23(&RaizPessoa, NULL, "34534534");
 
     imprimirPessoas23(RaizPessoa);
 

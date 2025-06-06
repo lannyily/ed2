@@ -32,5 +32,11 @@ void addInfoPessoa(arv23Pessoa* no, Pessoa* Info, arv23Pessoa* subArv);
 arv23Pessoa* quebraNoPessoa(arv23Pessoa** no, Pessoa* pessoaInfo, Pessoa** sobe, arv23Pessoa* Dir);
 arv23Pessoa* insere23Pessoa(arv23Pessoa** Raiz, Pessoa* noPessoa, arv23Pessoa* Pai, Pessoa** sobe);
 void imprimirPessoas23(arv23Pessoa *Raiz);
+Pessoa* buscaPessoa(arv23Pessoa* Raiz, char* cpf);
+int ehFolha(arv23Pessoa* pessoa);
+void redistribuir(arv23Pessoa** Raiz, arv23Pessoa** Pai);
+void removerMaiorEsq(arv23Pessoa** Raiz, arv23Pessoa** maiorPai, arv23Pessoa** maiorRemove, int localInfo);
+void removerPessoa23(arv23Pessoa** Raiz, arv23Pessoa** Pai, char* cpf);
+
 
 #endif 
