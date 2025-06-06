@@ -25,6 +25,6 @@ Cep* buscaCep(arv23cep* Raiz, Cep* cepNum);
 void imprimirCep23(arv23cep* Raiz);
 void imprimirCidades23(arv23cidade* Raiz);
 void imprimirEstadosCidadesCeps23(Estado* listaEstados);
-void cadastrarCep23(Estado* listaEstados, char* nomeEst, char*nomeCity, char* cep, Cep** sobe);
+void cadastrarCep23(Estado* listaEstados, arv23cep* raizCep, char* nomeEst, char*nomeCity, char* cep, Cep** sobe);
 
 #endif 

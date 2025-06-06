@@ -9,6 +9,7 @@
 int main(){
     Estado* listaEstados = NULL;
     arv23Pessoa* RaizPessoa = NULL;
+    arv23cep* RaizCep = NULL;
 
     inserirEstadosOrdenado(&listaEstados, "SP", "Sao Paulo", 46289333);
     inserirEstadosOrdenado(&listaEstados, "RJ", "Rio de Janeiro", 17463349);
@@ -38,7 +39,7 @@ int main(){
 
     Cep* sobeCep = NULL;
 
-    cadastrarCep23(listaEstados, "SP", "Osasco", "23453-234", &sobeCep);
+    cadastrarCep23(listaEstados, "SP", RaizCep, "Osasco", "23453-234", &sobeCep);
 
     Pessoa* sobePessoa;
 
@@ -46,6 +47,8 @@ int main(){
     
     printf("Iniciar cadastro de Pessoas!\n");
 
+    Cep* cepBusca;
+    cepBusca = buscaCep(RaizCep, "23453-234");
     insere23Pessoa(&RaizPessoa, nova, NULL, &sobePessoa);
 
     imprimirPessoas23(RaizPessoa);

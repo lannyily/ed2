@@ -201,7 +201,7 @@ void imprimirEstadosCidadesCeps23(Estado* listaEstados){
     }
 }
 
-void cadastrarCep23(Estado* listaEstados, char* nomeEst, char*nomeCity, char* cep, Cep** sobe){
+void cadastrarCep23(Estado* listaEstados, arv23cep* raizCep, char* nomeEst, char*nomeCity, char* cep, Cep** sobe){
     Estado* estado = NULL;
 
     buscaEstado(listaEstados, nomeEst, &estado);
