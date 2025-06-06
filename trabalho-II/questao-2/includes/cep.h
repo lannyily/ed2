@@ -26,5 +26,9 @@ void imprimirCep23(arv23cep* Raiz);
 void imprimirCidades23(arv23cidade* Raiz);
 void imprimirEstadosCidadesCeps23(Estado* listaEstados);
 void cadastrarCep23(Estado* listaEstados, arv23cep* raizCep, char* nomeEst, char*nomeCity, char* cep, Cep** sobe);
+void redistribuirCep(arv23cep** Raiz, arv23cep** Pai);
+int ehFolhaCep(arv23cep* cep);
+void removerMaiorEsqCep(arv23cep** Raiz, arv23cep** maiorPai, arv23cep** maiorRemove, int localInfo);
+void removerCep23(arv23cep** Raiz, arv23cep** Pai, char* cep);
 
 #endif 

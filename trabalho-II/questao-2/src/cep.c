@@ -227,3 +227,257 @@ void cadastrarCep23(Estado* listaEstados, arv23cep* raizCep, char* nomeEst, char
         printf("Estado nao encontrado!\n");
     }
 }
+
+void redistribuirCep(arv23cep** Raiz, arv23cep** Pai){
+    if (*Raiz != NULL){
+        if ((*Raiz)->Ninfos == 0) {
+            if (Pai != NULL){
+                if ((*Raiz) == ((*Pai)->Dir)){
+                    
+                    if((*Pai)->Cent->Ninfos == 2){
+                        (*Raiz)->Info1 = (*Pai)->Info2;
+                        (*Raiz)->Ninfos = 1;
+                        (*Pai)->Info2 = (*Pai)->Cent->Info2;
+                        (*Pai)->Cent->Ninfos = 1;
+                        (*Pai)->Cent->Info2 = NULL;
+                        (*Raiz)->Esq = (*Pai)->Cent->Dir;
+                        (*Pai)->Cent->Dir = NULL;
+                    } 
+                    
+                    else if ((*Pai)->Cent->Ninfos == 1) {
+                        (*Raiz)->Info2 = (*Pai)->Info2;
+                        (*Raiz)->Dir = (*Raiz)->Cent;
+                        (*Raiz)->Info1 = (*Pai)->Cent->Info1;
+                        (*Raiz)->Ninfos = 2;
+                        (*Pai)->Ninfos = 1;
+                        (*Raiz)->Cent = (*Pai)->Cent->Cent;
+                        (*Raiz)->Esq = (*Pai)->Cent->Esq;
+                        free((*Pai)->Cent);
+                        (*Pai)->Cent = (*Raiz);
+                        (*Pai)->Dir = NULL;
+                    }
+                } 
+                
+                else if ((*Raiz) == (*Pai)->Cent){
+
+                    if ((*Pai)->Esq->Ninfos == 2) {
+                        (*Raiz)->Info1 = (*Pai)->Info1;
+                        (*Raiz)->Ninfos = 1;
+                        (*Pai)->Info1 = (*Pai)->Esq->Info2;
+                        (*Pai)->Esq->Ninfos = 1;
+                        (*Raiz)->Esq = (*Pai)->Esq->Dir;
+                        (*Pai)->Esq->Dir = NULL;
+                    } 
+                    
+                    else if ((*Pai)->Esq->Ninfos == 1){
+
+                        if ((*Pai)->Ninfos == 2) {
+                            (*Raiz)->Info2 = (*Pai)->Info1;
+                            (*Raiz)->Info1 = (*Pai)->Esq->Info1;
+                            (*Raiz)->Ninfos = 2;
+                            (*Raiz)->Dir = (*Raiz)->Cent;
+                            (*Raiz)->Cent = (*Pai)->Esq->Cent;
+                            (*Raiz)->Esq = (*Pai)->Esq->Esq;
+                            free((*Pai)->Esq);
+                            (*Pai)->Esq = (*Raiz);
+                            (*Pai)->Info1 = (*Pai)->Info2;
+                            (*Pai)->Ninfos = 1;
+                            (*Pai)->Cent = (*Pai)->Dir;
+                            (*Pai)->Dir = NULL;
+                        } 
+                        
+                        else if ((*Pai)->Ninfos == 1) {
+                            (*Raiz)->Info2 = (*Pai)->Info1;
+                            (*Raiz)->Info1 = (*Pai)->Esq->Info1;
+                            (*Raiz)->Ninfos = 2;
+                            (*Pai)->Ninfos = 0;
+                            (*Raiz)->Dir = (*Raiz)->Cent;
+                            (*Raiz)->Cent = (*Pai)->Esq->Cent;
+                            (*Raiz)->Esq = (*Pai)->Esq->Esq;
+                            free((*Pai)->Esq);
+                            (*Pai)->Esq = NULL;
+                        }
+                    }
+                } 
+                
+                else if ((*Raiz) == (*Pai)->Esq) {
+                    
+                    if ((*Pai)->Cent->Ninfos == 2) {
+                        (*Raiz)->Info1 = (*Pai)->Info1;
+                        (*Raiz)->Ninfos = 1;
+                        (*Pai)->Info1 = (*Pai)->Cent->Info1;
+                        (*Pai)->Cent->Ninfos = 1;
+                        (*Pai)->Cent->Info1 = (*Pai)->Cent->Info2;
+                        (*Raiz)->Esq = (*Raiz)->Cent;
+                        (*Raiz)->Cent = (*Pai)->Cent->Esq;
+                        (*Pai)->Cent->Esq = (*Pai)->Cent->Cent;
+                        (*Pai)->Cent->Cent = (*Pai)->Cent->Dir;
+                        (*Pai)->Cent->Dir = NULL;
+                    } 
+                    
+                    else if ((*Pai)->Cent->Ninfos == 1) {
+                        
+                        if ((*Pai)->Ninfos == 2) {
+                            (*Raiz)->Info1 = (*Pai)->Info1;
+                            (*Raiz)->Info2 = (*Pai)->Cent->Info1;
+                            (*Raiz)->Ninfos = 2;
+                            (*Raiz)->Esq = (*Raiz)->Cent;
+                            (*Raiz)->Cent = (*Pai)->Cent->Esq;
+                            (*Raiz)->Dir = (*Pai)->Cent->Cent;
+                            (*Pai)->Info1 = (*Pai)->Info2;
+                            (*Pai)->Ninfos = 1;
+                            free((*Pai)->Cent);
+                            (*Pai)->Cent = (*Pai)->Dir;
+                            (*Pai)->Dir = NULL;
+                        } 
+                        
+                        else if ((*Pai)->Ninfos == 1) {
+                            (*Raiz)->Info1 = (*Pai)->Info1;
+                            (*Raiz)->Esq = (*Raiz)->Cent;
+                            (*Raiz)->Info2 = (*Pai)->Cent->Info1;
+                            (*Raiz)->Cent = (*Pai)->Cent->Esq;
+                            (*Raiz)->Dir = (*Pai)->Cent->Cent;
+                            (*Pai)->Ninfos = 0;
+                            (*Raiz)->Ninfos = 2;
+                            free((*Pai)->Cent);
+                            (*Pai)->Cent = (*Raiz);
+                            (*Pai)->Esq = NULL;
+                        }
+                    }
+                }
+            } 
+            else if (Pai == NULL) {
+                (*Raiz) = (*Raiz)->Cent;
+            }  
+ 
+        }
+    }
+
+}
+
+
+int ehFolhaCep(arv23cep* cep){
+    int folha = 0;
+    if(cep->Esq == NULL && cep->Cent == NULL){
+        folha = 1;
+    }
+    return folha;
+}
+
+
+void removerMaiorEsqCep(arv23cep** Raiz, arv23cep** maiorPai, arv23cep** maiorRemove, int localInfo){
+    if(*maiorRemove != NULL) {
+        if(ehFolhaCep(*maiorRemove) == 1) {
+            Cep* aux;
+            if(localInfo == 1) {
+                aux = (*Raiz)->Info1;
+                if((*maiorRemove)->Ninfos == 2) {
+                    printf("Removendo Info2 do no folha (Cep: %s) para substituir Info1 do no interno\n", (*maiorRemove)->Info2->Cep);
+                    (*Raiz)->Info1 = (*maiorRemove)->Info2;
+                    (*maiorRemove)->Info2 = aux;
+                }
+                else {
+                    printf("Removendo Info1 do no folha (Cep: %s) para substituir Info1 do no interno\n", (*maiorRemove)->Info1->Cep);
+                    (*Raiz)->Info1 = (*maiorRemove)->Info1;
+                    (*maiorRemove)->Info1 = aux;
+                }
+            } 
+            else if (localInfo == 2) {
+                aux = (*Raiz)->Info2;
+                if ((*maiorRemove)->Ninfos == 2) {
+                    printf("Removendo Info2 do no folha (Cep: %s) para substituir Info2 do no interno\n", (*maiorRemove)->Info2->Cep);
+                    (*Raiz)->Info2 = (*maiorRemove)->Info2;
+                    (*maiorRemove)->Info2 = aux;
+                }
+                else {
+                    printf("Removendo Info1 do no folha (Cep: %s) para substituir Info2 do no interno\n", (*maiorRemove)->Info1->Cep);
+                    (*Raiz)->Info2 = (*maiorRemove)->Info1;
+                    (*maiorRemove)->Info1 = aux;
+                }
+            }
+            
+            // Remoção do nó folha
+            if((*maiorRemove)->Ninfos == 2) {
+                printf("Liberando Info2 do no folha (Cep: %s)\n", (*maiorRemove)->Info2->Cep);
+                free((*maiorRemove)->Info2);
+                (*maiorRemove)->Info2 = NULL;
+                (*maiorRemove)->Ninfos = 1;
+            }
+            else {
+                printf("Liberando Info1 do no folha (Cep: %s)\n", (*maiorRemove)->Info1->Cep);
+                free((*maiorRemove)->Info1);
+                (*maiorRemove)->Info1 = NULL;
+                (*maiorRemove)->Ninfos = 0;
+            }
+        } 
+        else {
+            if((*maiorRemove)->Ninfos == 2) {
+                removerMaiorEsqCep(Raiz, maiorRemove, &((*maiorRemove)->Dir), localInfo);
+            } 
+            else {
+                removerMaiorEsqCep(Raiz, maiorRemove, &((*maiorRemove)->Cent), localInfo);
+            }
+        }
+    }
+    redistribuirCep(maiorRemove, maiorPai);
+}
+
+
+void removerCep23(arv23cep** Raiz, arv23cep** Pai, char* cep) {
+    if(*Raiz != NULL) {
+        if(strcmp(cep, (*Raiz)->Info1->Cep) == 0) {
+            printf("Encontrado Cep %s para remocao (Info1)\n", cep);
+            
+            if(ehFolhaCep(*Raiz) == 1) {
+                if ((*Raiz)->Ninfos == 2) {
+                    printf("Removendo Info1 (Cep: %s) de no folha com 2 infos\n", (*Raiz)->Info1->Cep);
+                    free((*Raiz)->Info1);
+                    (*Raiz)->Info1 = (*Raiz)->Info2;
+                    (*Raiz)->Info2 = NULL;
+                    (*Raiz)->Ninfos = 1;
+                } else if ((*Raiz)->Ninfos == 1) {
+                    printf("Removendo Info1 (Cep: %s) de no folha com 1 info\n", (*Raiz)->Info1->Cep);
+                    free((*Raiz)->Info1);
+                    (*Raiz)->Info1 = NULL;
+                    (*Raiz)->Ninfos = 0;
+                }
+            } else {
+                printf("Substituindo Info1 (Cep: %s) de no interno pelo maior da esquerda\n", (*Raiz)->Info1->Cep);
+                arv23cep** maiorInfoRemove = &((*Raiz)->Esq);
+                arv23cep** maiorPai = Raiz;
+                removerMaiorEsqCep(Raiz, maiorPai, maiorInfoRemove, 1);
+            }
+        } 
+        else if ((*Raiz)->Ninfos == 2 && strcmp(cep, (*Raiz)->Info2->Cep) == 0) {
+            printf("Encontrado CPF %s para remocao (Info2)\n", cep);
+
+            if (ehFolhaCep(*Raiz) == 1){
+                printf("Removendo Info2 (Cep: %s) de no folha\n", (*Raiz)->Info2->Cep);
+                free((*Raiz)->Info2);
+                (*Raiz)->Info2 = NULL;
+                (*Raiz)->Ninfos = 1;
+            } 
+            
+            else {
+                printf("Substituindo Info2 (Cep: %s) de no interno pelo maior do centro\n", (*Raiz)->Info2->Cep);
+                arv23cep** maiorInfoRemove = &((*Raiz)->Cent);
+                arv23cep** maiorPai = Raiz;
+                removerMaiorEsqCep(Raiz, maiorPai, maiorInfoRemove, 2);
+            }
+        }  
+        else if (strcmp(cep, (*Raiz)->Info1->Cep) < 0) {
+            printf("Buscando Cep %s na subarvore esquerda\n", cep);
+            removerCep23(&((*Raiz)->Esq), Raiz, cep);
+        } 
+        else if ((*Raiz)->Ninfos == 1 || ((*Raiz)->Ninfos == 2 && strcmp(cep, (*Raiz)->Info2->Cep) < 0)) {
+            printf("Buscando Cep %s na subarvore central\n", cep);
+            removerCep23(&((*Raiz)->Cent), Raiz, cep);
+        } 
+        else {
+            printf("Buscando Cep %s na subarvore direita\n", cep);
+            removerCep23(&((*Raiz)->Dir), Raiz, cep);
+        }
+    }
+    
+    redistribuirCep(Raiz, Pai);
+}
