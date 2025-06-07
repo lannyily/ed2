@@ -96,16 +96,23 @@ void cadastrarCep(Estado* lista,  char* nomeEst, char* nomeCity, char* cep){
         if(cidade != NULL){
             Cep* novoCep = criarNoCep(cep);
 
-            if(insereCep(&(cidade->ceps), novoCep)){
-                printf("Cep \"%s\" cadastrado com sucesso!\n", nomeCity);
-            } else {
-                printf("Esse CEP ja existe!\n");
-            }
+            insereAjustaCorCep(&(cidade->ceps), novoCep);
         } else {
             printf("Cidade \"%s\" nao encontrada!\n", nomeCity);
         }
     } else {
         printf("Estado \"%s\" nao encontrado!\n", nomeEst);
+    }
+}
+
+Cep* insereAjustaCorCep(Cep** raiz, Cep* no){
+    int inseriu;
+    inseriu = insereCep(raiz, no);
+    if(inseriu){
+        if(raiz){
+            (*raiz)->cor = BLACK;
+        }
+        printf("Cep \"%s\" inserido com sucesso!\n", no->Cep);
     }
 }
 
@@ -172,3 +179,49 @@ Cep* buscarCepEmEstado(Estado* estado, char* cep) {
     return resultado;
 }
 
+Cep* removerCep(Cep** Raiz, char* cep){
+    if(*Raiz != NULL){
+        if (strcmp(cep, (*Raiz)->Cep) < 0){
+            if((*Raiz)->Esq != NULL && (*Raiz)->Esq->cor == BLACK && (*Raiz)->Esq->Esq != NULL && (*Raiz)->Esq->Esq == BLACK){
+                rotacaoDirCep(Raiz);
+            }
+            (*Raiz)->Esq = removerCep(&(*Raiz)->Esq, cep);
+        }
+        else {
+            if((*Raiz)->Esq != NULL && (*Raiz)->Esq->cor == RED){
+                rotacaoDirCep(Raiz);
+            }
+            
+            if(strcmp((*Raiz)->Cep, cep) == 0 && (*Raiz)->Dir == NULL){
+                free(*Raiz);
+                printf("CEP \"%s\" removido!\n", cep);
+                return NULL;
+            }
+
+            if ((*Raiz)->Dir != NULL && (*Raiz)->Dir->cor == BLACK && (*Raiz)->Dir->Esq != NULL && (*Raiz)->Dir->Esq->cor == BLACK){
+                rotacaoEsqCep(&(*Raiz)->Dir);
+                if ((*Raiz)->Dir != NULL && (*Raiz)->Dir->Dir != NULL && (*Raiz)->Dir->Dir->cor == RED){
+                    rotacaoEsqCep(Raiz);
+                }
+
+            }
+
+            if (strcmp((*Raiz)->Cep, cep) == 0) {
+                Cep* aux = (*Raiz)->Dir;
+                
+                while (aux->Esq != NULL){
+                    aux = aux->Esq;
+                }
+
+                strcpy((*Raiz)->Cep, aux->Cep);
+
+                (*Raiz)->Dir = removerCep(&(*Raiz)->Dir, (*Raiz)->Cep);
+            } else {
+                (*Raiz)->Dir = removerCep(&(*Raiz)->Dir, cep);
+            }
+
+        }
+    }
+
+    return *Raiz;
+}

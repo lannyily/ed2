@@ -22,10 +22,12 @@ void trocarCorCep(Cep** Raiz);
 Cep* criarNoCep(char* cep);
 int insereCep(Cep** Raiz, Cep* No);
 void cadastrarCep(Estado* lista,  char* nomeEst, char* nomeCity, char* cep);
+Cep* insereAjustaCorCep(Cep** raiz, Cep* no);
 void imprimirCidadesCeps(Cidade* raiz);
 void imprimirCeps(Cep* raiz);
 void buscaCep(Cep* Raiz, char* cep, Cep** resultado);
 Cep* buscarCepEmCidade(Cidade* cidade, char* cep);
 Cep* buscarCepEmEstado(Estado* estado, char* cep);
+Cep* removerCep(Cep** Raiz, char* cep);
 
 #endif 

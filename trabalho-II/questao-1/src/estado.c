@@ -4,13 +4,13 @@
 #include "../includes/estado.h"
 
 
-Estado* criarNoEstado(char* nomeEstado, char* nomeCapital, int tamPopu){
+Estado* criarNoEstado(char* nomeEstado, char* nomeCapital){
     Estado* novo = (Estado*)malloc(sizeof(Estado));
 
     strcpy(novo->nomeEst, nomeEstado);
     strcpy(novo->nomeCap, nomeCapital);
     novo->quantCity = 0;
-    novo->tamPopu = tamPopu;
+    novo->tamPopu = 0;
     novo->cidades = NULL;
     novo->capital = NULL;
 
@@ -54,8 +54,8 @@ void insertionSort(Estado** listaEstados){
     *listaEstados = ordenar;
 }
 
-void inserirEstadosOrdenado(Estado** listaEstados, char* nomeEstado, char* nomeCapital, int tamPopu){
-    Estado* novoEstado = criarNoEstado(nomeEstado, nomeCapital, tamPopu);
+void inserirEstadosOrdenado(Estado** listaEstados, char* nomeEstado, char* nomeCapital){
+    Estado* novoEstado = criarNoEstado(nomeEstado, nomeCapital);
 
     if (*listaEstados == NULL) {
         *listaEstados = novoEstado;

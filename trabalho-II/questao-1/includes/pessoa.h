@@ -27,10 +27,9 @@ void trocarCorPessoa(Pessoa** Raiz);
 void buscaPessoa(Pessoa* Raiz, char* cpf, Pessoa** resultado);
 Pessoa* criarNoPessoa(char* nome, char* cpf, char* cepCityNatal, char* cepCityMora, char* dataN);
 int inserePessoa(Pessoa** Raiz, Pessoa* No);
-int cepExiste(Estado* lista, char* cep);
-int buscarCEPCidades(Cidade* cidade, char* cep);
-int buscarEmCEPs(Cep* raizCEPs, char* cep);
 void cadastrarPessoa(Estado* lista, Pessoa** Raiz, char* nome, char* cpf, char* cepCityNatal, char* cepCityMora, char* dataN);
+Pessoa* insereAjustaCorPessoa(Pessoa** raiz, Pessoa* no);
 void imprimirPessoas(Pessoa* raiz);
+Pessoa* removerPessoa(Pessoa** Raiz, char* cpf);
 
 #endif 

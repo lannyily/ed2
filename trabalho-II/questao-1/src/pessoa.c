@@ -160,6 +160,20 @@ void cadastrarPessoa(Estado* lista, Pessoa** Raiz, char* nome, char* cpf, char* 
     }
 }
 
+
+Pessoa* insereAjustaCorPessoa(Pessoa** raiz, Pessoa* no){
+    int inseriu;
+    inseriu = inserePessoa(raiz, no);
+
+    if(inseriu){
+        if(raiz){
+            (*raiz)->cor = BLACK;
+        }
+        printf("CEP \"%s\" inserido com sucesso!\n", no->nome);
+    }  
+    return *raiz; 
+}
+
 void imprimirPessoas(Pessoa* raiz){
     
     if(raiz != NULL){
@@ -169,4 +183,56 @@ void imprimirPessoas(Pessoa* raiz){
                raiz->dataNascimento, raiz->cor == 0 ? "BLACK" : "RED");
         imprimirPessoas(raiz->Dir);
     }
+}
+
+
+Pessoa* removerPessoa(Pessoa** Raiz, char* cpf){
+    if(*Raiz != NULL){
+        if (strcmp(cpf, (*Raiz)->cpf) < 0){
+            if((*Raiz)->Esq != NULL && (*Raiz)->Esq->cor == BLACK && (*Raiz)->Esq->Esq != NULL && (*Raiz)->Esq->Esq == BLACK){
+                rotacaoDirPessoa(Raiz);
+            }
+            (*Raiz)->Esq = removerPessoa(&(*Raiz)->Esq, cpf);
+        }
+        else {
+            if((*Raiz)->Esq != NULL && (*Raiz)->Esq->cor == RED){
+                rotacaoDirPessoa(Raiz);
+            }
+            
+            if(strcmp((*Raiz)->cpf, cpf) == 0 && (*Raiz)->Dir == NULL){
+                free(*Raiz);
+                printf("Pessoa com o cpf \"%s\" removido!\n", cpf);
+                return NULL;
+            }
+
+            if ((*Raiz)->Dir != NULL && (*Raiz)->Dir->cor == BLACK && (*Raiz)->Dir->Esq != NULL && (*Raiz)->Dir->Esq->cor == BLACK){
+                rotacaoEsqPessoa(&(*Raiz)->Dir);
+                if ((*Raiz)->Dir != NULL && (*Raiz)->Dir->Dir != NULL && (*Raiz)->Dir->Dir->cor == RED){
+                    rotacaoEsqPessoa(Raiz);
+                }
+
+            }
+
+            if (strcmp((*Raiz)->cpf, cpf) == 0) {
+                Pessoa* aux = (*Raiz)->Dir;
+                
+                while (aux->Esq != NULL){
+                    aux = aux->Esq;
+                }
+
+                strcpy((*Raiz)->cpf, aux->cpf);
+                strcpy((*Raiz)->nome, aux->nome);
+                strcpy((*Raiz)->cepCityNatal, aux->cepCityNatal);
+                strcpy((*Raiz)->cepCityMora, aux->cepCityMora);
+                strcpy((*Raiz)->dataNascimento, aux->dataNascimento);
+
+                (*Raiz)->Dir = removerPessoa(&(*Raiz)->Dir, (*Raiz)->cpf);
+            } else {
+                (*Raiz)->Dir = removerPessoa(&(*Raiz)->Dir, cpf);
+            }
+
+        }
+    }
+
+    return *Raiz;
 }

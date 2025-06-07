@@ -28,6 +28,7 @@ void buscaCidade(Cidade* Raiz, char* nomeCity, Cidade** resultado);
 Cidade* criarNoCidade(char* nomeCity, int tamPopu);
 int insereCidade(Cidade** Raiz, Cidade* No);
 void cadastrarCidade(Estado* lista, char* nomeEst, char* nomeCity, int tamPopu);
+Cidade* insereAjustaCor(Cidade** raiz, Cidade* no);
 void imprimirCidades(Cidade* raiz);
 void imprimirEstadosCidadesCeps(Estado* listaEstados);
 

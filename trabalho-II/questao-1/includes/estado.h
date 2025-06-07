@@ -18,9 +18,9 @@ typedef struct Estado{
 }Estado;
 
 
-Estado* criarNoEstado(char* nomeEstado, char* nomeCapital, int tamPopu);
+Estado* criarNoEstado(char* nomeEstado, char* nomeCapital);
 void insertionSort(Estado** listaEstados);
-void inserirEstadosOrdenado(Estado** lista, char* nomeEstado, char* nomeCapital, int tamPopu);
+void inserirEstadosOrdenado(Estado** lista, char* nomeEstado, char* nomeCapital);
 void buscaEstado(Estado* lista, char* nomeEstado, Estado** resultado);
 void imprimirEstados(Estado* lista);
 

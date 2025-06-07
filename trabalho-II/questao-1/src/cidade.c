@@ -112,21 +112,31 @@ void cadastrarCidade(Estado* lista, char* nomeEst, char* nomeCity, int tamPopu){
     
     if (estado != NULL){
         Cidade* nova = criarNoCidade(nomeCity,tamPopu);
+
+        insereAjustaCor(&(estado->cidades), nova);
         
-        if (insereCidade(&(estado->cidades), nova)){
-            printf("Cidade \"%s\" cadastrado com sucesso!\n", nomeCity);
-            estado->quantCity++;
+        estado->quantCity++;
 
-            if (strcmp(nomeCity, estado->nomeCap) == 0) {
-                estado->capital = nova;
-            }
+        estado->tamPopu += tamPopu;
 
-        } else {
-            printf("A Cidade ja existe!\n");
+        if (strcmp(nomeCity, estado->nomeCap) == 0) {
+            estado->capital = nova;
         }
     } else {
         printf("Estado \"%s\" nao encontrado!\n", nomeEst);
     }
+}
+
+Cidade* insereAjustaCor(Cidade** raiz, Cidade* no){
+    int inseriu;
+    inseriu = insereCidade(raiz, no);
+    if(inseriu){
+        if (raiz){
+            (*raiz)->cor = BLACK;
+        }
+        printf("Cidade \"%s\" inserida com sucesso!\n", no->nomeCity);
+    } 
+    return *raiz;
 }
 
 
