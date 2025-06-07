@@ -11,55 +11,223 @@ int main(){
     arv23Pessoa* RaizPessoa = NULL;
     arv23cep* RaizCep = NULL;
 
-    inserirEstadosOrdenado(&listaEstados, "SP", "Sao Paulo", 46289333);
-    inserirEstadosOrdenado(&listaEstados, "RJ", "Rio de Janeiro", 17463349);
-    inserirEstadosOrdenado(&listaEstados, "MG", "Belo Horizonte", 21168791);
+    int opcao;
 
-    printf("Estados inseridos!\n");
+    do {
+        printf("-------------------- MENU --------------------\n");
+        printf(" 1 - Cadastrar Estado\n");
+        printf(" 2 - Cadastrar Cidade\n");
+        printf(" 3 - Cadastrar CEP\n");
+        printf(" 4 - Cadastrar Pessoa\n");
+        printf(" 5 - Mostrar Estados\n");
+        printf(" 6 - Mostrar Cidades\n");
+        printf(" 7 - Mostrar CEPS\n");
+        printf(" 8 - Mostrar Pessoas\n");
+        printf(" 9 - Remover um CEP\n");
+        printf("10 - Remover uma pessoa\n");
+        printf("11 - Curiosidades\n");
+        printf(" 0 - SAIR\n");
+        printf("----------------------------------------------\n");
+        printf("Escolha uma opcao: ");
+        scanf("%d", &opcao);
+        printf("\n");
 
-    printf("Iniciar cadastro de Cidade!\n");
+        switch (opcao) {
+            case 1: {
+                printf("\n-------------- Cadastrar Estado --------------\n");
+                /*
+                char estado[50], capital[50];
+                printf("Digite o nome do estado: ");
+                scanf(" %[^\n]", estado);
+                printf("Digite o nome da capital: ");
+                scanf(" %[^\n]", capital);
 
-    Cidade* sobeCidade = NULL;
+                Estado* buscaEst = NULL;
+                buscaEstado(listaEstados, estado, buscaEst);
+                if(buscaEst != NULL){
+                    inserirEstadosOrdenado(&listaEstados, estado, capital);
+                    printf("Estado \"%s\" cadastrado com sucesso!\n", estado);
+                } else {
+                    printf("Esse estado ja existe!\n");
+                }
+                */
 
-    cadastrarCidade(listaEstados, "SP", "Sao Paulo", 12300000, &sobeCidade); // Capital
-    cadastrarCidade(listaEstados, "SP", "Campinas", 1214000, &sobeCidade);
-    cadastrarCidade(listaEstados, "SP", "Sao Bernardo do Campo", 844483, &sobeCidade);
-    cadastrarCidade(listaEstados, "SP", "Santo Andre", 721368, &sobeCidade);
-    cadastrarCidade(listaEstados, "SP", "Osasco", 699944, &sobeCidade);
-    
-    cadastrarCidade(listaEstados, "RJ", "Rio de Janeiro", 6748000, &sobeCidade); // Capital
-    cadastrarCidade(listaEstados, "RJ", "Sao Goncalo", 1084839, &sobeCidade);
-    cadastrarCidade(listaEstados, "RJ", "Duque de Caxias", 924624, &sobeCidade);
-    
-    cadastrarCidade(listaEstados, "MG", "Belo Horizonte", 2523794, &sobeCidade); // Capital
-    cadastrarCidade(listaEstados, "MG", "Uberlandia", 699097, &sobeCidade);
-    cadastrarCidade(listaEstados, "MG", "Contagem", 668949, &sobeCidade);
+                inserirEstadosOrdenado(&listaEstados, "SP", "Sao Paulo");
+                inserirEstadosOrdenado(&listaEstados, "RJ", "Rio de Janeiro");
+                inserirEstadosOrdenado(&listaEstados, "MG", "Belo Horizonte");
 
-    printf("Cidades cadastradas com sucesso!\n");
+                printf("Estados inseridos!\n");
+                
+                break;
+            }
+            case 2: {
+                printf("\n-------------- Cadastrar Cidade --------------\n");
+                /*
+                char estado[50], cidade[50];
+                int populacao;
+                printf("Digite o nome do estado: ");
+                scanf(" %[^\n]", estado);
+                printf("Digite o nome da cidade: ");
+                scanf(" %[^\n]", cidade);
+                printf("Digite o tipo do artista (Solo/Banda): ");
+                scanf(" %d", &populacao);
+                
+                Cidade* buscaCity = NULL;
+                buscaCidade(listaEstados, estado, buscaCity);
+                if (buscaCity != NULL){
+                    Cidade* sobeCidade = NULL;
+                    cadastrarCidade(listaEstados, estado, cidade, populacao, &sobeCidade);
+                    printf("Cidade \"%s\" cadastrada com sucesso!\n", cidade);
+                } else {
+                    printf("Essa cidade ja existe!\n");
+                }
+                */
+                Cidade* sobeCidade = NULL;
 
-    //Cep* sobeCep = NULL;
+                cadastrarCidade(listaEstados, "SP", "Sao Paulo", 12300000, &sobeCidade); // Capital
+                cadastrarCidade(listaEstados, "SP", "Campinas", 1214000, &sobeCidade);
+                cadastrarCidade(listaEstados, "SP", "Sao Bernardo do Campo", 844483, &sobeCidade);
+                
+                cadastrarCidade(listaEstados, "RJ", "Rio de Janeiro", 6748000, &sobeCidade); // Capital
+                cadastrarCidade(listaEstados, "RJ", "Sao Goncalo", 1084839, &sobeCidade);
+                cadastrarCidade(listaEstados, "RJ", "Duque de Caxias", 924624, &sobeCidade);
+                
+                cadastrarCidade(listaEstados, "MG", "Belo Horizonte", 2523794, &sobeCidade); // Capital
+                cadastrarCidade(listaEstados, "MG", "Uberlandia", 699097, &sobeCidade);
+                cadastrarCidade(listaEstados, "MG", "Contagem", 668949, &sobeCidade);
 
-    //cadastrarCep23(listaEstados, RaizCep, "SP", "Osasco", "23453-234", &sobeCep);
+                printf("Cidades cadastradas com sucesso!\n");
 
-    Pessoa* sobePessoa;
+                break;
+            }
+            case 3: {
+                printf("\n--------------- Cadastrar CEP ----------------\n");
+                /*
+                char estado[50], cidade[50];
+                printf("Digite o nome do estado: ");
+                scanf(" %[^\n]", estado);
+                printf("Digite o nome da cidade: ");
+                scanf(" %[^\n]", cidade);
 
-    Pessoa* nova = criarNoPessoa("Ana Maria", "34534534", "23453-234", "23453-234", "21/02/2004");
-    
-    printf("Iniciar cadastro de Pessoas!\n");
+                Cep* cep;
+                cep = malloc(sizeof(Cep));
 
-    //Cep* cepBusca;
-    //cepBusca = buscaCep(RaizCep, "23453-234");
-    insere23Pessoa(&RaizPessoa, nova, NULL, &sobePessoa);
+                printf("Digite o CEP: ");
+                scanf(" %[^\n]", cep->Cep);
 
-    imprimirPessoas23(RaizPessoa);
+                Cep* buscaC = NULL;
+                buscaC = buscaCep(RaizCep, cep->Cep);
+                if(buscaC != NULL){
+                    Cep* sobeCep = NULL;
+                    cadastrarCep23(listaEstados, RaizCep, estado, cidade, cep, &sobeCep);
+                    printf("CEP \"%s\" cadastrado com sucesso!\n", cep);
+                } else {
+                    printf("Esse CEP ja existe!\n");
+                }
+                */
+                
+                Cep* cep;
+                cep = malloc(sizeof(Cep));
+                strcpy(cep->Cep, "23453-234");  
 
-    printf("Iniciar remocao de Pessoas!\n");
+                Cep* sobeCep = NULL;
+                cadastrarCep23(listaEstados, RaizCep, "SP", "Sao Paulo", cep->Cep, &sobeCep);
 
-    removerPessoa23(&RaizPessoa, NULL, "34534534");
+                printf("CEPs cadastrados com sucesso!\n");
 
-    imprimirPessoas23(RaizPessoa);
+                break;
+            }
+            case 4: {
+                printf("\n-------------- Cadastrar Pessoa --------------\n");
+                /*
+                char nomeP[50], cpf[50], cepN[50], cepM[50], dataN[50];
+                printf("Digite o nome: ");
+                scanf(" %[^\n]", nomeP);
+                printf("Digite o cpf: ");
+                scanf(" %[^\n]", cpf);
+                printf("Digite o cep de onde nasceu: ");
+                scanf(" %[^\n]", cepN);
+                printf("Digite o cep de onde mora: ");
+                scanf(" %[^\n]", cepM);
+                printf("Digite a data de nascimento (ex: 21/02/2004): ");
+                scanf(" %[^\n]", dataN);
 
-    //imprimirEstadosCidadesCeps23(listaEstados);
+                Cep* encontrouCEPn = NULL;
+                Cep* encontrouCEPm = NULL;
+
+                encontrouCEPn = buscaCep(RaizCep, cepN);
+                encontrouCEPm = buscaCep(RaizCep, cepM);
+
+                if(encontrouCEPm != NULL && encontrouCEPn != NULL){
+                    if(dataValida(data1)) {
+                        Pessoa* sobePessoa;
+                        Pessoa* nova = criarNoPessoa(nomeP, cpf, cepN, cepM, dataN);
+                        insere23Pessoa(&RaizPessoa, nova, NULL, &sobePessoa);
+                        printf("Pessoa \"%s\" cadastrado com sucesso!\n", nomeP);
+                    } else {
+                        printf("Data de nascimento invalida!");
+                    }
+                } else {
+                    printf("CEP nao existe!\n");
+                }
+
+                */
+                Pessoa* sobePessoa;
+                Pessoa* nova = criarNoPessoa("Ana Maria", "34534534", "23453-234", "23453-234", "21/02/2004");
+                
+                insere23Pessoa(&RaizPessoa, nova, NULL, &sobePessoa);
+
+                break;
+            }
+            case 5: {
+                printf("\n------------------ Estados -------------------\n");
+
+                imprimirEstadosCidadesCeps23(listaEstados);
+
+                break;
+            }
+            case 6: {
+                printf("\n------------------ Cidades -------------------\n");
+
+                imprimirEstadosCidadesCeps23(listaEstados);
+
+                break;
+            }
+            case 7: {
+                printf("\n-------------------- CEPs --------------------\n");
+
+                break;
+            }
+            case 8: {
+                printf("\n------------------ Pessoas -------------------\n");
+                imprimirPessoas23(RaizPessoa);
+                break;
+            }
+            case 9: {
+                printf("\n---------------- Remover CEP -----------------\n");
+
+                break;
+            }
+            case 10: {
+                printf("\n--------------- Remover Pessoa ---------------\n");
+                removerPessoa23(&RaizPessoa, NULL, "34534534");
+
+                break;
+            }
+            case 11: {
+
+                break;
+            }
+            case 0: {
+                printf("Saindo do programa...\n");
+
+                break;
+            }
+            default:
+                printf("Opcao invalida, tente novamente!\n");
+                break;
+        }
+    } while (opcao != 0);
 
     return 0;
 }

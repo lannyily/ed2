@@ -29,7 +29,7 @@ arv23cidade* criarNo23(Cidade* cidadeInfo, arv23cidade* Esq, arv23cidade* Cen){
 }
 
 void addInfo(arv23cidade** no, Cidade* cidadeInfo, arv23cidade* subArvInfo){
-    if(strcmp(cidadeInfo->nomeCity, (*no)->Info1->nomeCity) > 0){
+    if(strcasecmp(cidadeInfo->nomeCity, (*no)->Info1->nomeCity) > 0){
         (*no)->Info2 = cidadeInfo;
         (*no)->Dir = subArvInfo;
     } else {
@@ -41,24 +41,26 @@ void addInfo(arv23cidade** no, Cidade* cidadeInfo, arv23cidade* subArvInfo){
     (*no)->Ninfos = 2;
 }
 
-arv23cidade* quebraNo(arv23cidade** no, Cidade* cidadeInfo, Cidade** sobe, arv23cidade* Dir){
+ arv23cidade* quebraNo(arv23cidade** no, Cidade* cidadeInfo, Cidade** sobe, arv23cidade* FilhoDir){
     arv23cidade* maior;
     
-    if(strcmp(cidadeInfo->nomeCity, (*no)->Info2->nomeCity) > 0){
+    if(strcasecmp(cidadeInfo->nomeCity, (*no)->Info2->nomeCity) > 0){
         *sobe = (*no)->Info2;
-        maior = criarNo23(cidadeInfo, (*no)->Dir, Dir);
-    } else if(strcmp(cidadeInfo->nomeCity, (*no)->Info1->nomeCity) > 0){
+        maior = criarNo23(cidadeInfo, (*no)->Dir, FilhoDir);
+    } else if(strcasecmp(cidadeInfo->nomeCity, (*no)->Info1->nomeCity) > 0 && strcasecmp(cidadeInfo->nomeCity, (*no)->Info2->nomeCity) < 0){
         *sobe = cidadeInfo;
-        maior = criarNo23((*no)->Info2, Dir, (*no)->Dir);
+        maior = criarNo23((*no)->Info2, FilhoDir, (*no)->Dir);
     } else {
         *sobe = (*no)->Info1;
         maior = criarNo23((*no)->Info2, (*no)->Cent, (*no)->Dir);
         (*no)->Info1 = cidadeInfo;
-        (*no)->Cent = Dir;
+        (*no)->Esq = FilhoDir;
+        
     }
     (*no)->Info2 = NULL;
     (*no)->Dir = NULL;
     (*no)->Ninfos = 1;
+    printf("Passou aqui!\n");
     return maior;
 }
 
@@ -73,16 +75,18 @@ arv23cidade* insere23Cidade(arv23cidade** Raiz, Cidade* noCidade, arv23cidade* P
                 addInfo(Raiz, noCidade, NULL);
             } else {
                 maiorNo = quebraNo(Raiz, noCidade, sobe, NULL);
-
+                
                 if(Pai == NULL){
                     *Raiz = criarNo23(*sobe, *Raiz, maiorNo);
                     maiorNo = NULL;
+                    
                 }
             }
         } else {
-            if(strcmp(noCidade->nomeCity, (*Raiz)->Info1->nomeCity) < 0){
+            
+            if(strcasecmp(noCidade->nomeCity, (*Raiz)->Info1->nomeCity) < 0){
                 maiorNo = insere23Cidade(&((*Raiz)->Esq), noCidade, *Raiz, sobe);
-            } else if ((*Raiz)->Ninfos == 1 || strcmp(noCidade->nomeCity, (*Raiz)->Info2->nomeCity) < 0){
+            } else if (((*Raiz)->Ninfos == 1 || (*Raiz)->Ninfos == 2) && strcasecmp(noCidade->nomeCity, (*Raiz)->Info2->nomeCity) < 0){
                 maiorNo = insere23Cidade(&((*Raiz)->Cent), noCidade, *Raiz, sobe);
             } else {
                 maiorNo = insere23Cidade(&((*Raiz)->Dir), noCidade, *Raiz, sobe);
@@ -102,7 +106,7 @@ arv23cidade* insere23Cidade(arv23cidade** Raiz, Cidade* noCidade, arv23cidade* P
             }
         }
     }
-
+    
     return maiorNo;
 }
 
@@ -113,7 +117,7 @@ void cadastrarCidade(Estado* lista, char* nomeEst, char* nomeCity, int tamPopu, 
     if(estado != NULL) {
         Cidade* nova = criarCidade(nomeCity, tamPopu);
 
-        if(strcmp(nomeCity, estado->nomeCap) == 0) {
+        if(strcasecmp(nomeCity, estado->nomeCap) == 0) {
             estado->capital = nova;  
             printf("Cidade %s registrada como capital de %s\n", nomeCity, estado->nomeEst);
         }
@@ -121,7 +125,7 @@ void cadastrarCidade(Estado* lista, char* nomeEst, char* nomeCity, int tamPopu, 
         insere23Cidade(&(estado->arvCidades), nova, NULL, sobe);
         
         estado->quantCity++;
-
+        estado->tamPopu += tamPopu;
         
     } else {
         printf("Estado \"%s\" nao encontrado!\n", nomeEst);
@@ -132,13 +136,13 @@ Cidade* buscaCidade(arv23cidade* Raiz, char* nomeCity){
     Cidade* encontrou = NULL;
 
     if (Raiz != NULL){
-        if(strcmp(nomeCity, Raiz->Info1->nomeCity) == 0){
+        if(strcasecmp(nomeCity, Raiz->Info1->nomeCity) == 0){
             encontrou = Raiz->Info1;
-        } else if(Raiz->Ninfos == 2 && strcmp(nomeCity, Raiz->Info2->nomeCity) == 0){
+        } else if(Raiz->Ninfos == 2 && strcasecmp(nomeCity, Raiz->Info2->nomeCity) == 0){
             encontrou = Raiz->Info2;
-        } else if(strcmp(nomeCity, Raiz->Info1->nomeCity) < 0){
+        } else if(strcasecmp(nomeCity, Raiz->Info1->nomeCity) < 0){
             encontrou = buscaCidade(Raiz->Esq, nomeCity);
-        } else if(Raiz->Ninfos == 1 || strcmp(nomeCity, Raiz->Info2->nomeCity) < 0){
+        } else if(Raiz->Ninfos == 1 || strcasecmp(nomeCity, Raiz->Info2->nomeCity) < 0){
             encontrou = buscaCidade(Raiz->Cent, nomeCity);
         } else {
             encontrou = buscaCidade(Raiz->Dir, nomeCity);

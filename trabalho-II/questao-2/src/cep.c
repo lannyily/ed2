@@ -21,7 +21,7 @@ arv23cep* criarNo23Cep(Cep* cepInfo, arv23cep* Esq, arv23cep* Cen){
 
 void addInfoCep(arv23cep** no, Cep* cepInfo, arv23cep* subArvInfo){
     
-    if(strcmp(cepInfo->Cep, (*no)->Info1->Cep) > 0){
+    if(strcasecmp(cepInfo->Cep, (*no)->Info1->Cep) > 0){
         (*no)->Info2 = cepInfo;
         (*no)->Dir = subArvInfo;
     } else {
@@ -33,21 +33,21 @@ void addInfoCep(arv23cep** no, Cep* cepInfo, arv23cep* subArvInfo){
     (*no)->Ninfos = 2;
 }
 
-arv23cep* quebraNoCep(arv23cep** no, Cep* cepInfo, Cep** sobe, arv23cep* Dir){
+arv23cep* quebraNoCep(arv23cep** no, Cep* cepInfo, Cep** sobe, arv23cep* FilhoDir){
     printf("Entrou em quebraNo\n");
     arv23cep* maior;
 
-    if(strcmp(cepInfo->Cep, (*no)->Info2->Cep) > 0){
+    if(strcasecmp(cepInfo->Cep, (*no)->Info2->Cep) > 0){
         *sobe = (*no)->Info2;
-        maior = criarNo23Cep(cepInfo, (*no)->Dir, Dir);
-    } else if (strcmp(cepInfo->Cep, (*no)->Info1->Cep) > 0){
+        maior = criarNo23Cep(cepInfo, (*no)->Dir, FilhoDir);
+    } else if (strcasecmp(cepInfo->Cep, (*no)->Info1->Cep) > 0 && strcasecmp(cepInfo->Cep, (*no)->Info2->Cep) < 0){
         *sobe = cepInfo;
-        maior = criarNo23Cep((*no)->Info2, Dir, (*no)->Dir);
+        maior = criarNo23Cep((*no)->Info2, FilhoDir, (*no)->Dir);
     } else {
         *sobe = (*no)->Info1;
         maior = criarNo23Cep((*no)->Info2, (*no)->Cent, (*no)->Dir);
         (*no)->Info1 = cepInfo;
-        (*no)->Cent = Dir;
+        (*no)->Cent = FilhoDir;
     }
     (*no)->Info2 = NULL;
     (*no)->Dir = NULL;
@@ -81,10 +81,10 @@ arv23cep* insere23Cep(arv23cep** Raiz, Cep* cepInfo, arv23cep* Pai, Cep** sobe){
             }
         } else {
             
-            if (strcmp(cepInfo->Cep, (*Raiz)->Info1->Cep) < 0){
+            if (strcasecmp(cepInfo->Cep, (*Raiz)->Info1->Cep) < 0){
                 maiorNo = insere23Cep(&((*Raiz)->Esq), cepInfo, *Raiz, sobe);
             } 
-            else if ((*Raiz)->Ninfos == 1 || strcmp(cepInfo->Cep, (*Raiz)->Info2->Cep) < 0){
+            else if (((*Raiz)->Ninfos == 1 || (*Raiz)->Ninfos == 2) && strcasecmp(cepInfo->Cep, (*Raiz)->Info2->Cep) < 0){
                 maiorNo = insere23Cep(&((*Raiz)->Cent), cepInfo, *Raiz, sobe);
             }
             else {
@@ -115,13 +115,13 @@ Cep* buscaCep(arv23cep* Raiz, Cep* cepNum){
 
     if(Raiz != NULL){
         
-        if(strcmp(cepNum->Cep, Raiz->Info1->Cep) == 0){
+        if(strcasecmp(cepNum->Cep, Raiz->Info1->Cep) == 0){
             encontrou = Raiz->Info1;
-        } else if(Raiz->Ninfos == 2 && strcmp(cepNum->Cep, Raiz->Info2->Cep) == 0){
+        } else if(Raiz->Ninfos == 2 && strcasecmp(cepNum->Cep, Raiz->Info2->Cep) == 0){
             encontrou = Raiz->Info2;
-        } else if (strcmp(cepNum->Cep, Raiz->Info1->Cep) < 0){
+        } else if (strcasecmp(cepNum->Cep, Raiz->Info1->Cep) < 0){
             encontrou = buscaCep(Raiz->Esq, cepNum);
-        } else if (Raiz->Ninfos == 1 || strcmp(cepNum->Cep, Raiz->Info2->Cep) < 0){
+        } else if (Raiz->Ninfos == 1 || strcasecmp(cepNum->Cep, Raiz->Info2->Cep) < 0){
             encontrou = buscaCep(Raiz->Cent, cepNum);
         } else {
             encontrou = buscaCep(Raiz->Dir, cepNum);
@@ -158,25 +158,26 @@ void imprimirCidades23(arv23cidade* Raiz) {
         imprimirCidades23(Raiz->Esq);
         
         printf("        - %s (Populacao: %d)\n", Raiz->Info1->nomeCity, Raiz->Info1->tamPopu);
-        
+        /*
         if (Raiz->Info1 != NULL && Raiz->Info1->arvCeps != NULL) {
             
             imprimirCep23(Raiz->Info1->arvCeps);
         } else {
             printf("            - Nenhum CEP cadastrado nesta cidade!\n");
         }
-        
+        */
         
         if(Raiz->Ninfos == 2) {
             imprimirCidades23(Raiz->Cent);
             
-            printf("        - %s (População: %d)\n", Raiz->Info2->nomeCity, Raiz->Info2->tamPopu);
+            printf("        - %s (Populacao: %d)\n", Raiz->Info2->nomeCity, Raiz->Info2->tamPopu);
+            /*
             if (Raiz->Info2 != NULL && Raiz->Info2->arvCeps != NULL) {
                 imprimirCep23(Raiz->Info2->arvCeps);
             } else {
                 printf("            - Nenhum CEP cadastrado nesta cidade!\n");
             }
-            
+            */
             imprimirCidades23(Raiz->Dir);
         } else {
             imprimirCidades23(Raiz->Cent);
@@ -184,17 +185,19 @@ void imprimirCidades23(arv23cidade* Raiz) {
     }
 }
 
-void imprimirEstadosCidadesCeps23(Estado* listaEstados){
+void imprimirEstadosCidadesCeps23(Estado* listaEstados) {
     Estado* atual = listaEstados;
     
     while(atual != NULL) {
         printf("\nEstado: %s\n", atual->nomeEst);
-        printf("Capital: %s | Populacao: %d | Num. Cidades: %d\n", atual->nomeCap, atual->tamPopu, atual->quantCity);
+        printf("Capital: %s | Populacao: %d | Num. Cidades: %d\n", 
+               atual->nomeCap, atual->tamPopu, atual->quantCity);
         
-        if(atual->arvCidades != NULL) {
+       
+        if (atual->arvCidades != NULL) {
             imprimirCidades23(atual->arvCidades);
         } else {
-            printf("    - Nenhuma cidade cadastrada neste estado!\n");
+            printf("    - Nenhuma outra cidade cadastrada neste estado!\n");
         }
         
         atual = atual->Prox;
@@ -212,12 +215,8 @@ void cadastrarCep23(Estado* listaEstados, arv23cep* raizCep, char* nomeEst, char
 
         if(cidade != NULL){
             Cep* novo = (Cep*) malloc(sizeof(Cep));
-            if (novo == NULL) {
-                fprintf(stderr, "Erro ao alocar memoria para cep\n");
-                exit(1);
-            }
-            strncpy(novo->Cep, cep, sizeof(novo->Cep) - 1);
 
+            strncpy(novo->Cep, cep, sizeof(novo->Cep) - 1);
 
             insere23Cep(&(cidade->arvCeps), novo, NULL, sobe);
         } else {
@@ -425,7 +424,7 @@ void removerMaiorEsqCep(arv23cep** Raiz, arv23cep** maiorPai, arv23cep** maiorRe
 
 void removerCep23(arv23cep** Raiz, arv23cep** Pai, char* cep) {
     if(*Raiz != NULL) {
-        if(strcmp(cep, (*Raiz)->Info1->Cep) == 0) {
+        if(strcasecmp(cep, (*Raiz)->Info1->Cep) == 0) {
             printf("Encontrado Cep %s para remocao (Info1)\n", cep);
             
             if(ehFolhaCep(*Raiz) == 1) {
@@ -448,7 +447,7 @@ void removerCep23(arv23cep** Raiz, arv23cep** Pai, char* cep) {
                 removerMaiorEsqCep(Raiz, maiorPai, maiorInfoRemove, 1);
             }
         } 
-        else if ((*Raiz)->Ninfos == 2 && strcmp(cep, (*Raiz)->Info2->Cep) == 0) {
+        else if ((*Raiz)->Ninfos == 2 && strcasecmp(cep, (*Raiz)->Info2->Cep) == 0) {
             printf("Encontrado CPF %s para remocao (Info2)\n", cep);
 
             if (ehFolhaCep(*Raiz) == 1){
@@ -465,11 +464,11 @@ void removerCep23(arv23cep** Raiz, arv23cep** Pai, char* cep) {
                 removerMaiorEsqCep(Raiz, maiorPai, maiorInfoRemove, 2);
             }
         }  
-        else if (strcmp(cep, (*Raiz)->Info1->Cep) < 0) {
+        else if (strcasecmp(cep, (*Raiz)->Info1->Cep) < 0) {
             printf("Buscando Cep %s na subarvore esquerda\n", cep);
             removerCep23(&((*Raiz)->Esq), Raiz, cep);
         } 
-        else if ((*Raiz)->Ninfos == 1 || ((*Raiz)->Ninfos == 2 && strcmp(cep, (*Raiz)->Info2->Cep) < 0)) {
+        else if ((*Raiz)->Ninfos == 1 || ((*Raiz)->Ninfos == 2 && strcasecmp(cep, (*Raiz)->Info2->Cep) < 0)) {
             printf("Buscando Cep %s na subarvore central\n", cep);
             removerCep23(&((*Raiz)->Cent), Raiz, cep);
         } 
