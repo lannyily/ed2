@@ -456,3 +456,55 @@ void removerPessoa23(arv23Pessoa** Raiz, arv23Pessoa** Pai, char* cpf) {
     }
     redistribuir(Raiz, Pai);
 }
+
+Pessoa* buscaCepEmPessoa(arv23Pessoa* Raiz, char* cep) {
+    Pessoa* result = NULL; 
+    if (Raiz != NULL) {
+        
+        if (Raiz->Info1 != NULL && 
+            (strcmp(Raiz->Info1->cepCityMora, cep) == 0 || 
+            strcmp(Raiz->Info1->cepCityNatal, cep) == 0)) {
+            result = Raiz->Info1;
+        }
+
+        
+        if (Raiz->Ninfos == 2 && Raiz->Info2 != NULL && 
+            (strcmp(Raiz->Info2->cepCityMora, cep) == 0 || 
+            strcmp(Raiz->Info2->cepCityNatal, cep) == 0)) {
+            result = Raiz->Info2;
+        }
+
+        
+        if (strcmp(cep, Raiz->Info1->cepCityMora) < 0 && 
+            strcmp(cep, Raiz->Info1->cepCityNatal) < 0) {
+            result = buscaCepEmPessoa(Raiz->Esq, cep);
+        } 
+        else if (Raiz->Ninfos == 1 || 
+                (strcmp(cep, Raiz->Info2->cepCityMora) < 0 && 
+                strcmp(cep, Raiz->Info2->cepCityNatal) < 0)) {
+            result = buscaCepEmPessoa(Raiz->Cent, cep);
+        } 
+        else {
+            result = buscaCepEmPessoa(Raiz->Dir, cep);
+        }
+    }
+    return result;
+}
+
+void liberarPessoas(arv23Pessoa* raiz) {
+    if (raiz != NULL) {
+        liberarPessoas(raiz->Esq);
+        liberarPessoas(raiz->Cent);
+        liberarPessoas(raiz->Dir);
+
+        
+        if (raiz->Info1 != NULL) {
+            free(raiz->Info1);
+        }
+        if (raiz->Info2 != NULL) {
+            free(raiz->Info2);
+        }
+
+        free(raiz);
+    }
+}

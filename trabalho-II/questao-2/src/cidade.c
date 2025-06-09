@@ -60,7 +60,7 @@ void addInfo(arv23cidade** no, Cidade* cidadeInfo, arv23cidade* subArvInfo){
     (*no)->Info2 = NULL;
     (*no)->Dir = NULL;
     (*no)->Ninfos = 1;
-    printf("Passou aqui!\n");
+    
     return maior;
 }
 

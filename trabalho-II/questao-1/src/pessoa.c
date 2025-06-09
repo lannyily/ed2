@@ -255,8 +255,9 @@ Pessoa* removerPessoa(Pessoa** Raiz, char* cpf){
 }
 
 void liberarPessoas(Pessoa* raiz) {
-    if (raiz == NULL) return;
-    liberarPessoas(raiz->Esq);
-    liberarPessoas(raiz->Dir);
-    free(raiz);
+    if (raiz != NULL){
+        liberarPessoas(raiz->Esq);
+        liberarPessoas(raiz->Dir);
+        free(raiz);
+    }
 }

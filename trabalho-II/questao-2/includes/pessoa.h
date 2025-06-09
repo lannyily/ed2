@@ -37,6 +37,7 @@ int ehFolha(arv23Pessoa* pessoa);
 void redistribuir(arv23Pessoa** Raiz, arv23Pessoa** Pai);
 void removerMaiorEsq(arv23Pessoa** Raiz, arv23Pessoa** maiorPai, arv23Pessoa** maiorRemove, int localInfo);
 void removerPessoa23(arv23Pessoa** Raiz, arv23Pessoa** Pai, char* cpf);
-
+Pessoa* buscaCepEmPessoa(arv23Pessoa* Raiz, char* cep);
+void liberarPessoas(arv23Pessoa* raiz);
 
 #endif 

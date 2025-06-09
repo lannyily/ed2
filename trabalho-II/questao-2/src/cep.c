@@ -4,6 +4,7 @@
 #include "../includes/estado.h"
 #include "../includes/cidade.h"
 #include "../includes/cep.h"
+#include "../includes/pessoa.h"
 
 arv23cep* criarNo23Cep(Cep* cepInfo, arv23cep* Esq, arv23cep* Cen){
     arv23cep* novo = (arv23cep*)malloc(sizeof(arv23cep));
@@ -110,18 +111,18 @@ arv23cep* insere23Cep(arv23cep** Raiz, Cep* cepInfo, arv23cep* Pai, Cep** sobe){
 }
 
 
-Cep* buscaCep(arv23cep* Raiz, Cep* cepNum){
+Cep* buscaCep(arv23cep* Raiz, char* cepNum){
     Cep* encontrou = NULL;
 
     if(Raiz != NULL){
         
-        if(strcasecmp(cepNum->Cep, Raiz->Info1->Cep) == 0){
+        if(strcasecmp(cepNum, Raiz->Info1->Cep) == 0){
             encontrou = Raiz->Info1;
-        } else if(Raiz->Ninfos == 2 && strcasecmp(cepNum->Cep, Raiz->Info2->Cep) == 0){
+        } else if(Raiz->Ninfos == 2 && strcasecmp(cepNum, Raiz->Info2->Cep) == 0){
             encontrou = Raiz->Info2;
-        } else if (strcasecmp(cepNum->Cep, Raiz->Info1->Cep) < 0){
+        } else if (strcasecmp(cepNum, Raiz->Info1->Cep) < 0){
             encontrou = buscaCep(Raiz->Esq, cepNum);
-        } else if (Raiz->Ninfos == 1 || strcasecmp(cepNum->Cep, Raiz->Info2->Cep) < 0){
+        } else if (Raiz->Ninfos == 1 || strcasecmp(cepNum, Raiz->Info2->Cep) < 0){
             encontrou = buscaCep(Raiz->Cent, cepNum);
         } else {
             encontrou = buscaCep(Raiz->Dir, cepNum);
@@ -479,4 +480,110 @@ void removerCep23(arv23cep** Raiz, arv23cep** Pai, char* cep) {
     }
     
     redistribuirCep(Raiz, Pai);
+}
+
+Cep* buscarCepEmCidade(arv23cidade* arvCidades, char* cep) {
+    Cep* resultado = NULL;
+
+    if (arvCidades != NULL) {
+        
+        if (arvCidades->Info1 != NULL && arvCidades->Info1->arvCeps != NULL) {
+            resultado = buscaCep(arvCidades->Info1->arvCeps, cep);
+        }
+
+        
+        if (resultado == NULL && arvCidades->Ninfos == 2 && 
+            arvCidades->Info2 != NULL && arvCidades->Info2->arvCeps != NULL) {
+            resultado = buscaCep(arvCidades->Info2->arvCeps, cep);
+        }
+
+        
+        if (resultado == NULL) resultado = buscarCepEmCidade(arvCidades->Esq, cep);
+        if (resultado == NULL) resultado = buscarCepEmCidade(arvCidades->Cent, cep);
+        if (resultado == NULL) resultado = buscarCepEmCidade(arvCidades->Dir, cep);
+
+    }
+
+    return resultado;
+}
+
+Cep* buscarCepEmEstado(Estado* estado, char* cep) {
+    Cep* resultado = NULL;
+
+    while (estado != NULL && resultado == NULL) {
+        if (estado->arvCidades != NULL) {
+            resultado = buscarCepEmCidade(estado->arvCidades, cep);
+        }
+        estado = estado->Prox;
+    }
+
+    return resultado;
+}
+
+void liberarCep(arv23cep* raiz) {
+    if (raiz != NULL) {
+        liberarCep(raiz->Esq);
+        liberarCep(raiz->Cent);
+        liberarCep(raiz->Dir);
+
+        if (raiz->Info1 != NULL) {
+            free(raiz->Info1);
+        }
+        if (raiz->Info2 != NULL) {
+            free(raiz->Info2);
+        }
+
+        free(raiz);
+    }
+}
+
+void liberarCidade(arv23cidade* raiz) {
+    if (raiz != NULL) {
+        
+        liberarCidade(raiz->Esq);
+        liberarCidade(raiz->Cent);
+        liberarCidade(raiz->Dir);
+
+        
+        if (raiz->Info1 != NULL) {
+            if (raiz->Info1->arvCeps != NULL) {
+                liberarCep(raiz->Info1->arvCeps);
+            }
+            free(raiz->Info1);
+        }
+        if (raiz->Info2 != NULL) {
+            if (raiz->Info2->arvCeps != NULL) {
+                liberarCep(raiz->Info2->arvCeps);
+            }
+            free(raiz->Info2);
+        }
+
+        
+        free(raiz);
+    }
+}
+
+void liberarEstados(Estado* inicio) {
+    Estado* atual = inicio;
+    Estado* proximo;
+    
+    while (atual != NULL) {
+        proximo = atual->Prox;
+        
+      
+        if (atual->capital != NULL) {
+            if (atual->capital->arvCeps != NULL) {
+                liberarCep(atual->capital->arvCeps);
+            }
+            free(atual->capital);
+        }
+        
+        
+        if (atual->arvCidades != NULL) {
+            liberarCidade(atual->arvCidades);
+        }
+        
+        free(atual);
+        atual = proximo;
+    }
 }
