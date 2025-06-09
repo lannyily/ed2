@@ -25,11 +25,13 @@ Pessoa* rotacaoEsqPessoa(Pessoa** Raiz);
 Pessoa* rotacaoDirPessoa(Pessoa** Raiz);
 void trocarCorPessoa(Pessoa** Raiz);
 void buscaPessoa(Pessoa* Raiz, char* cpf, Pessoa** resultado);
+Pessoa* buscaCepEmPessoa(Pessoa* Raiz, char* cep);
 Pessoa* criarNoPessoa(char* nome, char* cpf, char* cepCityNatal, char* cepCityMora, char* dataN);
 int inserePessoa(Pessoa** Raiz, Pessoa* No);
 void cadastrarPessoa(Estado* lista, Pessoa** Raiz, char* nome, char* cpf, char* cepCityNatal, char* cepCityMora, char* dataN);
 Pessoa* insereAjustaCorPessoa(Pessoa** raiz, Pessoa* no);
 void imprimirPessoas(Pessoa* raiz);
 Pessoa* removerPessoa(Pessoa** Raiz, char* cpf);
+void liberarPessoas(Pessoa* raiz);
 
 #endif 

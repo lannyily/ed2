@@ -225,3 +225,34 @@ Cep* removerCep(Cep** Raiz, char* cep){
 
     return *Raiz;
 }
+
+
+void liberarCep(Cep* raiz) {
+    if (raiz != NULL) {
+        liberarCep(raiz->Esq);
+        liberarCep(raiz->Dir);
+        free(raiz);
+    }
+}
+
+
+void liberarCidade(Cidade* raiz) {
+    if (raiz != NULL) {
+        liberarCidade(raiz->Esq);
+        liberarCidade(raiz->Dir);
+        liberarCep(raiz->ceps);  
+        free(raiz);
+    }
+}
+
+
+void liberarEstados(Estado* inicio) {
+    Estado* atual = inicio;
+    while (atual != NULL) {
+        Estado* prox = atual->Prox;
+        liberarCidade(atual->capital);  
+        liberarCidade(atual->cidades);  
+        free(atual);
+        atual = prox;
+    }
+}

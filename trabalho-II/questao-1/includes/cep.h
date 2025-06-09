@@ -29,5 +29,8 @@ void buscaCep(Cep* Raiz, char* cep, Cep** resultado);
 Cep* buscarCepEmCidade(Cidade* cidade, char* cep);
 Cep* buscarCepEmEstado(Estado* estado, char* cep);
 Cep* removerCep(Cep** Raiz, char* cep);
+void liberarCep(Cep* raiz);
+void liberarCidade(Cidade* raiz);
+void liberarEstados(Estado* inicio);
 
 #endif 

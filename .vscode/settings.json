@@ -4,6 +4,7 @@
         "album.h": "c",
         "musica.h": "c",
         "stdlib.h": "c",
-        "cidade.h": "c"
+        "cidade.h": "c",
+        "estado.h": "c"
     }
 }

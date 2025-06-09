@@ -92,6 +92,23 @@ void buscaPessoa(Pessoa* Raiz, char* cpf, Pessoa** resultado) {
     }
 }
 
+Pessoa* buscaCepEmPessoa(Pessoa* Raiz, char* cep){
+    Pessoa* resultado = NULL;
+
+    if (Raiz == NULL){
+        if (strcmp(Raiz->cepCityMora, cep) == 0 || strcmp(Raiz->cepCityNatal, cep) == 0) {
+            resultado = Raiz;
+        }
+
+        buscaCepEmPessoa(Raiz->Esq, cep);
+        if (resultado == NULL) {
+            buscaCepEmPessoa(Raiz->Dir, cep);
+        }
+    }
+
+    return resultado;
+}
+
 Pessoa* criarNoPessoa(char* nome, char* cpf, char* cepCityNatal, char* cepCityMora, char* dataN){
     Pessoa* nova = (Pessoa*)malloc(sizeof(Pessoa));
 
@@ -235,4 +252,11 @@ Pessoa* removerPessoa(Pessoa** Raiz, char* cpf){
     }
 
     return *Raiz;
+}
+
+void liberarPessoas(Pessoa* raiz) {
+    if (raiz == NULL) return;
+    liberarPessoas(raiz->Esq);
+    liberarPessoas(raiz->Dir);
+    free(raiz);
 }
