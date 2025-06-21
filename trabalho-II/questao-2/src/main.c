@@ -114,8 +114,7 @@ int main(){
         switch (opcao) {
             case 1: {
                 printf("\n-------------- Cadastrar Estado --------------\n");
-                
-                char estado[50], capital[50];
+                                char estado[50], capital[50];
                 printf("Digite o nome do estado: ");
                 scanf(" %[^\n]", estado);
                 printf("Digite o nome da capital: ");
