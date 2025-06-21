@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <time.h>
 
 #define DISCOS 4
 #define PINOS 3
@@ -284,8 +285,14 @@ int main(){
         printf("\nConfiguracao inicial corresponde ao vertice V%d\n", indiceConfig);
         printf("Destino final (todos os discos no pino 3) e o vertice V%d\n", indiceDestino);
 
-        // Chamar Dijkstra
+        clock_t inicio = clock();
+
         dijkstra(possibilidades, indiceConfig, indiceDestino, matrizAdj);
+
+        clock_t fim = clock();
+
+        double tempo_ms = ((double)(fim - inicio) / CLOCKS_PER_SEC) * 1000.0;
+        printf("Tempo gasto: %.3f milissegundos\n", tempo_ms);
     } else {
         printf("\nErro ao identificar configuracao inicial ou destino.\n");
     }
