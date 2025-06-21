@@ -4,6 +4,7 @@
 
 #define DISCOS 4
 #define PINOS 3
+#define MAX_VERTICES 81
 
 typedef struct GrafoHanoi {
     int vertices;
@@ -116,7 +117,7 @@ int qualDiscoFoiMovido(int* estadoTorre1, int* estadoTorre2){
     }
 
     if(cont != 1){
-        cont = -1;
+        posicao = -1;
     }
 
     return posicao;
@@ -172,43 +173,121 @@ void criarArestasMatriz(int matriz[81][81], int** estadoTorre, int possibilidade
     }
 }
 
+void dijkstra(int vertices, int origem, int destino, int matrizAdj[81][81]) {
+    
+    int dist[MAX_VERTICES], visitado[MAX_VERTICES], anterior[MAX_VERTICES];
+    
+    for (int i = 0; i < vertices; i++) {
+        dist[i] = 99999;
+        visitado[i] = 0;
+        anterior[i] = -1;
+    }
+
+    dist[origem] = 0;
+
+    for (int i = 0; i < vertices - 1; i++) {
+        int min = 99999, u = -1;
+
+        for (int j = 0; j < vertices; j++) {
+            if (!visitado[j] && dist[j] <= min) {
+                min = dist[j];
+                u = j;
+            }
+        }
+
+        if (u == -1) break;
+
+        visitado[u] = 1;
+
+        for (int v = 0; v < vertices; v++) {
+            if (!visitado[v] && matrizAdj[u][v]) {
+                if (dist[u] + 1 < dist[v]) {
+                    dist[v] = dist[u] + 1;
+                    anterior[v] = u;
+                }
+            }
+        }
+    }
+
+    if (dist[destino] == 99999) {
+        printf("Nao existe caminho entre os vartices %d e %d\n", origem, destino);
+    } else {
+        printf("Menor caminho do vartice %d ao %d (ordem reversa):\n", origem, destino);
+        int atual = destino;
+        while (atual != -1) {
+            printf("V%d ", atual);
+            atual = anterior[atual];
+            if (atual != -1) printf("<- ");
+        }
+        printf("\nCusto: %d movimentos\n", dist[destino]);
+    }
+}
+
+
 
 int main(){
-    printf("passou aqui 1\n");
     int possibilidades = pow(PINOS, DISCOS);
-    printf("passou aqui 2\n");
     GrafoHanoi* grafo = criarGrafo(possibilidades, PINOS, 0);
-    printf("passou aqui 3\n");
     int** estadoTorre = possibilidadeDeMovimentos(possibilidades);
-    printf("passou aqui 4\n");
     criarArestas(grafo, estadoTorre, possibilidades);
-
-    printf("Grafo (lista de adjacencia):\n");
-    for(int i = 0; i < possibilidades; i++) {
-        printf("V%d -> ", i);
-        for(int j = 0; j < grafo->grau[i]; j++) {
-            printf("%d ", grafo->arestas[i][j]);
-        }
-        printf("\n");
-    }
-    printf("passou aqui 5\n");
-    for(int i = 0; i < possibilidades; i++) {
-    printf("V%d: [%d %d %d %d]\n", i,
-        estadoTorre[i][0],
-        estadoTorre[i][1],
-        estadoTorre[i][2],
-        estadoTorre[i][3]);
-    }
 
     int matrizAdj[81][81] = {0};
     criarArestasMatriz(matrizAdj, estadoTorre, possibilidades);
 
-    printf("Matriz de Adjacencia:\n");
-    for(int i = 0; i < possibilidades; i++){
-        for(int j = 0; j < possibilidades; j++){
-            printf("%d ", matrizAdj[i][j]);
+    // Entrada do usuário
+    int configUsuario[DISCOS];
+    printf("Digite a configuracao dos %d discos (valores de 1 a 3 para cada pino):\n", DISCOS);
+    for(int i = 0; i < DISCOS; i++) {
+        do {
+            printf("Disco %d esta em qual pino? ", i + 1);
+            scanf("%d", &configUsuario[i]);
+            if (configUsuario[i] < 1 || configUsuario[i] > 3) {
+                printf("Valor invalido! Insira 1, 2 ou 3.\n");
+            }
+        } while(configUsuario[i] < 1 || configUsuario[i] > 3);
+    }
+
+    // Buscar índice da configuração digitada
+    int indiceConfig = -1;
+    for(int i = 0; i < possibilidades; i++) {
+        int igual = 1;
+        for(int j = 0; j < DISCOS; j++) {
+            if(configUsuario[j] != estadoTorre[i][j]) {
+                igual = 0;
+                break;
+            }
         }
-        printf("\n");
+        if (igual) {
+            indiceConfig = i;
+            break;
+        }
+    }
+
+    // Definir destino final padrão: todos os discos no pino 3
+    int destinoFinal[DISCOS] = {3, 3, 3, 3};
+    int indiceDestino = -1;
+    for(int i = 0; i < possibilidades; i++) {
+        int igual = 1;
+        for(int j = 0; j < DISCOS; j++) {
+            if(destinoFinal[j] != estadoTorre[i][j]) {
+                igual = 0;
+                break;
+            }
+        }
+        if (igual) {
+            indiceDestino = i;
+            break;
+        }
+    }
+
+    if(indiceConfig != -1 && indiceDestino != -1) {
+        printf("\nConfiguracao inicial corresponde ao vertice V%d\n", indiceConfig);
+        printf("Destino final (todos os discos no pino 3) e o vertice V%d\n", indiceDestino);
+
+        // Chamar Dijkstra
+        dijkstra(possibilidades, indiceConfig, indiceDestino, matrizAdj);
+    } else {
+        printf("\nErro ao identificar configuracao inicial ou destino.\n");
     }
 
     return 0;
