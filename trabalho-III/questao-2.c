@@ -6,6 +6,8 @@
 #define DISCOS 4
 #define PINOS 3
 #define MAX_VERTICES 81
+#define INFINITO 99999
+#define NIL -1
 
 typedef struct GrafoHanoi {
     int vertices;
@@ -75,12 +77,11 @@ int inserirAresta(GrafoHanoi* grafo, int origem, int destino, int digrafo, float
         if((origem >= 0 && origem < grafo->vertices) && (destino >= 0 && destino < grafo->vertices)){
             grafo->arestas[origem][grafo->grau[origem]] = destino;
 
-
             if(grafo->ponderado){
-                grafo->pesos[origem - 1][grafo->grau[origem - 1]] = peso;
+                grafo->pesos[origem][grafo->grau[origem]] = peso;
             }
 
-            grafo->grau[origem - 1]++;
+            grafo->grau[origem]++;
 
             if(digrafo == 0){
                 inserirAresta(grafo, destino, origem, 1, peso);
@@ -92,6 +93,7 @@ int inserirAresta(GrafoHanoi* grafo, int origem, int destino, int digrafo, float
 
     return resultado;
 }
+
 
 int quantidadeMovimentos(int* torre1, int* torre2){
     int cont = 0;
@@ -173,59 +175,57 @@ void criarArestasMatriz(int matriz[MAX_VERTICES][MAX_VERTICES], int** torre, int
     }
 }
 
-void dijkstra(int vertices, int origem, int destino, int matrizAdj[MAX_VERTICES][MAX_VERTICES]) {
-    
-    int dist[MAX_VERTICES], visitado[MAX_VERTICES], anterior[MAX_VERTICES];
-    
-    for (int i = 0; i < vertices; i++) {
-        dist[i] = 99999;
-        visitado[i] = 0;
-        anterior[i] = -1;
-    }
 
+int bellmanFord(GrafoHanoi* grafo, int origem, int* dist, int* pred) {
+    int V = grafo->vertices;
+
+    for (int i = 0; i < V; i++) {
+        dist[i] = INFINITO;
+        pred[i] = NIL;
+    }
     dist[origem] = 0;
 
-    for (int i = 0; i < vertices - 1; i++) {
-        int min = 99999, u = -1;
+    for (int i = 0; i < V - 1; i++) {
+        for (int u = 0; u < V; u++) {
+            for (int j = 0; j < grafo->grau[u]; j++) {
+                int v = grafo->arestas[u][j];
+                float peso = 1.0; // cada movimento tem peso 1
 
-        for (int j = 0; j < vertices; j++) {
-            if (!visitado[j] && dist[j] <= min) {
-                min = dist[j];
-                u = j;
-            }
-        }
-
-        if (u == -1) break;
-
-        visitado[u] = 1;
-
-        for (int v = 0; v < vertices; v++) {
-            if (!visitado[v] && matrizAdj[u][v]) {
-                if (dist[u] + 1 < dist[v]) {
-                    dist[v] = dist[u] + 1;
-                    anterior[v] = u;
+                if (dist[u] != INFINITO && dist[v] > dist[u] + peso) {
+                    dist[v] = dist[u] + peso;
+                    pred[v] = u;
                 }
             }
         }
     }
 
-    if (dist[destino] == 99999) {
-        printf("Nao existe caminho entre os vartices %d e %d\n", origem, destino);
-    } else {
-        printf("Menor caminho do vartice %d ao %d (ordem reversa):\n", origem, destino);
-        int atual = destino;
-        while (atual != -1) {
-            printf("V%d ", atual);
-            atual = anterior[atual];
-            if (atual != -1) printf("<- ");
+    // Verifica ciclos negativos
+    for (int u = 0; u < V; u++) {
+        for (int j = 0; j < grafo->grau[u]; j++) {
+            int v = grafo->arestas[u][j];
+            float peso = 1.0;
+            if (dist[u] != INFINITO && dist[v] > dist[u] + peso) {
+                return 0; // ciclo negativo detectado
+            }
         }
-        printf("\nCusto: %d movimentos\n", dist[destino]);
+    }
+
+    return 1;
+}
+
+void imprimirCaminho(int origem, int destino, int* pred) {
+    if (origem == destino) {
+        printf("V%d ", origem);
+    } else if (pred[destino] == NIL) {
+        printf("Sem caminho de V%d a V%d\n", origem, destino);
+    } else {
+        imprimirCaminho(origem, pred[destino], pred);
+        printf("-> V%d ", destino);
     }
 }
 
 
-
-int main(){
+int main() {
     int possibilidades = MAX_VERTICES;
     GrafoHanoi* grafo = criarGrafo(possibilidades, PINOS, 0);
     int** torre = possibilidadeDeMovimentos(possibilidades);
@@ -285,16 +285,32 @@ int main(){
         printf("Destino final (todos os discos no pino 3) e o vertice V%d\n", indiceDestino);
 
         clock_t inicio = clock();
+        
+        int dist[MAX_VERTICES];
+        int pred[MAX_VERTICES];
 
-        dijkstra(possibilidades, indiceConfig, indiceDestino, matrizAdj);
+        if (bellmanFord(grafo, indiceConfig, dist, pred)) {
+            printf("\nCaminho mais curto de V%d ate V%d:\n", indiceConfig, indiceDestino);
+            imprimirCaminho(indiceConfig, indiceDestino, pred);
+            printf("\nDistancia total: %d\n", dist[indiceDestino]);
+        } else {
+            printf("\nExiste ciclo negativo no grafo.\n");
+        }
 
+                
         clock_t fim = clock();
 
         double tempo_ms = ((double)(fim - inicio) / CLOCKS_PER_SEC) * 1000.0;
-        printf("Tempo gasto: %.3f milissegundos\n", tempo_ms);
+        printf("\nTempo gasto: %.3f milissegundos\n", tempo_ms);
     } else {
         printf("\nErro ao identificar configuracao inicial ou destino.\n");
     }
 
+    // Liberar memória
+    for(int i = 0; i < possibilidades; i++) {
+        free(torre[i]);
+    }
+    free(torre);
+    
     return 0;
 }
