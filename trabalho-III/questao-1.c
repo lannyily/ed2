@@ -173,7 +173,7 @@ void criarArestasMatriz(int matriz[MAX_VERTICES][MAX_VERTICES], int** torre, int
     }
 }
 
-void dijkstra(int vertices, int origem, int destino, int matrizAdj[MAX_VERTICES][MAX_VERTICES]) {
+void dijkstra(int vertices, int origem, int destino, int matrizAdj[MAX_VERTICES][MAX_VERTICES]){
     
     int dist[MAX_VERTICES], visitado[MAX_VERTICES], anterior[MAX_VERTICES];
     
@@ -234,7 +234,7 @@ int main(){
     int matrizAdj[MAX_VERTICES][MAX_VERTICES] = {0};
     criarArestasMatriz(matrizAdj, torre, possibilidades);
 
-    // Entrada do usuário
+    
     int configUsuario[DISCOS];
     printf("Digite a configuracao dos %d discos (valores de 1 a 3 para cada pino):\n", DISCOS);
     for(int i = 0; i < DISCOS; i++) {
@@ -247,23 +247,21 @@ int main(){
         } while(configUsuario[i] < 1 || configUsuario[i] > 3);
     }
 
-    // Buscar índice da configuração digitada
+   
     int indiceConfig = -1;
     for(int i = 0; i < possibilidades; i++) {
         int igual = 1;
         for(int j = 0; j < DISCOS; j++) {
             if(configUsuario[j] != torre[i][j]) {
                 igual = 0;
-                break;
             }
         }
         if (igual) {
             indiceConfig = i;
-            break;
         }
     }
 
-    // Definir destino final padrão: todos os discos no pino 3
+    
     int destinoFinal[DISCOS] = {3, 3, 3, 3};
     int indiceDestino = -1;
     for(int i = 0; i < possibilidades; i++) {
@@ -271,12 +269,10 @@ int main(){
         for(int j = 0; j < DISCOS; j++) {
             if(destinoFinal[j] != torre[i][j]) {
                 igual = 0;
-                break;
             }
         }
         if (igual) {
             indiceDestino = i;
-            break;
         }
     }
 

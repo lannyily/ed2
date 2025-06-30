@@ -19,7 +19,7 @@ typedef struct TabelaHash{
 
 
 int tabelaHash(char* matricula){
-    // Extrair os grupos
+    
     char grupo1_str[4];
     grupo1_str[0] = matricula[0];
     grupo1_str[1] = matricula[1];
@@ -43,16 +43,14 @@ int tabelaHash(char* matricula){
 
 
 void cadastrarFuncionario(TabelaHash* hash, char* matricula, char* nome, char* funcao, float salario){
-    // ========================
-    // 1. Hash principal: Fold Shift
-    // grupo1 = 1º, 2º, 6º
+    
     char grupo1_str[4];
     grupo1_str[0] = matricula[0];
     grupo1_str[1] = matricula[1];
     grupo1_str[2] = matricula[5];
     grupo1_str[3] = '\0';
 
-    // grupo2 = 3º, 4º, 5º
+    
     char grupo2_str[4];
     grupo2_str[0] = matricula[2];
     grupo2_str[1] = matricula[3];
@@ -64,16 +62,13 @@ void cadastrarFuncionario(TabelaHash* hash, char* matricula, char* nome, char* f
     int soma = grupo1 + grupo2;
     int indice = soma % TAM;
 
-    // ========================
-    // 2. Cálculo do deslocamento para colisão
+   
     char desloca_str[3];
     desloca_str[0] = matricula[0];
     desloca_str[1] = matricula[5];
     desloca_str[2] = '\0';
     int deslocamento = atoi(desloca_str);
 
-    // ========================
-    // 3. Tratamento de colisão
     int tentativa = 0;
     while(hash->tabela[indice] != NULL){
         hash->colisoes++;
@@ -81,8 +76,6 @@ void cadastrarFuncionario(TabelaHash* hash, char* matricula, char* nome, char* f
         indice = (indice + deslocamento) % TAM;
     }
 
-    // ========================
-    // 4. Inserção do funcionário
     Funcionario* novo = (Funcionario*)malloc(sizeof(Funcionario));
     strcpy(novo->matricula, matricula);
     strcpy(novo->nome, nome);
@@ -105,8 +98,8 @@ void mostrarTodos(TabelaHash* hash){
 
 Funcionario* buscarFuncionario(TabelaHash* hash, char* matricula){
     int indice = tabelaHash(matricula);
+    Funcionario* resultado = NULL;
 
-    // Novo deslocamento (igual ao de inserção)
     char desloca_str[3];
     desloca_str[0] = matricula[0];
     desloca_str[1] = matricula[5];
@@ -117,13 +110,13 @@ Funcionario* buscarFuncionario(TabelaHash* hash, char* matricula){
 
     while(hash->tabela[indice] != NULL && tentativas < TAM) {
         if(strcmp(hash->tabela[indice]->matricula, matricula) == 0){
-            return hash->tabela[indice];
+            resultado = hash->tabela[indice];
         }
         indice = (indice + deslocamento) % TAM;
         tentativas++;
     }
 
-    return NULL;
+    return resultado;
 }
 
 

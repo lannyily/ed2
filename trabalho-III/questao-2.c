@@ -159,7 +159,7 @@ void criarArestas(GrafoHanoi* grafo, int** torre, int possibilidades){
     for(int i = 0; i < possibilidades; i++){
         for(int j = 0; j < possibilidades; j++){
             if(movimentoValido(torre[i], torre[j]) == 1){
-                inserirAresta(grafo, i + 1, j + 1, 1, 0);
+                inserirAresta(grafo, i, j, 1, 0);
             }
         }
     }
@@ -176,8 +176,9 @@ void criarArestasMatriz(int matriz[MAX_VERTICES][MAX_VERTICES], int** torre, int
 }
 
 
-int bellmanFord(GrafoHanoi* grafo, int origem, int* dist, int* pred) {
+int bellmanFord(GrafoHanoi* grafo, int origem, int* dist, int* pred){
     int V = grafo->vertices;
+    int resultado = 1;
 
     for (int i = 0; i < V; i++) {
         dist[i] = INFINITO;
@@ -189,9 +190,9 @@ int bellmanFord(GrafoHanoi* grafo, int origem, int* dist, int* pred) {
         for (int u = 0; u < V; u++) {
             for (int j = 0; j < grafo->grau[u]; j++) {
                 int v = grafo->arestas[u][j];
-                float peso = 1.0; // cada movimento tem peso 1
+                float peso = 1.0;
 
-                if (dist[u] != INFINITO && dist[v] > dist[u] + peso) {
+                if (dist[u] != INFINITO && dist[u] + peso < dist[v]) {
                     dist[v] = dist[u] + peso;
                     pred[v] = u;
                 }
@@ -199,18 +200,20 @@ int bellmanFord(GrafoHanoi* grafo, int origem, int* dist, int* pred) {
         }
     }
 
-    // Verifica ciclos negativos
+
     for (int u = 0; u < V; u++) {
         for (int j = 0; j < grafo->grau[u]; j++) {
             int v = grafo->arestas[u][j];
             float peso = 1.0;
-            if (dist[u] != INFINITO && dist[v] > dist[u] + peso) {
-                return 0; // ciclo negativo detectado
+
+            if (dist[u] != INFINITO && dist[u] + peso < dist[v]) {
+                printf("Ciclo negativo detectado entre %d -> %d\n", u, v);
+                resultado = 0;
             }
         }
     }
 
-    return 1;
+    return resultado; 
 }
 
 void imprimirCaminho(int origem, int destino, int* pred) {
@@ -234,7 +237,7 @@ int main() {
     int matrizAdj[MAX_VERTICES][MAX_VERTICES] = {0};
     criarArestasMatriz(matrizAdj, torre, possibilidades);
 
-    // Entrada do usuário
+    
     int configUsuario[DISCOS];
     printf("Digite a configuracao dos %d discos (valores de 1 a 3 para cada pino):\n", DISCOS);
     for(int i = 0; i < DISCOS; i++) {
@@ -247,23 +250,21 @@ int main() {
         } while(configUsuario[i] < 1 || configUsuario[i] > 3);
     }
 
-    // Buscar índice da configuração digitada
+    
     int indiceConfig = -1;
     for(int i = 0; i < possibilidades; i++) {
         int igual = 1;
         for(int j = 0; j < DISCOS; j++) {
             if(configUsuario[j] != torre[i][j]) {
                 igual = 0;
-                break;
             }
         }
         if (igual) {
             indiceConfig = i;
-            break;
         }
     }
 
-    // Definir destino final padrão: todos os discos no pino 3
+    
     int destinoFinal[DISCOS] = {3, 3, 3, 3};
     int indiceDestino = -1;
     for(int i = 0; i < possibilidades; i++) {
@@ -271,12 +272,10 @@ int main() {
         for(int j = 0; j < DISCOS; j++) {
             if(destinoFinal[j] != torre[i][j]) {
                 igual = 0;
-                break;
             }
         }
         if (igual) {
             indiceDestino = i;
-            break;
         }
     }
 
@@ -306,7 +305,7 @@ int main() {
         printf("\nErro ao identificar configuracao inicial ou destino.\n");
     }
 
-    // Liberar memória
+    
     for(int i = 0; i < possibilidades; i++) {
         free(torre[i]);
     }

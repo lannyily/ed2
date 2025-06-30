@@ -29,12 +29,14 @@ int bellmanFord(Grafo* grafo, int origem, double* dist, int* pred){
     int V = grafo->V;
     int E = grafo->E;
 
+    int resultado = 1;
+
     
     for (int j = 0; j < E; j++) {
         double r = grafo->arestas[j].confiabilidade;
         if (r <= 0.0 || r > 1.0) {
             printf("Confiabilidade invalida na aresta");
-            return 0;
+            resultado = 0;
         }
     }
 
@@ -71,7 +73,7 @@ int bellmanFord(Grafo* grafo, int origem, double* dist, int* pred){
             printf("Aresta com ciclo detectado: (%d -> %d), confiabilidade: %.3f, peso: %.3f\n",u, v, grafo->arestas[j].confiabilidade, peso);
             printf("dist[%d] = %.3f, dist[%d] = %.3f\n", u, dist[u], v, dist[v]);
             printf("Grafo contem ciclo negativo!\n");
-            return 0;
+            resultado = 0;
         }
     }
 
@@ -81,11 +83,11 @@ int bellmanFord(Grafo* grafo, int origem, double* dist, int* pred){
         double peso = -log(grafo->arestas[j].confiabilidade);
         if (dist[u] != INFINITO && dist[u] + peso < dist[v] - 1e-9){
             printf("Grafo contem ciclo negativo!\n");
-            return 0;
+            resultado = 0;
         }
     }
 
-    return 1; // Sucesso
+    return resultado; 
 }
 
 
@@ -93,11 +95,12 @@ int bellmanFord(Grafo* grafo, int origem, double* dist, int* pred){
 void imprimirCaminho(int* pred, int destino) {
     if (pred[destino] == NIL) {
         printf("%d ", destino);
-        return;
+    } else {
+        imprimirCaminho(pred, pred[destino]);
+        printf("-> %d ", destino);
     }
-    imprimirCaminho(pred, pred[destino]);
-    printf("-> %d ", destino);
 }
+
 
 int main() {
     int V = 5, E = 6;
