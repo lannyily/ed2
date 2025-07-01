@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define TAM 121
+#define TAM 180
 #define FUNCIONARIOS 10000
 
 typedef struct Funcionario{
@@ -116,7 +116,7 @@ int main(){
                     printf("Atingido o limite de cadastramento de funcionarios\n");
                 }
                 else{
-                    /*
+                    
                     char matricula[7];
                     char nome[50];
                     char funcao[50];
@@ -141,8 +141,8 @@ int main(){
                     printf("Funcionario cadastrado com sucesso!\n");
 
                     printf("colisoes totais: %d\n", hash->colisoes);
-                    */
-
+                    
+                    /*
                     cadastrarFuncionario(hash, "332423", "Fulani", "Dev", 1.5454);
                     cadastrarFuncionario(hash, "812394", "Maria", "Analista", 3000.00);
                     cadastrarFuncionario(hash, "470183", "Joao", "Gerente", 4500.50);
@@ -173,7 +173,7 @@ int main(){
                     cadastrarFuncionario(hash, "120394", "Simone", "Tester", 3150.00);
                     cadastrarFuncionario(hash, "678203", "Andre", "Dev", 3600.00);
                     cadastrarFuncionario(hash, "983472", "Luciana", "Gerente", 5000.00);
-
+                    */
                     printf("colisoes totais: %d\n", hash->colisoes);
                 }
                 break;
